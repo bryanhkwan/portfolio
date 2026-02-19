@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bryan Kwan — Analytics Portfolio</title>
+  <meta name="description" content="Bryan Kwan — Data Analytics, Sports Analytics, Dashboard Development. University of Toledo."/>
+  <link rel="preconnect" href="https://api.fontshare.com"/>
+  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800,900&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0f1a;
+      --card: #111827;
+      --card-hover: #161f33;
+      --border: #1e293b;
+      --border-light: #2a3650;
+      --gold: #FFD200;
+      --gold-dim: rgba(255,210,0,.12);
+      --gold-mid: rgba(255,210,0,.35);
+      --text: #e8ecf4;
+      --muted: #8997b0;
+      --white: #ffffff;
+      --font: 'Satoshi', 'DM Sans', ui-sans-serif, system-ui, -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+    ::selection { background: rgba(255,210,0,.25); color: #fff; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+    a { color: inherit; }
+
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity .7s cubic-bezier(.22,1,.36,1), transform .7s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      border-bottom: 1px solid transparent; transition: all .35s ease;
+    }
+    nav.scrolled {
+      background: rgba(10,15,26,.92); backdrop-filter: blur(18px);
+      border-bottom-color: var(--border);
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto; padding: 0 28px;
+      display: flex; justify-content: space-between; align-items: center; height: 64px;
+    }
+    .nav-logo {
+      text-decoration: none; color: var(--gold); font-family: var(--mono);
+      font-weight: 700; font-size: 15px; letter-spacing: 1px;
+    }
+    .nav-logo span { color: var(--muted); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      text-decoration: none; font-size: 13px; font-weight: 600;
+      letter-spacing: .5px; color: var(--muted); transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-resume {
+      font-family: var(--mono) !important; font-size: 12px !important; font-weight: 700 !important;
+      padding: 8px 18px !important; border-radius: 8px;
+      border: 1px solid var(--gold-mid) !important;
+      color: var(--gold) !important; transition: background .2s;
+    }
+    .nav-resume:hover { background: var(--gold-dim); }
+    .nav-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      color: var(--gold); font-size: 24px; padding: 4px;
+    }
+    .nav-mobile { display: none; }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none !important; }
+      .nav-hamburger { display: block !important; }
+      .nav-mobile.open {
+        display: flex; flex-direction: column; gap: 16px;
+        background: rgba(10,15,26,.97); border-top: 1px solid var(--border);
+        padding: 16px 28px 24px;
+      }
+      .nav-mobile a { text-decoration: none; font-size: 15px; font-weight: 600; color: var(--muted); }
+      .about-grid { grid-template-columns: 1fr !important; }
+    }
+
+    .hero {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden; padding: 120px 28px 80px;
+    }
+    .hero-orb1 {
+      position: absolute; top: -20%; right: -10%; width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,210,0,.06) 0%, transparent 70%); pointer-events: none;
+    }
+    .hero-orb2 {
+      position: absolute; bottom: -30%; left: -15%; width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(94,209,167,.04) 0%, transparent 70%); pointer-events: none;
+    }
+    .hero-content { max-width: 720px; width: 100%; position: relative; z-index: 1; }
+    .hero-content > div {
+      opacity: 0; transform: translateY(40px);
+      transition: all .8s cubic-bezier(.22,1,.36,1);
+    }
+    .hero-content.loaded > div { opacity: 1; transform: translateY(0); }
+    .hero-content > div:nth-child(1) { transition-delay: .1s; }
+    .hero-content > div:nth-child(2) { transition-delay: .25s; }
+    .hero-content > div:nth-child(3) { transition-delay: .4s; }
+    .hero-content > div:nth-child(4) { transition-delay: .55s; }
+    .hero-content > div:nth-child(5) { transition-delay: .7s; }
+
+    .hero-label { font-family: var(--mono); font-size: 14px; color: var(--gold); margin-bottom: 16px; letter-spacing: 1.5px; }
+    .hero-name {
+      font-size: clamp(42px, 8vw, 72px); font-weight: 800; line-height: 1.05;
+      margin: 0 0 20px; color: var(--white); letter-spacing: -1px;
+    }
+    .hero-name span { color: var(--gold); }
+    .hero-tagline { font-size: clamp(20px, 3.5vw, 32px); font-weight: 600; color: var(--muted); margin: 0 0 28px; line-height: 1.35; }
+    .hero-desc { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 540px; margin: 0 0 36px; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .btn-gold {
+      text-decoration: none; font-size: 14px; font-weight: 700;
+      padding: 13px 28px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--gold), #e6be00);
+      color: #0a0f1a; border: none; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(255,210,0,.2);
+      transition: transform .2s, box-shadow .2s; display: inline-block;
+    }
+    .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,210,0,.3); }
+    .btn-outline {
+      text-decoration: none; font-size: 14px; font-weight: 600;
+      padding: 13px 28px; border-radius: 10px;
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border-light);
+      cursor: pointer; transition: all .2s; display: inline-block;
+    }
+    .btn-outline:hover { border-color: var(--gold-mid); color: var(--gold); }
+
+    .section { padding: 100px 28px; max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: var(--mono); font-size: 13px; color: var(--gold); margin-bottom: 10px; letter-spacing: 1.2px; }
+    .section-title { font-size: clamp(28px, 5vw, 40px); font-weight: 800; color: var(--white); margin: 0; letter-spacing: -.5px; }
+    .section-title span { color: var(--gold); }
+    .section-bar { width: 48px; height: 3px; background: var(--gold); border-radius: 2px; margin-top: 16px; }
+    .section-head { margin-bottom: 48px; }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .about-text { font-size: 15px; color: var(--muted); line-height: 1.8; }
+    .about-text p:first-child { margin-top: 0; }
+    .about-text .hl { color: var(--text); font-weight: 600; }
+    .about-text .gold { color: var(--gold); }
+
+    .edu-card {
+      padding: 20px; border-radius: 14px; background: var(--card);
+      border: 1px solid var(--border); transition: border-color .2s; margin-bottom: 16px;
+    }
+    .edu-card:last-child { margin-bottom: 0; }
+    .edu-card:hover { border-color: var(--gold-mid); }
+    .edu-date { font-family: var(--mono); font-size: 11px; color: var(--gold); margin: 0 0 6px; letter-spacing: .8px; }
+    .edu-degree { font-size: 16px; font-weight: 700; color: var(--white); margin: 0 0 4px; }
+    .edu-school { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+    .edu-note { font-size: 12px; color: var(--muted); margin: 0; font-style: italic; }
+
+    .exp-item {
+      border-radius: 14px; border: 1px solid var(--border);
+      transition: all .3s ease; overflow: hidden; cursor: pointer; margin-bottom: 12px;
+    }
+    .exp-item:last-child { margin-bottom: 0; }
+    .exp-item.open { border-color: var(--gold-mid); background: var(--card); }
+    .exp-header {
+      padding: 18px 22px; display: flex; justify-content: space-between;
+      align-items: center; gap: 16px; flex-wrap: wrap;
+    }
+    .exp-role { font-size: 16px; font-weight: 700; color: var(--white); margin: 0; }
+    .exp-meta { font-size: 13px; color: var(--muted); margin: 4px 0 0; }
+    .exp-date { font-family: var(--mono); font-size: 12px; color: var(--gold); margin: 0; white-space: nowrap; }
+    .exp-body { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s ease, opacity .3s ease; }
+    .exp-item.open .exp-body { max-height: 500px; opacity: 1; }
+    .exp-bullets { padding: 0 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .exp-bullet { display: flex; gap: 10px; align-items: flex-start; }
+    .exp-bullet-dot { color: var(--gold); font-size: 10px; margin-top: 6px; flex-shrink: 0; }
+    .exp-bullet p { font-size: 14px; color: var(--muted); margin: 0; line-height: 1.65; }
+
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+    .project-card {
+      padding: 28px; border-radius: 16px; background: var(--card);
+      border: 1px solid var(--border); transition: all .3s ease;
+      display: flex; flex-direction: column; height: 100%;
+    }
+    .project-card:hover {
+      background: var(--card-hover); border-color: var(--gold-mid);
+      transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    }
+    .project-bar { width: 36px; height: 4px; border-radius: 2px; margin-bottom: 20px; }
+    .project-title { font-size: 19px; font-weight: 700; color: var(--white); margin: 0 0 12px; line-height: 1.3; }
+    .project-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 20px; flex: 1; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .project-tag {
+      font-family: var(--mono); font-size: 11px; padding: 4px 10px;
+      border-radius: 6px; background: var(--gold-dim); color: var(--gold); font-weight: 500;
+    }
+    .project-link {
+      font-size: 13px; font-weight: 600; color: var(--gold);
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: gap .2s;
+    }
+    .project-link:hover { gap: 10px; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .skill-card {
+      padding: 22px; border-radius: 14px; background: var(--card);
+      border: 1px solid var(--border); transition: border-color .2s;
+    }
+    .skill-card:hover { border-color: var(--gold-mid); }
+    .skill-cat { font-family: var(--mono); font-size: 12px; color: var(--gold); margin: 0 0 14px; letter-spacing: .5px; font-weight: 600; }
+    .skill-items { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-item {
+      font-size: 13px; padding: 5px 12px; border-radius: 8px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border); color: var(--text);
+    }
+
+    .contact { text-align: center; max-width: 700px; }
+    .contact-desc { font-size: 16px; color: var(--muted); line-height: 1.7; margin: 0 0 36px; }
+    .contact-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    footer { padding: 28px; text-align: center; border-top: 1px solid var(--border); }
+    footer p { font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 0; }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">BK<span>.</span></a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.pdf" target="_blank" class="nav-resume">Resume</a>
+    </div>
+    <button class="nav-hamburger" onclick="document.querySelector('.nav-mobile').classList.toggle('open')">☰</button>
+  </div>
+  <div class="nav-mobile">
+    <a href="#about" onclick="this.parentElement.classList.remove('open')">About</a>
+    <a href="#experience" onclick="this.parentElement.classList.remove('open')">Experience</a>
+    <a href="#projects" onclick="this.parentElement.classList.remove('open')">Projects</a>
+    <a href="#skills" onclick="this.parentElement.classList.remove('open')">Skills</a>
+    <a href="#contact" onclick="this.parentElement.classList.remove('open')">Contact</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-orb1"></div>
+  <div class="hero-orb2"></div>
+  <div class="hero-content" id="heroContent">
+    <div><p class="hero-label">Hey, I'm</p></div>
+    <div><h1 class="hero-name">Bryan Kwan<span>.</span></h1></div>
+    <div><h2 class="hero-tagline">I turn data into decisions.</h2></div>
+    <div><p class="hero-desc">Analytics grad student at the University of Toledo, building dashboards, valuation models, and data pipelines across sports and business. Currently an Analytics Intern with UToledo Athletics.</p></div>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-gold">View Projects</a>
+      <a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="section-head reveal">
+    <p class="section-label">01</p>
+    <h2 class="section-title">About Me<span>.</span></h2>
+    <div class="section-bar"></div>
+  </div>
+  <div class="about-grid">
+    <div class="about-text reveal" style="transition-delay:.1s">
+      <p>I'm a graduate student at the <span class="hl">University of Toledo</span> finishing my M.S. in Business Analytics with a concentration in Marketing. I also hold a B.S. in Marketing &amp; Professional Sales — graduated <span class="gold">Summa Cum Laude</span> with a 3.94 GPA.</p>
+      <p>My work sits at the intersection of analytics, business strategy, and sports. Whether it's building valuation models for NCAA rosters, engineering SQL pipelines for revenue analytics, or designing Power BI dashboards for executive visibility — I'm focused on turning raw data into something leadership can actually act on.</p>
+      <p>Outside of analytics I speak four languages (English, Mandarin, Cantonese, and Malay) and I'm always looking for new problems to solve with data.</p>
+    </div>
+    <div class="reveal" style="transition-delay:.25s">
+      <div class="edu-card">
+        <p class="edu-date">Aug 2024 – May 2026</p>
+        <p class="edu-degree">M.S. Business Analytics</p>
+        <p class="edu-school">University of Toledo · GPA: 4.0</p>
+        <p class="edu-note">Concentration in Marketing</p>
+      </div>
+      <div class="edu-card">
+        <p class="edu-date">Aug 2021 – May 2024</p>
+        <p class="edu-degree">B.S. Marketing & Professional Sales</p>
+        <p class="edu-school">University of Toledo · GPA: 3.94</p>
+        <p class="edu-note">Summa Cum Laude · Phi Kappa Phi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="experience">
+  <div class="section-head reveal">
+    <p class="section-label">02</p>
+    <h2 class="section-title">Experience<span>.</span></h2>
+    <div class="section-bar"></div>
+  </div>
+
+  <div class="exp-item open reveal" style="transition-delay:.05s" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div>
+        <p class="exp-role">Data Science & Sports Analytics Intern</p>
+        <p class="exp-meta">University of Toledo Athletics · Toledo, OH</p>
+      </div>
+      <p class="exp-date">Jan 2026 – Present</p>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullets">
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Support Athletics leadership in financial and performance analytics — revenue optimization, resource allocation, and ROI of student-athlete benefit investments.</p></div>
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Develop dashboards and analytical reports to track KPIs across ticket sales, operations, and athletics performance.</p></div>
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Built and refined a regression model in KNIME to identify key predictors of WS/40, removing multicollinearity and creating a weighted scoring framework for transfer portal evaluation.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal" style="transition-delay:.1s" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div>
+        <p class="exp-role">Market Analyst</p>
+        <p class="exp-meta">Modern Builders Supply · Toledo, OH</p>
+      </div>
+      <p class="exp-date">May 2025 – Jul 2025</p>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullets">
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Led financial and performance analytics across 10,000+ SKUs, supporting leadership decisions impacting multi-million-dollar revenue streams.</p></div>
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Engineered SQL queries and Excel models for monthly variance analysis and KPI tracking, reducing manual reporting effort by 40%.</p></div>
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Built Power BI dashboards to monitor revenue performance, cost drivers, and operational efficiency across departments.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal" style="transition-delay:.15s" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div>
+        <p class="exp-role">E-Commerce Specialist</p>
+        <p class="exp-meta">Modern Builders Supply · Toledo, OH</p>
+      </div>
+      <p class="exp-date">Oct 2024 – May 2025</p>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullets">
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Analyzed ecommerce revenue and expense data across Walmart and eBay, contributing to a 30% YoY increase in online sales.</p></div>
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Automated recurring reports using Excel and Power Query, saving 10+ hours per week.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal" style="transition-delay:.2s" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div>
+        <p class="exp-role">Marketing Intern</p>
+        <p class="exp-meta">Chartwells Compass Group · Toledo, OH</p>
+      </div>
+      <p class="exp-date">Aug 2023 – Jul 2024</p>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullets">
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Conducted digital marketing and engagement analysis across social and on-campus channels, driving a 15% increase in engagement.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="exp-item reveal" style="transition-delay:.25s" onclick="toggleExp(this)">
+    <div class="exp-header">
+      <div>
+        <p class="exp-role">Sales & Marketing Intern</p>
+        <p class="exp-meta">Greek House Apparel · Jacksonville, FL</p>
+      </div>
+      <p class="exp-date">May 2023 – Aug 2023</p>
+    </div>
+    <div class="exp-body">
+      <div class="exp-bullets">
+        <div class="exp-bullet"><span class="exp-bullet-dot">▸</span><p>Analyzed CRM and outreach performance data to identify high-potential prospects, generating $300+ in new sales within one cycle.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="projects">
+  <div class="section-head reveal">
+    <p class="section-label">03</p>
+    <h2 class="section-title">Projects<span>.</span></h2>
+    <div class="section-bar"></div>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card reveal" style="transition-delay:.05s">
+      <div class="project-bar" style="background:#FFD200"></div>
+      <h3 class="project-title">NCAA Basketball Scouting Dashboard</h3>
+      <p class="project-desc">A live web dashboard that pulls NCAA MBB/WBB player stats from Google Sheets and runs weighted scoring, exponential salary valuation, percentile-based archetypes, and fit analysis — all client-side. Players are ranked, tagged with roles, and valued against configurable market parameters in real time.</p>
+      <div class="project-tags">
+        <span class="project-tag">HTML/CSS/JS</span>
+        <span class="project-tag">Google Sheets API</span>
+        <span class="project-tag">GitHub Pages</span>
+      </div>
+      <a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" class="project-link">Live Demo <span>→</span></a>
+    </div>
+    <div class="project-card reveal" style="transition-delay:.15s">
+      <div class="project-bar" style="background:#5ed1a7"></div>
+      <h3 class="project-title">Sports Analytics & Roster Valuation Model</h3>
+      <p class="project-desc">Regression models identifying key predictors of WS/40 through coefficient analysis and VIF-based multicollinearity testing. Position-specific scoring frameworks for guards and bigs used for transfer portal and trade candidate evaluation.</p>
+      <div class="project-tags">
+        <span class="project-tag">KNIME</span>
+        <span class="project-tag">Regression</span>
+        <span class="project-tag">UToledo Athletics</span>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:.25s">
+      <div class="project-bar" style="background:#ffe36a"></div>
+      <h3 class="project-title">NBA Player Salary Valuation Model</h3>
+      <p class="project-desc">Predictive model using 2022–23 NBA data (470+ players) to evaluate salary ROI. Built interactive Power BI dashboards for efficiency vs. salary distributions and delivered a 7,000-word analytical report on salary optimization strategies.</p>
+      <div class="project-tags">
+        <span class="project-tag">Excel</span>
+        <span class="project-tag">Power Query</span>
+        <span class="project-tag">Power BI</span>
+        <span class="project-tag">KNIME</span>
+      </div>
+    </div>
+    <div class="project-card reveal" style="transition-delay:.35s">
+      <div class="project-bar" style="background:#a8b4ff"></div>
+      <h3 class="project-title">Customer Segmentation & Cluster Analysis</h3>
+      <p class="project-desc">K-Means clustering on customer satisfaction data segmented by delivery speed, price flexibility, and product quality. Produced cluster visualizations and actionable insights for targeted marketing and operational improvements.</p>
+      <div class="project-tags">
+        <span class="project-tag">SAS Viya</span>
+        <span class="project-tag">K-Means</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="skills">
+  <div class="section-head reveal">
+    <p class="section-label">04</p>
+    <h2 class="section-title">Skills<span>.</span></h2>
+    <div class="section-bar"></div>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card reveal" style="transition-delay:.05s">
+      <p class="skill-cat">Programming & Data</p>
+      <div class="skill-items">
+        <span class="skill-item">Python</span><span class="skill-item">SQL</span>
+        <span class="skill-item">HTML/CSS/JS</span><span class="skill-item">R</span>
+        <span class="skill-item">Power Query</span><span class="skill-item">KNIME</span>
+        <span class="skill-item">SPSS</span>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="transition-delay:.1s">
+      <p class="skill-cat">Analytics & Visualization</p>
+      <div class="skill-items">
+        <span class="skill-item">Power BI</span><span class="skill-item">Tableau</span>
+        <span class="skill-item">SAS</span><span class="skill-item">Google Analytics</span>
+        <span class="skill-item">Excel (Advanced)</span>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="transition-delay:.15s">
+      <p class="skill-cat">Platforms & Tools</p>
+      <div class="skill-items">
+        <span class="skill-item">Salesforce</span><span class="skill-item">HubSpot</span>
+        <span class="skill-item">Shopify</span><span class="skill-item">Adobe Creative Suite</span>
+        <span class="skill-item">WordPress</span>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="transition-delay:.2s">
+      <p class="skill-cat">Concepts</p>
+      <div class="skill-items">
+        <span class="skill-item">ETL Pipelines</span><span class="skill-item">Data Modeling</span>
+        <span class="skill-item">Regression</span><span class="skill-item">Forecasting</span>
+        <span class="skill-item">SEO</span><span class="skill-item">Digital Marketing</span>
+      </div>
+    </div>
+    <div class="skill-card reveal" style="transition-delay:.25s">
+      <p class="skill-cat">Languages</p>
+      <div class="skill-items">
+        <span class="skill-item">English</span><span class="skill-item">Mandarin</span>
+        <span class="skill-item">Cantonese</span><span class="skill-item">Malay</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section contact" id="contact" style="padding-bottom:80px">
+  <div class="reveal">
+    <p class="section-label">05</p>
+    <h2 class="section-title">Get In Touch<span>.</span></h2>
+    <div class="section-bar" style="margin:16px auto 0"></div>
+    <p class="contact-desc" style="margin-top:28px">I'm currently open to full-time opportunities in analytics, data science, and business intelligence. Whether it's a role, a project, or just a conversation — feel free to reach out.</p>
+    <div class="contact-btns">
+      <a href="mailto:bryan.kwan@rockets.utoledo.edu" class="btn-gold">bryan.kwan@rockets.utoledo.edu</a>
+      <a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn →</a>
+    </div>
+  </div>
+</section>
+
+<footer><p>Built by Bryan Kwan · 2025</p></footer>
+
+<script>
+  setTimeout(() => document.getElementById('heroContent').classList.add('loaded'), 100);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  function toggleExp(el) {
+    const wasOpen = el.classList.contains('open');
+    document.querySelectorAll('.exp-item').forEach(item => item.classList.remove('open'));
+    if (!wasOpen) el.classList.add('open');
+  }
+</script>
+</body>
+</html>
