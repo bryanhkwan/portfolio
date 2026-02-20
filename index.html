@@ -1,398 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Bryan Kwan &mdash; Analytics Portfolio</title>
-  <meta name="description" content="Bryan Kwan &mdash; Data Analytics, Sports Analytics, Dashboard Development. University of Toledo."/>
-  <link rel="preconnect" href="https://api.fontshare.com"/>
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800,900&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
-  <style>
-    :root{--bg:#0a0f1a;--card:#111827;--card-hover:#161f33;--border:#1e293b;--border-light:#2a3650;--gold:#FFD200;--gold-dim:rgba(255,210,0,.12);--gold-mid:rgba(255,210,0,.35);--text:#e8ecf4;--muted:#8997b0;--white:#fff;--font:'Satoshi','DM Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code','SF Mono',monospace}
-    *,*::before,*::after{box-sizing:border-box}
-    html{scroll-behavior:smooth;scroll-padding-top:80px}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
-    ::selection{background:rgba(255,210,0,.25);color:#fff}
-    ::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--border-light)}
-    a{color:inherit}
-
-    .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid transparent;transition:all .35s ease}
-    nav.scrolled{background:rgba(10,15,26,.92);backdrop-filter:blur(18px);border-bottom-color:var(--border)}
-    .nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;align-items:center;height:64px}
-    .nav-logo{text-decoration:none;color:var(--gold);font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:1px}
-    .nav-logo span{color:var(--muted)}
-    .nav-links{display:flex;gap:32px;align-items:center}
-    .nav-links a{text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--muted);transition:color .2s}
-    .nav-links a:hover{color:var(--gold)}
-    .nav-resume{font-family:var(--mono)!important;font-size:12px!important;font-weight:700!important;padding:8px 18px!important;border-radius:8px;border:1px solid var(--gold-mid)!important;color:var(--gold)!important;transition:background .2s}
-    .nav-resume:hover{background:var(--gold-dim)}
-    .nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--gold);font-size:24px;padding:4px}
-    .nav-mobile{display:none}
-    @media(max-width:768px){
-      .nav-links{display:none!important}
-      .nav-hamburger{display:block!important}
-      .nav-mobile.open{display:flex;flex-direction:column;gap:16px;background:rgba(10,15,26,.97);border-top:1px solid var(--border);padding:16px 28px 24px}
-      .nav-mobile a{text-decoration:none;font-size:15px;font-weight:600;color:var(--muted)}
-      .about-grid{grid-template-columns:1fr!important}
-    }
-
-    /* HERO */
-    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 28px 80px}
-    .hero-orb1{position:absolute;top:-20%;right:-10%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,0,.06) 0%,transparent 70%);pointer-events:none}
-    .hero-orb2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,209,167,.04) 0%,transparent 70%);pointer-events:none}
-    .hero-content{max-width:720px;width:100%;position:relative;z-index:1}
-    .hero-content>div{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.22,1,.36,1)}
-    .hero-content.loaded>div{opacity:1;transform:translateY(0)}
-    .hero-content>div:nth-child(1){transition-delay:.1s}
-    .hero-content>div:nth-child(2){transition-delay:.25s}
-    .hero-content>div:nth-child(3){transition-delay:.4s}
-    .hero-content>div:nth-child(4){transition-delay:.55s}
-    .hero-content>div:nth-child(5){transition-delay:.7s}
-    .hero-label{font-family:var(--mono);font-size:14px;color:var(--gold);margin-bottom:16px;letter-spacing:1.5px}
-    .hero-name{font-size:clamp(42px,8vw,72px);font-weight:800;line-height:1.05;margin:0 0 20px;color:var(--white);letter-spacing:-1px}
-    .hero-name span{color:var(--gold)}
-    .hero-tagline{font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--muted);margin:0 0 28px;line-height:1.35}
-    .hero-desc{font-size:16px;color:var(--muted);line-height:1.7;max-width:540px;margin:0 0 36px}
-    .hero-btns{display:flex;gap:16px;flex-wrap:wrap}
-
-    /* BUTTONS */
-    .btn-gold{text-decoration:none;font-size:14px;font-weight:700;padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6be00);color:#0a0f1a;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(255,210,0,.2);transition:transform .2s,box-shadow .2s;display:inline-block}
-    .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,210,0,.3)}
-    .btn-outline{text-decoration:none;font-size:14px;font-weight:600;padding:13px 28px;border-radius:10px;background:transparent;color:var(--text);border:1px solid var(--border-light);cursor:pointer;transition:all .2s;display:inline-block}
-    .btn-outline:hover{border-color:var(--gold-mid);color:var(--gold)}
-    .btn-sm{font-size:12px;padding:8px 16px;border-radius:8px}
-
-    /* SECTIONS */
-    .section{padding:100px 28px;max-width:1100px;margin:0 auto}
-    .section-label{font-family:var(--mono);font-size:13px;color:var(--gold);margin-bottom:10px;letter-spacing:1.2px}
-    .section-title{font-size:clamp(28px,5vw,40px);font-weight:800;color:var(--white);margin:0;letter-spacing:-.5px}
-    .section-title span{color:var(--gold)}
-    .section-bar{width:48px;height:3px;background:var(--gold);border-radius:2px;margin-top:16px}
-    .section-head{margin-bottom:48px}
-
-    /* ABOUT */
-    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-    .about-text{font-size:15px;color:var(--muted);line-height:1.8}
-    .about-text p:first-child{margin-top:0}
-    .about-text .hl{color:var(--text);font-weight:600}
-    .about-text .gold{color:var(--gold)}
-    .edu-card{padding:20px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s;margin-bottom:16px}
-    .edu-card:last-child{margin-bottom:0}
-    .edu-card:hover{border-color:var(--gold-mid)}
-    .edu-date{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 6px;letter-spacing:.8px}
-    .edu-degree{font-size:16px;font-weight:700;color:var(--white);margin:0 0 4px}
-    .edu-school{font-size:13px;color:var(--muted);margin:0 0 6px}
-    .edu-note{font-size:12px;color:var(--muted);margin:0;font-style:italic}
-
-    /* EXPERIENCE */
-    .exp-item{border-radius:14px;border:1px solid var(--border);transition:all .3s ease;overflow:hidden;cursor:pointer;margin-bottom:12px}
-    .exp-item:last-child{margin-bottom:0}
-    .exp-item.open{border-color:var(--gold-mid);background:var(--card)}
-    .exp-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-    .exp-role{font-size:16px;font-weight:700;color:var(--white);margin:0}
-    .exp-meta{font-size:13px;color:var(--muted);margin:4px 0 0}
-    .exp-date{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0;white-space:nowrap}
-    .exp-body{max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
-    .exp-item.open .exp-body{max-height:800px;opacity:1}
-    .exp-bullets{padding:0 22px 20px;display:flex;flex-direction:column;gap:10px}
-    .exp-bullet{display:flex;gap:10px;align-items:flex-start}
-    .exp-bullet-dot{color:var(--gold);font-size:10px;margin-top:6px;flex-shrink:0}
-    .exp-bullet p{font-size:14px;color:var(--muted);margin:0;line-height:1.65}
-    .exp-footer{padding:0 22px 18px}
-
-    /* REC BADGE */
-    .rec-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;background:rgba(94,209,167,.08);border:1px solid rgba(94,209,167,.25);font-size:12px;font-weight:600;color:#5ed1a7;text-decoration:none;transition:all .2s;cursor:pointer}
-    .rec-badge:hover{background:rgba(94,209,167,.15);border-color:rgba(94,209,167,.45)}
-    .rec-badge svg{width:14px;height:14px;fill:currentColor}
-
-    /* PROJECTS */
-    .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-    .project-card{padding:28px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all .3s ease;display:flex;flex-direction:column;height:100%}
-    .project-card:hover{background:var(--card-hover);border-color:var(--gold-mid);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-    .project-bar{width:36px;height:4px;border-radius:2px;margin-bottom:20px}
-    .project-title{font-size:19px;font-weight:700;color:var(--white);margin:0 0 12px;line-height:1.3}
-    .project-desc{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;flex:1}
-    .project-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-    .project-tag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;background:var(--gold-dim);color:var(--gold);font-weight:500}
-    .project-link{font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
-    .project-link:hover{gap:10px}
-
-    /* SKILLS */
-    .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-    .skill-card{padding:22px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s}
-    .skill-card:hover{border-color:var(--gold-mid)}
-    .skill-cat{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0 0 14px;letter-spacing:.5px;font-weight:600}
-    .skill-items{display:flex;flex-wrap:wrap;gap:8px}
-    .skill-item{font-size:13px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text)}
-
-    /* CONTACT */
-    .contact{text-align:center;max-width:700px}
-    .contact-desc{font-size:16px;color:var(--muted);line-height:1.7;margin:0 0 36px}
-    .contact-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-
-    footer{padding:28px;text-align:center;border-top:1px solid var(--border)}
-    footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Bryan Kwan - Analytics Portfolio</title>
+<meta name="description" content="Bryan Kwan - Data Analytics, Sports Analytics, Dashboard Development. University of Toledo."/>
+<link rel="preconnect" href="https://api.fontshare.com"/>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800,900&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#0a0f1a;--card:#111827;--card-hover:#161f33;--border:#1e293b;--border-light:#2a3650;--gold:#FFD200;--gold-dim:rgba(255,210,0,.12);--gold-mid:rgba(255,210,0,.35);--text:#e8ecf4;--muted:#8997b0;--white:#fff;--font:'Satoshi','DM Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code','SF Mono',monospace}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
+::selection{background:rgba(255,210,0,.25);color:#fff}
+::-webkit-scrollbar{width:8px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+a{color:inherit}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid transparent;transition:all .35s ease}
+nav.scrolled{background:rgba(10,15,26,.92);backdrop-filter:blur(18px);border-bottom-color:var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;align-items:center;height:64px}
+.nav-logo{text-decoration:none;color:var(--gold);font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:1px}
+.nav-logo em{color:var(--muted);font-style:normal}
+.nav-links{display:flex;gap:32px;align-items:center}
+.nav-links a{text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+.nav-resume{font-family:var(--mono)!important;font-size:12px!important;font-weight:700!important;padding:8px 18px!important;border-radius:8px;border:1px solid var(--gold-mid)!important;color:var(--gold)!important;transition:background .2s}
+.nav-resume:hover{background:var(--gold-dim)}
+.nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--gold);font-size:24px;padding:4px}
+.nav-mobile{display:none}
+@media(max-width:768px){.nav-links{display:none!important}.nav-hamburger{display:block!important}.nav-mobile.open{display:flex;flex-direction:column;gap:16px;background:rgba(10,15,26,.97);border-top:1px solid var(--border);padding:16px 28px 24px}.nav-mobile a{text-decoration:none;font-size:15px;font-weight:600;color:var(--muted)}.about-grid{grid-template-columns:1fr!important}}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 28px 80px}
+.hero-orb1{position:absolute;top:-20%;right:-10%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,0,.06) 0%,transparent 70%);pointer-events:none}
+.hero-orb2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,209,167,.04) 0%,transparent 70%);pointer-events:none}
+.hero-content{max-width:720px;width:100%;position:relative;z-index:1}
+.hero-content>div{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.22,1,.36,1)}
+.hero-content.loaded>div{opacity:1;transform:translateY(0)}
+.hero-content>div:nth-child(1){transition-delay:.1s}
+.hero-content>div:nth-child(2){transition-delay:.25s}
+.hero-content>div:nth-child(3){transition-delay:.4s}
+.hero-content>div:nth-child(4){transition-delay:.55s}
+.hero-content>div:nth-child(5){transition-delay:.7s}
+.hero-label{font-family:var(--mono);font-size:14px;color:var(--gold);margin-bottom:16px;letter-spacing:1.5px}
+.hero-name{font-size:clamp(42px,8vw,72px);font-weight:800;line-height:1.05;margin:0 0 20px;color:var(--white);letter-spacing:-1px}
+.hero-name em{color:var(--gold);font-style:normal}
+.hero-tagline{font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--muted);margin:0 0 28px;line-height:1.35}
+.hero-desc{font-size:16px;color:var(--muted);line-height:1.7;max-width:540px;margin:0 0 36px}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn-gold{text-decoration:none;font-size:14px;font-weight:700;padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6be00);color:#0a0f1a;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(255,210,0,.2);transition:transform .2s,box-shadow .2s;display:inline-block}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,210,0,.3)}
+.btn-outline{text-decoration:none;font-size:14px;font-weight:600;padding:13px 28px;border-radius:10px;background:transparent;color:var(--text);border:1px solid var(--border-light);cursor:pointer;transition:all .2s;display:inline-block}
+.btn-outline:hover{border-color:var(--gold-mid);color:var(--gold)}
+.section{padding:100px 28px;max-width:1100px;margin:0 auto}
+.section-label{font-family:var(--mono);font-size:13px;color:var(--gold);margin-bottom:10px;letter-spacing:1.2px}
+.section-title{font-size:clamp(28px,5vw,40px);font-weight:800;color:var(--white);margin:0;letter-spacing:-.5px}
+.section-title em{color:var(--gold);font-style:normal}
+.section-bar{width:48px;height:3px;background:var(--gold);border-radius:2px;margin-top:16px}
+.section-head{margin-bottom:48px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+.about-text{font-size:15px;color:var(--muted);line-height:1.8}
+.about-text p:first-child{margin-top:0}
+.about-text b{color:var(--text);font-weight:600}
+.about-text i{color:var(--gold);font-style:normal}
+.edu-card{padding:20px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s;margin-bottom:16px}
+.edu-card:last-child{margin-bottom:0}
+.edu-card:hover{border-color:var(--gold-mid)}
+.edu-date{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 6px;letter-spacing:.8px}
+.edu-degree{font-size:16px;font-weight:700;color:var(--white);margin:0 0 4px}
+.edu-school{font-size:13px;color:var(--muted);margin:0 0 6px}
+.edu-note{font-size:12px;color:var(--muted);margin:0;font-style:italic}
+.exp-item{border-radius:14px;border:1px solid var(--border);transition:all .3s ease;overflow:hidden;cursor:pointer;margin-bottom:12px}
+.exp-item:last-child{margin-bottom:0}
+.exp-item.open{border-color:var(--gold-mid);background:var(--card)}
+.exp-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.exp-role{font-size:16px;font-weight:700;color:var(--white);margin:0}
+.exp-meta{font-size:13px;color:var(--muted);margin:4px 0 0}
+.exp-date{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0;white-space:nowrap}
+.exp-body{max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
+.exp-item.open .exp-body{max-height:800px;opacity:1}
+.exp-bullets{padding:0 22px 20px;display:flex;flex-direction:column;gap:10px}
+.exp-bullet{display:flex;gap:10px;align-items:flex-start}
+.exp-bullet-dot{color:var(--gold);font-size:10px;margin-top:6px;flex-shrink:0}
+.exp-bullet p{font-size:14px;color:var(--muted);margin:0;line-height:1.65}
+.exp-footer{padding:0 22px 18px}
+.rec-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;background:rgba(94,209,167,.08);border:1px solid rgba(94,209,167,.25);font-size:12px;font-weight:600;color:#5ed1a7;text-decoration:none;transition:all .2s;cursor:pointer}
+.rec-badge:hover{background:rgba(94,209,167,.15);border-color:rgba(94,209,167,.45)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.project-card{padding:28px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all .3s ease;display:flex;flex-direction:column;height:100%}
+.project-card:hover{background:var(--card-hover);border-color:var(--gold-mid);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.project-bar{width:36px;height:4px;border-radius:2px;margin-bottom:20px}
+.project-title{font-size:19px;font-weight:700;color:var(--white);margin:0 0 12px;line-height:1.3}
+.project-desc{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;flex:1}
+.project-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.project-tag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;background:var(--gold-dim);color:var(--gold);font-weight:500}
+.project-link{font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
+.project-link:hover{gap:10px}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.skill-card{padding:22px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s}
+.skill-card:hover{border-color:var(--gold-mid)}
+.skill-cat{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0 0 14px;letter-spacing:.5px;font-weight:600}
+.skill-items{display:flex;flex-wrap:wrap;gap:8px}
+.skill-item{font-size:13px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text)}
+.contact{text-align:center;max-width:700px}
+.contact-desc{font-size:16px;color:var(--muted);line-height:1.7;margin:0 0 36px}
+.contact-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+footer{padding:28px;text-align:center;border-top:1px solid var(--border)}
+footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
+</style>
 </head>
 <body>
 
 <nav id="navbar">
-  <div class="nav-inner">
-    <a href="#hero" class="nav-logo">BK<span>.</span></a>
-    <div class="nav-links">
-      <a href="#about">About</a>
-      <a href="#experience">Experience</a>
-      <a href="#projects">Projects</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
-      <a href="resume.pdf" target="_blank" class="nav-resume">Resume</a>
-    </div>
-    <button class="nav-hamburger" onclick="document.querySelector('.nav-mobile').classList.toggle('open')">&#9776;</button>
-  </div>
-  <div class="nav-mobile">
-    <a href="#about" onclick="this.parentElement.classList.remove('open')">About</a>
-    <a href="#experience" onclick="this.parentElement.classList.remove('open')">Experience</a>
-    <a href="#projects" onclick="this.parentElement.classList.remove('open')">Projects</a>
-    <a href="#skills" onclick="this.parentElement.classList.remove('open')">Skills</a>
-    <a href="#contact" onclick="this.parentElement.classList.remove('open')">Contact</a>
-  </div>
+<div class="nav-inner">
+<a href="#hero" class="nav-logo">BK<em>.</em></a>
+<div class="nav-links">
+<a href="#about">About</a>
+<a href="#experience">Experience</a>
+<a href="#projects">Projects</a>
+<a href="#skills">Skills</a>
+<a href="#contact">Contact</a>
+<a href="resume.pdf" target="_blank" class="nav-resume">Resume</a>
+</div>
+<button class="nav-hamburger" id="hamBtn">&#9776;</button>
+</div>
+<div class="nav-mobile" id="mobileNav">
+<a href="#about" class="mob-link">About</a>
+<a href="#experience" class="mob-link">Experience</a>
+<a href="#projects" class="mob-link">Projects</a>
+<a href="#skills" class="mob-link">Skills</a>
+<a href="#contact" class="mob-link">Contact</a>
+</div>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-orb1"></div>
-  <div class="hero-orb2"></div>
-  <div class="hero-content" id="heroContent">
-    <div><p class="hero-label">Hey, I'm</p></div>
-    <div><h1 class="hero-name">Bryan Kwan<span>.</span></h1></div>
-    <div><h2 class="hero-tagline">I turn data into decisions.</h2></div>
-    <div><p class="hero-desc">Analytics grad student at the University of Toledo, building dashboards, valuation models, and data pipelines across sports and business. Currently an Analytics Intern with UToledo Athletics.</p></div>
-    <div class="hero-btns">
-      <a href="#projects" class="btn-gold">View Projects</a>
-      <a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
-    </div>
-  </div>
+<div class="hero-orb1"></div>
+<div class="hero-orb2"></div>
+<div class="hero-content" id="heroContent">
+<div><p class="hero-label">Hey, I'm</p></div>
+<div><h1 class="hero-name">Bryan Kwan<em>.</em></h1></div>
+<div><h2 class="hero-tagline">I turn data into decisions.</h2></div>
+<div><p class="hero-desc">Analytics grad student at the University of Toledo, building dashboards, valuation models, and data pipelines across sports and business. Currently an Analytics Intern with UToledo Athletics.</p></div>
+<div class="hero-btns">
+<a href="#projects" class="btn-gold">View Projects</a>
+<a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
+</div>
+</div>
 </section>
 
-<!-- ABOUT -->
 <section class="section" id="about">
-  <div class="section-head reveal"><p class="section-label">01</p><h2 class="section-title">About Me<span>.</span></h2><div class="section-bar"></div></div>
-  <div class="about-grid">
-    <div class="about-text reveal" style="transition-delay:.1s">
-      <p>I'm a graduate student at the <span class="hl">University of Toledo</span> finishing my M.S. in Business Analytics with a concentration in Marketing. I also hold a B.S. in Marketing &amp; Professional Sales &#8212; graduated <span class="gold">Summa Cum Laude</span> with a 3.94 GPA.</p>
-      <p>My work sits at the intersection of analytics, business strategy, and sports. Whether it's building valuation models for NCAA rosters, engineering SQL pipelines for revenue analytics, or designing Power BI dashboards for executive visibility &#8212; I'm focused on turning raw data into something leadership can actually act on.</p>
-      <p>Outside of analytics I speak four languages (English, Mandarin, Cantonese, and Malay) and I'm always looking for new problems to solve with data.</p>
-    </div>
-    <div class="reveal" style="transition-delay:.25s">
-      <div class="edu-card"><p class="edu-date">Aug 2024 &#8211; May 2026</p><p class="edu-degree">M.S. Business Analytics</p><p class="edu-school">University of Toledo &#183; GPA: 4.0</p><p class="edu-note">Concentration in Marketing</p></div>
-      <div class="edu-card"><p class="edu-date">Aug 2021 &#8211; May 2024</p><p class="edu-degree">B.S. Marketing &amp; Professional Sales</p><p class="edu-school">University of Toledo &#183; GPA: 3.94</p><p class="edu-note">Summa Cum Laude &#183; Phi Kappa Phi</p></div>
-    </div>
-  </div>
+<div class="section-head reveal"><p class="section-label">01</p><h2 class="section-title">About Me<em>.</em></h2><div class="section-bar"></div></div>
+<div class="about-grid">
+<div class="about-text reveal" style="transition-delay:.1s">
+<p>I'm a graduate student at the <b>University of Toledo</b> finishing my M.S. in Business Analytics with a concentration in Marketing. I also hold a B.S. in Marketing and Professional Sales &#8212; graduated <i>Summa Cum Laude</i> with a 3.94 GPA.</p>
+<p>My work sits at the intersection of analytics, business strategy, and sports. Whether it's building valuation models for NCAA rosters, engineering SQL pipelines for revenue analytics, or designing Power BI dashboards for executive visibility &#8212; I'm focused on turning raw data into something leadership can actually act on.</p>
+<p>Outside of analytics I speak four languages (English, Mandarin, Cantonese, and Malay) and I'm always looking for new problems to solve with data.</p>
+</div>
+<div class="reveal" style="transition-delay:.25s">
+<div class="edu-card"><p class="edu-date">Aug 2024 &#8211; May 2026</p><p class="edu-degree">M.S. Business Analytics</p><p class="edu-school">University of Toledo &#183; GPA: 4.0</p><p class="edu-note">Concentration in Marketing</p></div>
+<div class="edu-card"><p class="edu-date">Aug 2021 &#8211; May 2024</p><p class="edu-degree">B.S. Marketing and Professional Sales</p><p class="edu-school">University of Toledo &#183; GPA: 3.94</p><p class="edu-note">Summa Cum Laude &#183; Phi Kappa Phi</p></div>
+</div>
+</div>
 </section>
 
-<!-- EXPERIENCE -->
 <section class="section" id="experience">
-  <div class="section-head reveal"><p class="section-label">02</p><h2 class="section-title">Experience<span>.</span></h2><div class="section-bar"></div></div>
+<div class="section-head reveal"><p class="section-label">02</p><h2 class="section-title">Experience<em>.</em></h2><div class="section-bar"></div></div>
 
-  <!-- 1 - UToledo Athletics -->
-  <div class="exp-item open reveal" style="transition-delay:.04s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Data Science &amp; Sports Analytics Intern</p><p class="exp-meta">University of Toledo Athletics &#183; Toledo, OH</p></div><p class="exp-date">Feb 2026 &#8211; Present</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Partner with senior athletics leadership to deliver analytics that support operations, revenue strategy, and student-athlete performance decisions.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Build and maintain dashboards + KPI reporting for operational efficiency, fan engagement, and revenue growth initiatives.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Develop regression-based player evaluation models using advanced efficiency metrics; apply feature selection and multicollinearity reduction to improve interpretability and reliability.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Design constrained optimization / integer programming frameworks to evaluate roster construction scenarios under budget and structural constraints.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Translate complex analysis into clear recommendations for non-technical stakeholders, driving faster decision-making and alignment.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item open reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Data Science and Sports Analytics Intern</p><p class="exp-meta">University of Toledo Athletics &#183; Toledo, OH</p></div><p class="exp-date">Feb 2026 &#8211; Present</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Partner with senior athletics leadership to deliver analytics that support operations, revenue strategy, and student-athlete performance decisions.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Build and maintain dashboards + KPI reporting for operational efficiency, fan engagement, and revenue growth initiatives.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Develop regression-based player evaluation models using advanced efficiency metrics; apply feature selection and multicollinearity reduction to improve interpretability and reliability.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Design constrained optimization / integer programming frameworks to evaluate roster construction scenarios under budget and structural constraints.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Translate complex analysis into clear recommendations for non-technical stakeholders, driving faster decision-making and alignment.</p></div>
+</div></div>
+</div>
 
-  <!-- 2 - Academic Support -->
-  <div class="exp-item reveal" style="transition-delay:.07s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Academic Support Assistant</p><p class="exp-meta">UToledo Neff College of Business &#183; Toledo, OH</p></div><p class="exp-date">Oct 2025 &#8211; Jan 2026</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported students through data-driven advising workflows (degree audits, prerequisites, registration paths) to improve enrollment accuracy and speed.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Diagnosed student issues, identified root causes, and provided step-by-step system guidance across advising and registration platforms.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated academic policies clearly and consistently, strengthening customer-support style service and issue resolution.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Promoted tutoring, workshops, and student org resources to increase student engagement and retention.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Escalated complex cases efficiently to professional advisors while maintaining documentation and process quality.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Academic Support Assistant</p><p class="exp-meta">UToledo Neff College of Business &#183; Toledo, OH</p></div><p class="exp-date">Oct 2025 &#8211; Jan 2026</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported students through data-driven advising workflows (degree audits, prerequisites, registration paths) to improve enrollment accuracy and speed.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Diagnosed student issues, identified root causes, and provided step-by-step system guidance across advising and registration platforms.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated academic policies clearly and consistently, strengthening customer-support style service and issue resolution.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Promoted tutoring, workshops, and student org resources to increase student engagement and retention.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Escalated complex cases efficiently to professional advisors while maintaining documentation and process quality.</p></div>
+</div></div>
+</div>
 
-  <!-- 3 - MBS Market Analyst -->
-  <div class="exp-item reveal" style="transition-delay:.1s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Market Analyst</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">May 2025 &#8211; Jul 2025</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted competitive market research and pricing analysis to support profitability and marketplace positioning across e-commerce channels.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Analyzed sales trends and customer behavior to identify high-opportunity products and recommend pricing adjustments.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built/maintained competitor tracking systems and recurring reporting to enable faster, data-backed pricing decisions.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Presented market insights and pricing recommendations to senior leadership with clear takeaways and next steps.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Collaborated with purchasing, marketing, and SEO teams to align pricing strategy with demand, promotions, and performance goals.</p></div>
-    </div>
-    <div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 9h4v2h-4v-2zm0 4h4v2h-4v-2zm-2-4h1v2H8v-2zm0 4h1v2H8v-2z"/></svg>Letter of Recommendation from Manager</a></div>
-    </div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Market Analyst</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">May 2025 &#8211; Jul 2025</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted competitive market research and pricing analysis to support profitability and marketplace positioning across e-commerce channels.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Analyzed sales trends and customer behavior to identify high-opportunity products and recommend pricing adjustments.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built/maintained competitor tracking systems and recurring reporting to enable faster, data-backed pricing decisions.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Presented market insights and pricing recommendations to senior leadership with clear takeaways and next steps.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Collaborated with purchasing, marketing, and SEO teams to align pricing strategy with demand, promotions, and performance goals.</p></div>
+</div>
+<div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge">&#128196; Letter of Recommendation from Manager</a></div>
+</div>
+</div>
 
-  <!-- 4 - MBS Ecommerce -->
-  <div class="exp-item reveal" style="transition-delay:.13s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">E-Commerce Specialist</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">Oct 2024 &#8211; May 2025</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Optimized Walmart and eBay listings using market analysis, keyword strategy, and conversion-focused merchandising to improve visibility and sales performance.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove 25%+ YoY Walmart sales growth, including a 120% increase in March 2025 vs. March 2024, by refining selection, pricing, and listing execution.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered consistent MoM growth on eBay through pricing adjustments, product prioritization, and search optimization.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built custom SQL logic to improve internal data workflows and strengthen recommendation/selection decisions.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced actionable insights from marketplace data to support smarter product, pricing, and inventory moves.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated cross-functionally to align channel strategy and improve operational accuracy in catalog management.</p></div>
-    </div>
-    <div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zm-3 9h4v2h-4v-2zm0 4h4v2h-4v-2zm-2-4h1v2H8v-2zm0 4h1v2H8v-2z"/></svg>Letter of Recommendation from Manager</a></div>
-    </div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">E-Commerce Specialist</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">Oct 2024 &#8211; May 2025</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Optimized Walmart and eBay listings using market analysis, keyword strategy, and conversion-focused merchandising to improve visibility and sales performance.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove 25%+ YoY Walmart sales growth, including a 120% increase in March 2025 vs. March 2024, by refining selection, pricing, and listing execution.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered consistent MoM growth on eBay through pricing adjustments, product prioritization, and search optimization.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built custom SQL logic to improve internal data workflows and strengthen recommendation/selection decisions.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced actionable insights from marketplace data to support smarter product, pricing, and inventory moves.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated cross-functionally to align channel strategy and improve operational accuracy in catalog management.</p></div>
+</div>
+<div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge">&#128196; Letter of Recommendation from Manager</a></div>
+</div>
+</div>
 
-  <!-- 5 - Chartwells -->
-  <div class="exp-item reveal" style="transition-delay:.16s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Marketing Intern</p><p class="exp-meta">Compass Group (Chartwells) &#183; Toledo, OH</p></div><p class="exp-date">Aug 2023 &#8211; Jul 2024</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing strategy for national brands and internal concepts through campaign execution, event marketing, and performance tracking.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Helped plan and execute events that improved customer engagement by pairing creative concepts with operational coordination and post-event insights.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed digital communications and content planning to strengthen brand presence and increase student awareness.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced reports and updates for stakeholders by translating engagement and activation outcomes into clear recommendations.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Marketing Intern</p><p class="exp-meta">Compass Group (Chartwells) &#183; Toledo, OH</p></div><p class="exp-date">Aug 2023 &#8211; Jul 2024</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing strategy for national brands and internal concepts through campaign execution, event marketing, and performance tracking.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Helped plan and execute events that improved customer engagement by pairing creative concepts with operational coordination and post-event insights.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed digital communications and content planning to strengthen brand presence and increase student awareness.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced reports and updates for stakeholders by translating engagement and activation outcomes into clear recommendations.</p></div>
+</div></div>
+</div>
 
-  <!-- 6 - Greek House -->
-  <div class="exp-item reveal" style="transition-delay:.19s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Sales &amp; Marketing Intern</p><p class="exp-meta">Greek House &#183; Jacksonville, FL (Remote)</p></div><p class="exp-date">May 2023 &#8211; Aug 2023</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove outbound outreach to decision-makers using organized lead workflows to generate interest in custom apparel solutions.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built relationships with prospects and existing customers through persuasive communication and timely follow-up, strengthening sales pipeline health.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing efforts through content and social updates that improved brand consistency and top-of-funnel engagement.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with internal teams to ensure customer needs were met from discovery to fulfillment, reinforcing retention and satisfaction.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Sales and Marketing Intern</p><p class="exp-meta">Greek House &#183; Jacksonville, FL (Remote)</p></div><p class="exp-date">May 2023 &#8211; Aug 2023</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove outbound outreach to decision-makers using organized lead workflows to generate interest in custom apparel solutions.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built relationships with prospects and existing customers through persuasive communication and timely follow-up, strengthening sales pipeline health.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing efforts through content and social updates that improved brand consistency and top-of-funnel engagement.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with internal teams to ensure customer needs were met from discovery to fulfillment, reinforcing retention and satisfaction.</p></div>
+</div></div>
+</div>
 
-  <!-- 7 - Camp Counselor -->
-  <div class="exp-item reveal" style="transition-delay:.22s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Summer Camp Counselor</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Summers 2023, 2024, 2025</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Led daily program operations for groups of campers by planning activities, managing schedules, and ensuring a safe, structured environment.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Practiced real-time decision-making and problem-solving by de-escalating conflicts and handling behavioral issues with consistency and empathy.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with counselor teams to execute events smoothly, demonstrating leadership, teamwork, and operational discipline.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated clearly with campers and staff to maintain engagement, set expectations, and reinforce positive experiences.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Summer Camp Counselor</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Summers 2023, 2024, 2025</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Led daily program operations for groups of campers by planning activities, managing schedules, and ensuring a safe, structured environment.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Practiced real-time decision-making and problem-solving by de-escalating conflicts and handling behavioral issues with consistency and empathy.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with counselor teams to execute events smoothly, demonstrating leadership, teamwork, and operational discipline.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated clearly with campers and staff to maintain engagement, set expectations, and reinforce positive experiences.</p></div>
+</div></div>
+</div>
 
-  <!-- 8 - Intl Student Assistant -->
-  <div class="exp-item reveal" style="transition-delay:.25s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">International Student Assistant</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Feb 2023 &#8211; May 2023</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported international office operations across recruitment and student services through organized admin processes and service-based communication.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Used digital marketing and content updates to improve engagement across social platforms and support enrollment visibility.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inbox triage and routine communications, ensuring timely responses and a strong service experience for prospective/current students.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">International Student Assistant</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Feb 2023 &#8211; May 2023</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported international office operations across recruitment and student services through organized admin processes and service-based communication.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Used digital marketing and content updates to improve engagement across social platforms and support enrollment visibility.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inbox triage and routine communications, ensuring timely responses and a strong service experience for prospective/current students.</p></div>
+</div></div>
+</div>
 
-  <!-- 9 - Vitals -->
-  <div class="exp-item reveal" style="transition-delay:.28s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Marketing Specialist</p><p class="exp-meta">Vitals Official Enterprise &#183; Hybrid</p></div><p class="exp-date">Mar 2021 &#8211; Feb 2023</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Executed digital marketing initiatives across social and web channels to drive engagement, brand awareness, and sales activity.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted cost and supplier analysis to improve margin efficiency and support better operational decisions.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Performed primary/secondary research to develop customer insight and guide product/service improvements.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Balanced marketing creativity with business analytics by connecting campaigns to measurable goals and performance indicators.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Marketing Specialist</p><p class="exp-meta">Vitals Official Enterprise &#183; Hybrid</p></div><p class="exp-date">Mar 2021 &#8211; Feb 2023</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Executed digital marketing initiatives across social and web channels to drive engagement, brand awareness, and sales activity.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted cost and supplier analysis to improve margin efficiency and support better operational decisions.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Performed primary/secondary research to develop customer insight and guide product/service improvements.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Balanced marketing creativity with business analytics by connecting campaigns to measurable goals and performance indicators.</p></div>
+</div></div>
+</div>
 
-  <!-- 10 - Starbucks -->
-  <div class="exp-item reveal" style="transition-delay:.31s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">Starbucks &#183; Toledo, OH</p></div><p class="exp-date">Aug 2021 &#8211; Sep 2022</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered high-volume customer service while maintaining speed, accuracy, and quality standards in a fast-paced environment.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inventory stocking and station readiness to support smooth operations and reduce service bottlenecks.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built customer loyalty through consistent communication, professionalism, and service recovery.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">Starbucks &#183; Toledo, OH</p></div><p class="exp-date">Aug 2021 &#8211; Sep 2022</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered high-volume customer service while maintaining speed, accuracy, and quality standards in a fast-paced environment.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inventory stocking and station readiness to support smooth operations and reduce service bottlenecks.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built customer loyalty through consistent communication, professionalism, and service recovery.</p></div>
+</div></div>
+</div>
 
-  <!-- 11 - {x} coffee -->
-  <div class="exp-item reveal" style="transition-delay:.34s" onclick="toggleExp(this)">
-    <div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">{x} coffee</p></div><p class="exp-date">Jan 2019 &#8211; Mar 2019</p></div>
-    <div class="exp-body"><div class="exp-bullets">
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Provided personalized customer service by recommending products based on preferences, strengthening repeat business.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Maintained high standards for cleanliness, workflow organization, and drink/food quality.</p></div>
-      <div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Developed strong product knowledge and communication skills through daily customer interaction and service delivery.</p></div>
-    </div></div>
-  </div>
+<div class="exp-item reveal" onclick="toggleExp(this)">
+<div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">{x} coffee</p></div><p class="exp-date">Jan 2019 &#8211; Mar 2019</p></div>
+<div class="exp-body"><div class="exp-bullets">
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Provided personalized customer service by recommending products based on preferences, strengthening repeat business.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Maintained high standards for cleanliness, workflow organization, and drink/food quality.</p></div>
+<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Developed strong product knowledge and communication skills through daily customer interaction and service delivery.</p></div>
+</div></div>
+</div>
 
 </section>
 
-<!-- PROJECTS -->
 <section class="section" id="projects">
-  <div class="section-head reveal"><p class="section-label">03</p><h2 class="section-title">Projects<span>.</span></h2><div class="section-bar"></div></div>
-  <div class="projects-grid">
-    <div class="project-card reveal" style="transition-delay:.05s">
-      <div class="project-bar" style="background:#FFD200"></div>
-      <h3 class="project-title">NCAA Basketball Scouting Dashboard</h3>
-      <p class="project-desc">A live web dashboard that pulls NCAA MBB/WBB player stats from Google Sheets and runs weighted scoring, exponential salary valuation, percentile-based archetypes, and fit analysis &#8212; all client-side in real time.</p>
-      <div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Google Sheets API</span><span class="project-tag">GitHub Pages</span></div>
-      <a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" class="project-link">Live Demo <span>&#8594;</span></a>
-    </div>
-    <div class="project-card reveal" style="transition-delay:.15s">
-      <div class="project-bar" style="background:#5ed1a7"></div>
-      <h3 class="project-title">Sports Analytics &amp; Roster Valuation Model</h3>
-      <p class="project-desc">Regression models identifying key predictors of WS/40 through coefficient analysis and VIF-based multicollinearity testing. Position-specific scoring frameworks for transfer portal evaluation.</p>
-      <div class="project-tags"><span class="project-tag">KNIME</span><span class="project-tag">Regression</span><span class="project-tag">UToledo Athletics</span></div>
-    </div>
-    <div class="project-card reveal" style="transition-delay:.25s">
-      <div class="project-bar" style="background:#ffe36a"></div>
-      <h3 class="project-title">NBA Player Salary Valuation Model</h3>
-      <p class="project-desc">Predictive model using 2022&#8211;23 NBA data (470+ players) to evaluate salary ROI. Interactive Power BI dashboards and a 7,000-word analytical report on salary optimization.</p>
-      <div class="project-tags"><span class="project-tag">Excel</span><span class="project-tag">Power Query</span><span class="project-tag">Power BI</span><span class="project-tag">KNIME</span></div>
-    </div>
-    <div class="project-card reveal" style="transition-delay:.35s">
-      <div class="project-bar" style="background:#a8b4ff"></div>
-      <h3 class="project-title">Customer Segmentation &amp; Cluster Analysis</h3>
-      <p class="project-desc">K-Means clustering on customer satisfaction data segmented by delivery speed, price flexibility, and product quality. Actionable insights for targeted marketing.</p>
-      <div class="project-tags"><span class="project-tag">SAS Viya</span><span class="project-tag">K-Means</span></div>
-    </div>
-  </div>
+<div class="section-head reveal"><p class="section-label">03</p><h2 class="section-title">Projects<em>.</em></h2><div class="section-bar"></div></div>
+<div class="projects-grid">
+<div class="project-card reveal">
+<div class="project-bar" style="background:#FFD200"></div>
+<h3 class="project-title">NCAA Basketball Scouting Dashboard</h3>
+<p class="project-desc">A live web dashboard that pulls NCAA MBB/WBB player stats from Google Sheets and runs weighted scoring, exponential salary valuation, percentile-based archetypes, and fit analysis &#8212; all client-side in real time.</p>
+<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Google Sheets API</span><span class="project-tag">GitHub Pages</span></div>
+<a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" class="project-link">Live Demo &#8594;</a>
+</div>
+<div class="project-card reveal">
+<div class="project-bar" style="background:#5ed1a7"></div>
+<h3 class="project-title">Sports Analytics and Roster Valuation Model</h3>
+<p class="project-desc">Regression models identifying key predictors of WS/40 through coefficient analysis and VIF-based multicollinearity testing. Position-specific scoring frameworks for transfer portal evaluation.</p>
+<div class="project-tags"><span class="project-tag">KNIME</span><span class="project-tag">Regression</span><span class="project-tag">UToledo Athletics</span></div>
+</div>
+<div class="project-card reveal">
+<div class="project-bar" style="background:#ffe36a"></div>
+<h3 class="project-title">NBA Player Salary Valuation Model</h3>
+<p class="project-desc">Predictive model using 2022-23 NBA data (470+ players) to evaluate salary ROI. Interactive Power BI dashboards and a 7,000-word analytical report on salary optimization.</p>
+<div class="project-tags"><span class="project-tag">Excel</span><span class="project-tag">Power Query</span><span class="project-tag">Power BI</span><span class="project-tag">KNIME</span></div>
+</div>
+<div class="project-card reveal">
+<div class="project-bar" style="background:#a8b4ff"></div>
+<h3 class="project-title">Customer Segmentation and Cluster Analysis</h3>
+<p class="project-desc">K-Means clustering on customer satisfaction data segmented by delivery speed, price flexibility, and product quality. Actionable insights for targeted marketing.</p>
+<div class="project-tags"><span class="project-tag">SAS Viya</span><span class="project-tag">K-Means</span></div>
+</div>
+</div>
 </section>
 
-<!-- SKILLS -->
 <section class="section" id="skills">
-  <div class="section-head reveal"><p class="section-label">04</p><h2 class="section-title">Skills<span>.</span></h2><div class="section-bar"></div></div>
-  <div class="skills-grid">
-    <div class="skill-card reveal" style="transition-delay:.05s"><p class="skill-cat">Programming &amp; Data</p><div class="skill-items"><span class="skill-item">Python</span><span class="skill-item">SQL</span><span class="skill-item">HTML/CSS/JS</span><span class="skill-item">R</span><span class="skill-item">Power Query</span><span class="skill-item">KNIME</span><span class="skill-item">SPSS</span></div></div>
-    <div class="skill-card reveal" style="transition-delay:.1s"><p class="skill-cat">Analytics &amp; Visualization</p><div class="skill-items"><span class="skill-item">Power BI</span><span class="skill-item">Tableau</span><span class="skill-item">SAS</span><span class="skill-item">Google Analytics</span><span class="skill-item">Excel (Advanced)</span></div></div>
-    <div class="skill-card reveal" style="transition-delay:.15s"><p class="skill-cat">Platforms &amp; Tools</p><div class="skill-items"><span class="skill-item">Salesforce</span><span class="skill-item">HubSpot</span><span class="skill-item">Shopify</span><span class="skill-item">Adobe Creative Suite</span><span class="skill-item">WordPress</span></div></div>
-    <div class="skill-card reveal" style="transition-delay:.2s"><p class="skill-cat">Concepts</p><div class="skill-items"><span class="skill-item">ETL Pipelines</span><span class="skill-item">Data Modeling</span><span class="skill-item">Regression</span><span class="skill-item">Forecasting</span><span class="skill-item">SEO</span><span class="skill-item">Digital Marketing</span></div></div>
-    <div class="skill-card reveal" style="transition-delay:.25s"><p class="skill-cat">Languages</p><div class="skill-items"><span class="skill-item">English</span><span class="skill-item">Mandarin</span><span class="skill-item">Cantonese</span><span class="skill-item">Malay</span></div></div>
-  </div>
+<div class="section-head reveal"><p class="section-label">04</p><h2 class="section-title">Skills<em>.</em></h2><div class="section-bar"></div></div>
+<div class="skills-grid">
+
+<div class="skill-card reveal"><p class="skill-cat">Advanced Analytics and Modeling</p><div class="skill-items">
+<span class="skill-item">Predictive Modeling</span><span class="skill-item">Regression and ML</span><span class="skill-item">Demand Forecasting</span><span class="skill-item">Pricing Optimization</span><span class="skill-item">Customer Segmentation</span><span class="skill-item">Churn and CLV Modeling</span><span class="skill-item">Scenario Simulation</span><span class="skill-item">Optimization Modeling</span><span class="skill-item">ROI Analysis</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Business and Revenue Analytics</p><div class="skill-items">
+<span class="skill-item">Revenue Forecasting</span><span class="skill-item">Ticket and Dynamic Pricing</span><span class="skill-item">Fan Engagement Analytics</span><span class="skill-item">Market Benchmarking</span><span class="skill-item">Retention Strategy</span><span class="skill-item">Performance KPI Analysis</span><span class="skill-item">Financial and Profitability Analysis</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Programming and Data Tools</p><div class="skill-items">
+<span class="skill-item">Python</span><span class="skill-item">SQL</span><span class="skill-item">R</span><span class="skill-item">KNIME</span><span class="skill-item">SPSS</span><span class="skill-item">HTML</span><span class="skill-item">Power Query</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Data Visualization and BI</p><div class="skill-items">
+<span class="skill-item">Power BI</span><span class="skill-item">Tableau</span><span class="skill-item">Excel (Advanced)</span><span class="skill-item">SAS</span><span class="skill-item">Google Analytics</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Data Engineering and Architecture</p><div class="skill-items">
+<span class="skill-item">Data Modeling</span><span class="skill-item">ETL Processes</span><span class="skill-item">Data Cleaning and Transformation</span><span class="skill-item">Automation Pipelines</span><span class="skill-item">Data Governance Fundamentals</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">AI and Analytics Productivity</p><div class="skill-items">
+<span class="skill-item">ChatGPT</span><span class="skill-item">Claude</span><span class="skill-item">Microsoft Copilot</span><span class="skill-item">Gemini</span><span class="skill-item">AI-assisted SQL and Python</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Marketing Analytics and Digital</p><div class="skill-items">
+<span class="skill-item">SEO Optimization</span><span class="skill-item">Digital Marketing Analytics</span><span class="skill-item">Social Media Analytics</span><span class="skill-item">Content Strategy</span><span class="skill-item">Salesforce</span><span class="skill-item">HubSpot</span><span class="skill-item">Shopify</span><span class="skill-item">Klaviyo</span><span class="skill-item">Prisync</span><span class="skill-item">Hootsuite</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Software and Technical Platforms</p><div class="skill-items">
+<span class="skill-item">Adobe Creative Suite</span><span class="skill-item">Microsoft Office Suite</span><span class="skill-item">Google Workspace</span><span class="skill-item">WordPress</span><span class="skill-item">Arena Simulation</span><span class="skill-item">Microsoft Azure</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Leadership and Strategy</p><div class="skill-items">
+<span class="skill-item">Data Storytelling</span><span class="skill-item">Stakeholder Communication</span><span class="skill-item">Cross-Functional Collaboration</span><span class="skill-item">Strategic Planning</span><span class="skill-item">Process Optimization</span><span class="skill-item">Analytics to Business Decisions</span>
+</div></div>
+
+<div class="skill-card reveal"><p class="skill-cat">Languages</p><div class="skill-items">
+<span class="skill-item">English</span><span class="skill-item">Mandarin</span><span class="skill-item">Cantonese</span><span class="skill-item">Malay</span>
+</div></div>
+
+</div>
 </section>
 
-<!-- CONTACT -->
 <section class="section contact" id="contact" style="padding-bottom:80px">
-  <div class="reveal">
-    <p class="section-label">05</p>
-    <h2 class="section-title">Get In Touch<span>.</span></h2>
-    <div class="section-bar" style="margin:16px auto 0"></div>
-    <p class="contact-desc" style="margin-top:28px">I'm currently open to full-time opportunities in analytics, data science, and business intelligence. Whether it's a role, a project, or just a conversation &#8212; feel free to reach out.</p>
-    <div class="contact-btns">
-      <a href="mailto:bryan.kwan@rockets.utoledo.edu" class="btn-gold">bryan.kwan@rockets.utoledo.edu</a>
-      <a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
-    </div>
-  </div>
+<div class="reveal">
+<p class="section-label">05</p>
+<h2 class="section-title">Get In Touch<em>.</em></h2>
+<div class="section-bar" style="margin:16px auto 0"></div>
+<p class="contact-desc" style="margin-top:28px">I'm currently open to full-time opportunities in analytics, data science, and business intelligence. Whether it's a role, a project, or just a conversation &#8212; feel free to reach out.</p>
+<div class="contact-btns">
+<a href="mailto:bryan.kwan@rockets.utoledo.edu" class="btn-gold">bryan.kwan@rockets.utoledo.edu</a>
+<a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
+</div>
+</div>
 </section>
 
 <footer><p>Built by Bryan Kwan &#183; 2025</p></footer>
 
 <script>
-setTimeout(function(){ document.getElementById('heroContent').classList.add('loaded'); }, 100);
-var obs = new IntersectionObserver(function(entries){ entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
-window.addEventListener('scroll', function(){ document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 40); }, { passive: true });
-function toggleExp(el){ var wasOpen = el.classList.contains('open'); document.querySelectorAll('.exp-item').forEach(function(item){ item.classList.remove('open'); }); if(!wasOpen) el.classList.add('open'); }
+setTimeout(function(){document.getElementById('heroContent').classList.add('loaded')},100);
+
+var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+
+window.addEventListener('scroll',function(){document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40)},{passive:true});
+
+document.getElementById('hamBtn').addEventListener('click',function(){document.getElementById('mobileNav').classList.toggle('open')});
+document.querySelectorAll('.mob-link').forEach(function(a){a.addEventListener('click',function(){document.getElementById('mobileNav').classList.remove('open')})});
+
+function toggleExp(el){var w=el.classList.contains('open');document.querySelectorAll('.exp-item').forEach(function(i){i.classList.remove('open')});if(!w)el.classList.add('open')}
 </script>
 </body>
 </html>
