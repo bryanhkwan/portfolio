@@ -31,7 +31,7 @@ nav.scrolled{background:rgba(10,15,26,.92);backdrop-filter:blur(18px);border-bot
 .nav-resume:hover{background:var(--gold-dim)}
 .nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--gold);font-size:24px;padding:4px}
 .nav-mobile{display:none}
-@media(max-width:768px){.nav-links{display:none!important}.nav-hamburger{display:block!important}.nav-mobile.open{display:flex;flex-direction:column;gap:16px;background:rgba(10,15,26,.97);border-top:1px solid var(--border);padding:16px 28px 24px}.nav-mobile a{text-decoration:none;font-size:15px;font-weight:600;color:var(--muted)}.nav-mobile .mob-resume{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--gold);border:1px solid var(--gold-mid);border-radius:8px;padding:10px 14px;display:inline-flex;align-self:flex-start}.about-grid{grid-template-columns:1fr!important}}
+@media(max-width:768px){.nav-links{display:none!important}.nav-hamburger{display:block!important}.nav-mobile.open{display:flex;flex-direction:column;gap:16px;background:rgba(10,15,26,.97);border-top:1px solid var(--border);padding:16px 28px 24px}.nav-mobile a{text-decoration:none;font-size:15px;font-weight:600;color:var(--muted)}.nav-mobile .mob-resume{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--gold);border:1px solid var(--gold-mid);border-radius:8px;padding:10px 14px;display:inline-flex;align-self:flex-start}.about-grid,.featured-grid,.projects-grid{grid-template-columns:1fr!important}.featured-main{grid-column:span 1!important}.project-group-head{align-items:flex-start!important}}
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 28px 80px}
 .hero-orb1{position:absolute;top:-20%;right:-10%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,0,.06) 0%,transparent 70%);pointer-events:none}
 .hero-orb2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,209,167,.04) 0%,transparent 70%);pointer-events:none}
@@ -87,16 +87,33 @@ nav.scrolled{background:rgba(10,15,26,.92);backdrop-filter:blur(18px);border-bot
 .exp-footer{padding:0 22px 18px}
 .rec-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;background:rgba(94,209,167,.08);border:1px solid rgba(94,209,167,.25);font-size:12px;font-weight:600;color:#5ed1a7;text-decoration:none;transition:all .2s;cursor:pointer}
 .rec-badge:hover{background:rgba(94,209,167,.15);border-color:rgba(94,209,167,.45)}
+.section-copy{max-width:720px;font-size:15px;color:var(--muted);line-height:1.8;margin:0 0 34px}
+.project-group{margin-bottom:36px}
+.project-group:last-child{margin-bottom:0}
+.project-group-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:18px}
+.project-kicker{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 6px;letter-spacing:1px;text-transform:uppercase}
+.project-group-title{font-size:24px;font-weight:700;color:var(--white);margin:0}
+.project-group-copy{max-width:620px;font-size:14px;color:var(--muted);line-height:1.7;margin:0}
+.featured-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:8px}
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
 .project-card{padding:28px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all .3s ease;display:flex;flex-direction:column;height:100%}
 .project-card:hover{background:var(--card-hover);border-color:var(--gold-mid);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.project-card.featured{padding:32px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),var(--card)}
+.featured-main{grid-column:span 2}
 .project-bar{width:36px;height:4px;border-radius:2px;margin-bottom:20px}
+.project-eyebrow{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 12px;letter-spacing:.8px;text-transform:uppercase}
+.project-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.project-badge{font-family:var(--mono);font-size:10px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--border-light);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
 .project-title{font-size:19px;font-weight:700;color:var(--white);margin:0 0 12px;line-height:1.3}
+.project-card.featured .project-title{font-size:24px}
 .project-desc{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;flex:1}
+.project-card.featured .project-desc{font-size:15px}
 .project-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
 .project-tag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;background:var(--gold-dim);color:var(--gold);font-weight:500}
+.project-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:auto}
 .project-link{font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
 .project-link:hover{gap:10px}
+.project-note{font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center}
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
 .skill-card{padding:22px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s}
 .skill-card:hover{border-color:var(--gold-mid)}
@@ -141,8 +158,8 @@ footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
 <div class="hero-content" id="heroContent">
 <div><p class="hero-label">Hey, I'm</p></div>
 <div><h1 class="hero-name">Bryan Kwan<em>.</em></h1></div>
-<div><h2 class="hero-tagline">I turn data into decisions.</h2></div>
-<div><p class="hero-desc">Analytics grad student at the University of Toledo, building dashboards, valuation models, and data pipelines across sports and business. Currently an Analytics Intern with UToledo Athletics.</p></div>
+<div><h2 class="hero-tagline">I build analytics tools people can actually use.</h2></div>
+<div><p class="hero-desc">M.S. Business Analytics candidate at the University of Toledo building sports analytics dashboards, valuation models, BI workflows, and backend tools that turn messy data into clear decisions.</p></div>
 <div class="hero-btns">
 <a href="#projects" class="btn-gold">View Projects</a>
 <a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
@@ -287,88 +304,115 @@ footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
 </section>
 
 <section class="section" id="projects">
-<div class="section-head reveal"><p class="section-label">03</p><h2 class="section-title">Projects<em>.</em></h2><div class="section-bar"></div></div>
+<div class="section-head reveal"><p class="section-label">03</p><h2 class="section-title">Selected Work<em>.</em></h2><div class="section-bar"></div></div>
+<p class="section-copy reveal">My portfolio is centered on projects that best represent how I work: build the model, ship the interface, and connect the pipeline behind it. The featured work below shows the strongest mix of public dashboards, sports analytics, and technical tooling.</p>
+
+<div class="project-group">
+<div class="project-group-head reveal">
+<div>
+<p class="project-kicker">Featured Work</p>
+<h3 class="project-group-title">Best representative projects</h3>
+</div>
+<p class="project-group-copy"> </p>
+</div>
+<div class="featured-grid">
+<div class="project-card featured featured-main reveal">
+<div class="project-bar" style="background:#FFD200"></div>
+<p class="project-eyebrow">Flagship dashboard</p>
+<div class="project-title-row"><h3 class="project-title">NCAA Basketball Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
+<p class="project-desc">A full scouting product for NCAA MBB/WBB that combines live player data, weighted composite scoring, valuation curves, archetypes, roster building, team matchup analysis, shot charts, and AI-assisted search in one browser-based dashboard.</p>
+<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Cloudflare Workers</span><span class="project-tag">Google Sheets API</span><span class="project-tag">Gemini AI</span><span class="project-tag">GitHub Pages</span></div>
+<div class="project-actions"><a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
+</div>
+
+<div class="project-card featured reveal">
+<div class="project-bar" style="background:#5ed1a7"></div>
+<p class="project-eyebrow">Public dashboard</p>
+<div class="project-title-row"><h3 class="project-title">NCAA Soccer Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
+<p class="project-desc">A scouting board for NCAA women's soccer with percentile-based player scoring, role-specific archetypes, Toledo fit grading, turnover analysis, and exportable reports built for faster evaluation across the MAC and national player pool.</p>
+<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Data Pipeline</span><span class="project-tag">Scouting Reports</span><span class="project-tag">GitHub Pages</span></div>
+<div class="project-actions"><a href="https://bryanhkwan.github.io/soccer-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
+</div>
+
+<div class="project-card featured reveal">
+<div class="project-bar" style="background:#7dd3fc"></div>
+<p class="project-eyebrow">Technical tooling</p>
+<div class="project-title-row"><h3 class="project-title">Swagger-MCP</h3><span class="project-badge">No live demo</span></div>
+<p class="project-desc">Built tooling around Swagger/OpenAPI specs to generate MCP-ready models, endpoint helpers, and schema-aware tool definitions for AI-assisted API integration workflows, reducing manual setup when wrapping APIs for agent use.</p>
+<div class="project-tags"><span class="project-tag">TypeScript</span><span class="project-tag">MCP</span><span class="project-tag">OpenAPI</span><span class="project-tag">Node.js</span></div>
+<div class="project-actions"><span class="project-note">Selected technical build and workflow project.</span></div>
+</div>
+</div>
+</div>
+
+<div class="project-group">
+<div class="project-group-head reveal">
+<div>
+<p class="project-kicker">Supporting Work</p>
+<h3 class="project-group-title">Additional range</h3>
+</div>
+<p class="project-group-copy">These projects still add value, but they work best as supporting evidence of range instead of competing with the flagship work above.</p>
+</div>
 <div class="projects-grid">
 <div class="project-card reveal">
-<div class="project-bar" style="background:#FFD200"></div>
-<h3 class="project-title">NCAA Basketball Scouting Dashboard</h3>
-<p class="project-desc">A live web dashboard that pulls NCAA MBB/WBB player stats and runs weighted scoring, exponential salary valuation, percentile-based archetypes, and fit analysis &#8212; all client-side. Features a Gemini-powered AI Chatbot for natural-language player and roster queries, and a dynamic interactive Heatmap for zone-by-zone shot-chart analysis.</p>
-<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Google Sheets API</span><span class="project-tag">Gemini AI</span><span class="project-tag">Cloudflare Workers</span><span class="project-tag">GitHub Pages</span></div>
-<a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" class="project-link">Live Demo &#8594;</a>
-</div>
-<div class="project-card reveal">
 <div class="project-bar" style="background:#c084fc"></div>
-<h3 class="project-title">NCAA Volleyball Scouting Dashboard</h3>
-<p class="project-desc">A web-based scouting and analysis tool for NCAA Volleyball, built as a companion to the basketball dashboard. Features player scoring and valuation, percentile-based archetypes, fit presets, team analysis, and an AI assistant for natural-language roster queries &#8212; all running client-side.</p>
-<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Cloudflare Workers</span><span class="project-tag">Gemini AI</span><span class="project-tag">GitHub Pages</span></div>
-<a href="https://bryanhkwan.github.io/volleyball-dashboard/" target="_blank" class="project-link">Live Demo &#8594;</a>
+<p class="project-eyebrow">Framework extension</p>
+<div class="project-title-row"><h3 class="project-title">NCAA Volleyball Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
+<p class="project-desc">A second public scouting dashboard that adapts the broader valuation framework to volleyball with position-specific weights, roster workflows, valuation bands, and AI-assisted player search.</p>
+<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Sports Analytics</span><span class="project-tag">GitHub Pages</span></div>
+<div class="project-actions"><a href="https://bryanhkwan.github.io/volleyball-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
 </div>
-<div class="project-card reveal">
-<div class="project-bar" style="background:#f9a84d"></div>
-<h3 class="project-title">Movie Ratings Dashboard</h3>
-<p class="project-desc">An end-to-end data visualization project showcasing Power BI and Power Query skills. Raw movie ratings data is cleaned, transformed, and modeled using Power Query, then surfaced through interactive Power BI visuals &#8212; highlighting trends in ratings, genres, and audience behavior.</p>
-<div class="project-tags"><span class="project-tag">Power BI</span><span class="project-tag">Power Query</span><span class="project-tag">Excel</span><span class="project-tag">Data Visualization</span></div>
-<a href="https://bryanhkwan.github.io/movie-ratings-dashboard/" target="_blank" class="project-link">Live Demo &#8594;</a>
-</div>
-<div class="project-card reveal">
-<div class="project-bar" style="background:#5ed1a7"></div>
-<h3 class="project-title">Sports Analytics and Roster Valuation Model</h3>
-<p class="project-desc">Regression models identifying key predictors of WS/40 through coefficient analysis and VIF-based multicollinearity testing. Position-specific scoring frameworks for transfer portal evaluation.</p>
-<div class="project-tags"><span class="project-tag">KNIME</span><span class="project-tag">Regression</span><span class="project-tag">UToledo Athletics</span></div>
-</div>
+
 <div class="project-card reveal">
 <div class="project-bar" style="background:#ffe36a"></div>
-<h3 class="project-title">NBA Player Salary Valuation Model</h3>
-<p class="project-desc">Predictive model using 2022-23 NBA data (470+ players) to evaluate salary ROI. Interactive Power BI dashboards and a 7,000-word analytical report on salary optimization.</p>
-<div class="project-tags"><span class="project-tag">Excel</span><span class="project-tag">Power Query</span><span class="project-tag">Power BI</span><span class="project-tag">KNIME</span></div>
+<p class="project-eyebrow">Backend system</p>
+<div class="project-title-row"><h3 class="project-title">Dashboard API and Auth Layer</h3><span class="project-badge">No live demo</span></div>
+<p class="project-desc">A Cloudflare Workers backend handling login, sessions, note storage, and authenticated dashboard workflows. It supports the product layer behind my public scouting tools rather than existing as a standalone frontend demo.</p>
+<div class="project-tags"><span class="project-tag">Cloudflare Workers</span><span class="project-tag">SQL</span><span class="project-tag">Auth</span><span class="project-tag">API Design</span></div>
+<div class="project-actions"><span class="project-note">Infrastructure powering dashboard features.</span></div>
 </div>
+
 <div class="project-card reveal">
-<div class="project-bar" style="background:#a8b4ff"></div>
-<h3 class="project-title">Customer Segmentation and Cluster Analysis</h3>
-<p class="project-desc">K-Means clustering on customer satisfaction data segmented by delivery speed, price flexibility, and product quality. Actionable insights for targeted marketing.</p>
-<div class="project-tags"><span class="project-tag">SAS Viya</span><span class="project-tag">K-Means</span></div>
+<div class="project-bar" style="background:#f9a84d"></div>
+<p class="project-eyebrow">BI case study</p>
+<div class="project-title-row"><h3 class="project-title">Movie Ratings Dashboard</h3><span class="project-badge">Public build</span></div>
+<p class="project-desc">A Power BI case study that cleans and models movie ratings data in Power Query, then turns it into a polished narrative dashboard focused on ratings, genres, and audience behavior.</p>
+<div class="project-tags"><span class="project-tag">Power BI</span><span class="project-tag">Power Query</span><span class="project-tag">Excel</span><span class="project-tag">Data Visualization</span></div>
+<div class="project-actions"><a href="https://bryanhkwan.github.io/movie-ratings-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
 </div>
 </div>
 </section>
 
 <section class="section" id="skills">
-<div class="section-head reveal"><p class="section-label">04</p><h2 class="section-title">Skills<em>.</em></h2><div class="section-bar"></div></div>
+<div class="section-head reveal"><p class="section-label">04</p><h2 class="section-title">Core Skills<em>.</em></h2><div class="section-bar"></div></div>
 <div class="skills-grid">
 
 <div class="skill-card reveal"><p class="skill-cat">Advanced Analytics and Modeling</p><div class="skill-items">
-<span class="skill-item">Predictive Modeling</span><span class="skill-item">Regression and ML</span><span class="skill-item">Demand Forecasting</span><span class="skill-item">Pricing Optimization</span><span class="skill-item">Customer Segmentation</span><span class="skill-item">Churn and CLV Modeling</span><span class="skill-item">Scenario Simulation</span><span class="skill-item">Optimization Modeling</span><span class="skill-item">ROI Analysis</span>
+<span class="skill-item">Predictive Modeling</span><span class="skill-item">Regression</span><span class="skill-item">Optimization Modeling</span><span class="skill-item">Scenario Simulation</span><span class="skill-item">Cluster Analysis</span><span class="skill-item">Valuation Modeling</span>
 </div></div>
 
 <div class="skill-card reveal"><p class="skill-cat">Business and Revenue Analytics</p><div class="skill-items">
-<span class="skill-item">Revenue Forecasting</span><span class="skill-item">Ticket and Dynamic Pricing</span><span class="skill-item">Fan Engagement Analytics</span><span class="skill-item">Market Benchmarking</span><span class="skill-item">Retention Strategy</span><span class="skill-item">Performance KPI Analysis</span><span class="skill-item">Financial and Profitability Analysis</span>
+<span class="skill-item">Revenue Forecasting</span><span class="skill-item">Pricing Analysis</span><span class="skill-item">Fan Engagement Analytics</span><span class="skill-item">Market Benchmarking</span><span class="skill-item">KPI Reporting</span><span class="skill-item">Profitability Analysis</span>
 </div></div>
 
 <div class="skill-card reveal"><p class="skill-cat">Programming and Data Tools</p><div class="skill-items">
-<span class="skill-item">Python</span><span class="skill-item">SQL</span><span class="skill-item">R</span><span class="skill-item">KNIME</span><span class="skill-item">SPSS</span><span class="skill-item">HTML</span><span class="skill-item">Power Query</span>
+<span class="skill-item">Python</span><span class="skill-item">SQL</span><span class="skill-item">JavaScript</span><span class="skill-item">TypeScript</span><span class="skill-item">R</span><span class="skill-item">KNIME</span>
 </div></div>
 
 <div class="skill-card reveal"><p class="skill-cat">Data Visualization and BI</p><div class="skill-items">
-<span class="skill-item">Power BI</span><span class="skill-item">Tableau</span><span class="skill-item">Excel (Advanced)</span><span class="skill-item">SAS</span><span class="skill-item">Google Analytics</span>
+<span class="skill-item">Power BI</span><span class="skill-item">Tableau</span><span class="skill-item">Excel</span><span class="skill-item">Power Query</span><span class="skill-item">Dashboard Design</span>
 </div></div>
 
 <div class="skill-card reveal"><p class="skill-cat">Data Engineering and Architecture</p><div class="skill-items">
-<span class="skill-item">Data Modeling</span><span class="skill-item">ETL Processes</span><span class="skill-item">Data Cleaning and Transformation</span><span class="skill-item">Automation Pipelines</span><span class="skill-item">Data Governance Fundamentals</span>
+<span class="skill-item">Data Modeling</span><span class="skill-item">ETL Pipelines</span><span class="skill-item">API Integration</span><span class="skill-item">Cloudflare Workers</span><span class="skill-item">Automation Scripts</span><span class="skill-item">Authentication Flows</span>
 </div></div>
 
-<div class="skill-card reveal"><p class="skill-cat">AI and Analytics Productivity</p><div class="skill-items">
-<span class="skill-item">ChatGPT</span><span class="skill-item">Claude</span><span class="skill-item">Microsoft Copilot</span><span class="skill-item">Gemini</span><span class="skill-item">DeepSeek</span><span class="skill-item">AI-assisted SQL and Python</span>
+<div class="skill-card reveal"><p class="skill-cat">Sports and Decision Analytics</p><div class="skill-items">
+<span class="skill-item">Roster Evaluation</span><span class="skill-item">Player Valuation</span><span class="skill-item">Scouting Workflows</span><span class="skill-item">Fit Analysis</span><span class="skill-item">Operational Dashboards</span><span class="skill-item">Executive Reporting</span>
 </div></div>
 
-<div class="skill-card reveal"><p class="skill-cat">Marketing Analytics and Digital</p><div class="skill-items">
-<span class="skill-item">SEO Optimization</span><span class="skill-item">Digital Marketing Analytics</span><span class="skill-item">Social Media Analytics</span><span class="skill-item">Content Strategy</span><span class="skill-item">Salesforce</span><span class="skill-item">HubSpot</span><span class="skill-item">Shopify</span><span class="skill-item">Klaviyo</span><span class="skill-item">Prisync</span><span class="skill-item">Hootsuite</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Software and Technical Platforms</p><div class="skill-items">
-<span class="skill-item">Adobe Creative Suite</span><span class="skill-item">Microsoft Office Suite</span><span class="skill-item">Google Workspace</span><span class="skill-item">WordPress</span><span class="skill-item">Arena Simulation</span><span class="skill-item">Microsoft Azure</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Leadership and Strategy</p><div class="skill-items">
-<span class="skill-item">Data Storytelling</span><span class="skill-item">Stakeholder Communication</span><span class="skill-item">Cross-Functional Collaboration</span><span class="skill-item">Strategic Planning</span><span class="skill-item">Process Optimization</span><span class="skill-item">Analytics to Business Decisions</span>
+<div class="skill-card reveal"><p class="skill-cat">Communication and Leadership</p><div class="skill-items">
+<span class="skill-item">Data Storytelling</span><span class="skill-item">Stakeholder Communication</span><span class="skill-item">Cross-Functional Collaboration</span><span class="skill-item">Strategic Recommendations</span><span class="skill-item">Process Improvement</span>
 </div></div>
 
 <div class="skill-card reveal"><p class="skill-cat">Languages</p><div class="skill-items">
@@ -391,7 +435,7 @@ footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
 </div>
 </section>
 
-<footer><p>Built by Bryan Kwan &#183; 2025</p></footer>
+<footer><p>Built by Bryan Kwan &#183; 2026</p></footer>
 
 <script>
 setTimeout(function(){document.getElementById('heroContent').classList.add('loaded')},100);
