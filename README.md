@@ -15,4 +15,4 @@ Static portfolio site for Bryan Kwan's analytics, BI, sports operations, and com
 
 - Commit the `compvision/` folder before deploying or the image/video assets will not appear.
 - The annotated video uses `compvision/compvision-sample.mp4` and is intentionally loaded with `preload="none"` so the page stays responsive.
-- `mac-tournament-model-validation.html.pdf`, `resume.pdf`, and `recommendation.pdf` are linked directly from the site.
+- `mac-tournament-model-validation.html.pdf`, `BryanKwan_Updated_Resume.pdf`, and `recommendation.pdf` are linked directly from the site.
