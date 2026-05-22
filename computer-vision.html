@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Computer Vision Lab | Bryan Kwan</title>
+<meta name="description" content="Bryan Kwan's computer vision lab for basketball player detection, annotated video, team heatmaps, spatial analytics, and model-improvement roadmap."/>
+<link rel="preconnect" href="https://api.fontshare.com"/>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&f[]=satoshi@400,500,600,700,800&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="portfolio-pages.css"/>
+</head>
+<body>
+<a href="#lab-output" class="skip-link">Skip to lab output</a>
+<nav class="topbar" id="topbar">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="brand" aria-label="Bryan Kwan home"><span class="brand-mark">BK</span><span>Bryan Kwan</span></a>
+    <div class="nav-links" aria-label="Primary navigation">
+      <a href="projects.html">Projects</a>
+      <a class="active" href="computer-vision.html" aria-current="page">Vision Lab</a>
+      <a href="proof.html">Proof</a>
+      <a href="index.html#experience">About</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="resume.pdf" target="_blank" rel="noopener" class="resume-link">Resume</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="projects.html">Projects</a>
+    <a class="active" href="computer-vision.html" aria-current="page">Vision Lab</a>
+    <a href="proof.html">Proof</a>
+    <a href="index.html#experience">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
+</nav>
+
+<main>
+  <section class="page-hero compact">
+    <div class="hero-grid">
+      <div class="hero-copy reveal visible">
+        <p class="eyebrow">Computer vision lab / in progress</p>
+        <h1>Turning game film<span>into court intelligence.</span></h1>
+        <p>This page is intentionally separate from the project deck because the work is still evolving. The prototype already produces player annotations and team heatmaps, and the next step is tightening reliability until the output is useful for coaching workflows.</p>
+        <div class="hero-actions">
+          <a class="btn red" href="#lab-output">See output</a>
+          <a class="btn ghost" href="projects.html#computer-vision">Back to project card &rarr;</a>
+        </div>
+      </div>
+      <aside class="hero-panel image-panel reveal" aria-label="Computer vision annotated output preview">
+        <img src="compvision/all_players.png" alt="Annotated basketball computer vision output with detected players"/>
+        <span class="cv-scan"></span>
+        <div class="panel-bottom"><span>DETECTIONS</span><span>HEATMAPS</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <div class="signal-strip" aria-hidden="true">
+    <div class="ticker">
+      <span><b>Prototype status</b> working but not perfect</span>
+      <span><b>Output</b> annotated video</span>
+      <span><b>Output</b> team heatmaps</span>
+      <span><b>Goal</b> coach-ready spatial analytics</span>
+      <span><b>Prototype status</b> working but not perfect</span>
+      <span><b>Output</b> annotated video</span>
+      <span><b>Output</b> team heatmaps</span>
+      <span><b>Goal</b> coach-ready spatial analytics</span>
+    </div>
+  </div>
+
+  <section class="section" id="lab-output">
+    <div class="wrap lab-layout">
+      <aside class="lab-card reveal" style="--accent:#ff5b4a">
+        <p class="eyebrow">Lab output</p>
+        <h2>Honest prototype, real media.</h2>
+        <p>The annotated video is not presented as perfect. That is the point: this is a working computer-vision pipeline that can already find players, separate spatial output by team, and create artifacts that can be reviewed and improved.</p>
+        <p>The portfolio uses a compressed <code>compvision-sample.mp4</code> so the browser has a better chance to load it. It is still a large media file, so the poster image and heatmaps are the fastest read.</p>
+        <span class="lab-status">Working prototype, actively improving</span>
+        <div class="hero-actions">
+          <a class="btn red" href="compvision/compvision-sample.mp4" target="_blank" rel="noopener">Open video file</a>
+          <a class="btn ghost" href="projects.html">View all projects</a>
+        </div>
+      </aside>
+
+      <div class="media-grid">
+        <figure class="media-card reveal">
+          <img src="compvision/team_0_heatmap.png" alt="Team 0 basketball court heatmap output" loading="lazy"/>
+          <figcaption class="caption"><span>Team 0 heatmap</span><span>PNG output</span></figcaption>
+        </figure>
+        <figure class="media-card reveal">
+          <img src="compvision/team_1_heatmap.png" alt="Team 1 basketball court heatmap output" loading="lazy"/>
+          <figcaption class="caption"><span>Team 1 heatmap</span><span>PNG output</span></figcaption>
+        </figure>
+        <figure class="media-card wide reveal">
+          <video controls preload="none" poster="compvision/all_players.png">
+            <source src="compvision/compvision-sample.mp4" type="video/mp4"/>
+          </video>
+          <figcaption class="caption"><span>Annotated video sample</span><span>Compressed MP4</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Pipeline shape</p>
+          <h2 class="section-title">The model is only useful if the output becomes coaching language.</h2>
+        </div>
+        <p class="section-copy">The goal is not just to draw boxes around players. The goal is to turn noisy game film into structured spatial evidence: who occupied which zones, what spacing patterns appeared, and where the system needs more supervision.</p>
+      </div>
+      <div class="workflow-grid">
+        <div class="workflow-card reveal" style="--accent:#ff5b4a"><b>01</b><h3>Detect</h3><p>Identify players frame-by-frame and produce annotated output that can be visually inspected for misses, swaps, and tracking drift.</p></div>
+        <div class="workflow-card reveal" style="--accent:#ffd200"><b>02</b><h3>Separate</h3><p>Split court activity into team-level outputs so the raw video becomes a map of possession shape and court occupation.</p></div>
+        <div class="workflow-card reveal" style="--accent:#43f5b6"><b>03</b><h3>Aggregate</h3><p>Convert detections into heatmaps and spatial summaries that can reveal tendencies without watching every second manually.</p></div>
+        <div class="workflow-card reveal" style="--accent:#69d9ff"><b>04</b><h3>Refine</h3><p>Use the mistakes in the annotated video as hard examples for model improvement, threshold tuning, and future evaluation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Roadmap</p>
+          <h2 class="section-title">What this becomes next.</h2>
+        </div>
+        <p class="section-copy">The best portfolio move here is honesty: the prototype is already producing meaningful output, and the next version should make the system more stable, explainable, and coach-friendly.</p>
+      </div>
+      <div class="roadmap-grid">
+        <div class="roadmap-card reveal"><h3>Cleaner tracking</h3><p>Reduce identity switches, missed detections, and jitter so the video output feels less noisy and the downstream heatmaps become more trustworthy.</p></div>
+        <div class="roadmap-card reveal"><h3>Evaluation loop</h3><p>Build a small validation set and track model performance with repeatable metrics instead of relying only on visual inspection.</p></div>
+        <div class="roadmap-card reveal"><h3>Coaching layer</h3><p>Translate spatial output into useful basketball questions: spacing, defensive shape, transition lanes, possession zones, and player movement tendencies.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Bryan Kwan / 2026</span>
+    <span><a href="index.html">Home</a> / <a href="projects.html">Projects</a> / <a href="proof.html">Proof</a></span>
+  </div>
+</footer>
+
+<script src="portfolio-pages.js"></script>
+</body>
+</html>

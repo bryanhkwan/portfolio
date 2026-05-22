@@ -3,452 +3,1490 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Bryan Kwan - Analytics Portfolio</title>
-<meta name="description" content="Bryan Kwan - Data Analytics, Sports Analytics, Dashboard Development. University of Toledo."/>
+<title>Bryan Kwan | Sports Analytics & Data Science Portfolio</title>
+<meta name="description" content="Bryan Kwan portfolio featuring sports analytics dashboards, computer vision experiments, finance planning tools, BI case studies, and decision-ready data products."/>
 <link rel="preconnect" href="https://api.fontshare.com"/>
-<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,800,900&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&f[]=satoshi@400,500,600,700,800&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#0a0f1a;--card:#111827;--card-hover:#161f33;--border:#1e293b;--border-light:#2a3650;--gold:#FFD200;--gold-dim:rgba(255,210,0,.12);--gold-mid:rgba(255,210,0,.35);--text:#e8ecf4;--muted:#8997b0;--white:#fff;--font:'Satoshi','DM Sans',ui-sans-serif,system-ui,-apple-system,sans-serif;--mono:'JetBrains Mono','Fira Code','SF Mono',monospace}
-*,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
-::selection{background:rgba(255,210,0,.25);color:#fff}
-::-webkit-scrollbar{width:8px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+:root{
+  --ink:#090906;
+  --ink-2:#11100b;
+  --ink-3:#19170f;
+  --panel:#15140f;
+  --panel-2:#1d1b13;
+  --line:#353024;
+  --line-2:#4d4430;
+  --text:#f6f0dc;
+  --muted:#b2aa92;
+  --soft:#77705f;
+  --gold:#ffd200;
+  --green:#43f5b6;
+  --cyan:#69d9ff;
+  --red:#ff5b4a;
+  --orange:#ff9c3a;
+  --violet:#b7a5ff;
+  --white:#fffaf0;
+  --shadow:0 22px 70px rgba(0,0,0,.45);
+  --font:'Satoshi',ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  --display:'Cabinet Grotesk','Satoshi',ui-sans-serif,system-ui,sans-serif;
+  --mono:'JetBrains Mono','SF Mono',Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    linear-gradient(90deg,rgba(255,210,0,.035) 1px,transparent 1px),
+    linear-gradient(rgba(255,210,0,.03) 1px,transparent 1px),
+    linear-gradient(135deg,#090906 0%,#0f0d08 48%,#0a0f0d 100%);
+  background-size:48px 48px,48px 48px,100% 100%;
+  color:var(--text);
+  font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.05),transparent 18%,transparent 70%,rgba(0,0,0,.35)),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 4px);
+  mix-blend-mode:screen;
+  opacity:.55;
+  z-index:-1;
+}
 a{color:inherit}
-.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s cubic-bezier(.22,1,.36,1),transform .7s cubic-bezier(.22,1,.36,1)}
+button,a{font-family:inherit}
+::selection{background:rgba(255,210,0,.28);color:var(--white)}
+:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.wrap{width:min(1180px,calc(100% - 40px));margin:0 auto}
+.eyebrow{
+  margin:0 0 12px;
+  color:var(--gold);
+  font-family:var(--mono);
+  font-size:.78rem;
+  letter-spacing:0;
+  text-transform:uppercase;
+}
+.section{padding:92px 0}
+.section-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,420px);gap:36px;align-items:end;margin-bottom:34px}
+.section-title{
+  margin:0;
+  color:var(--white);
+  font-family:var(--display);
+  font-size:3.1rem;
+  line-height:.98;
+  letter-spacing:0;
+}
+.section-copy{margin:0;color:var(--muted);font-size:1.02rem;line-height:1.75}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
 .reveal.visible{opacity:1;transform:translateY(0)}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;border-bottom:1px solid transparent;transition:all .35s ease}
-nav.scrolled{background:rgba(10,15,26,.92);backdrop-filter:blur(18px);border-bottom-color:var(--border)}
-.nav-inner{max-width:1100px;margin:0 auto;padding:0 28px;display:flex;justify-content:space-between;align-items:center;height:64px}
-.nav-logo{text-decoration:none;color:var(--gold);font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:1px}
-.nav-logo em{color:var(--muted);font-style:normal}
-.nav-links{display:flex;gap:32px;align-items:center}
-.nav-links a{text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--muted);transition:color .2s}
+.skip-link{position:absolute;left:-999px;top:12px;background:var(--gold);color:#111;padding:10px 14px;border-radius:6px;z-index:200}
+.skip-link:focus{left:12px}
+
+/* Navigation */
+.topbar{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:100;
+  border-bottom:1px solid transparent;
+  transition:background .25s ease,border-color .25s ease,transform .25s ease;
+}
+.topbar.scrolled{background:rgba(9,9,6,.86);backdrop-filter:blur(18px);border-bottom-color:rgba(255,210,0,.16)}
+.nav-inner{height:68px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:var(--white);
+  text-decoration:none;
+  font-weight:800;
+}
+.brand-mark{
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  color:#111;
+  background:var(--gold);
+  border:1px solid rgba(255,255,255,.22);
+  font-family:var(--mono);
+  font-size:.82rem;
+  box-shadow:0 0 0 5px rgba(255,210,0,.09);
+}
+.brand span:last-child{font-family:var(--display);font-size:1rem}
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-links a{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:.91rem;
+  font-weight:700;
+  transition:color .2s ease;
+}
 .nav-links a:hover{color:var(--gold)}
-.nav-resume{font-family:var(--mono)!important;font-size:12px!important;font-weight:700!important;padding:8px 18px!important;border-radius:8px;border:1px solid var(--gold-mid)!important;color:var(--gold)!important;transition:background .2s}
-.nav-resume:hover{background:var(--gold-dim)}
-.nav-hamburger{display:none;background:none;border:none;cursor:pointer;color:var(--gold);font-size:24px;padding:4px}
-.nav-mobile{display:none}
-@media(max-width:768px){.nav-links{display:none!important}.nav-hamburger{display:block!important}.nav-mobile.open{display:flex;flex-direction:column;gap:16px;background:rgba(10,15,26,.97);border-top:1px solid var(--border);padding:16px 28px 24px}.nav-mobile a{text-decoration:none;font-size:15px;font-weight:600;color:var(--muted)}.nav-mobile .mob-resume{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--gold);border:1px solid var(--gold-mid);border-radius:8px;padding:10px 14px;display:inline-flex;align-self:flex-start}.about-grid,.featured-grid,.projects-grid{grid-template-columns:1fr!important}.featured-main{grid-column:span 1!important}.project-group-head{align-items:flex-start!important}}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:120px 28px 80px}
-.hero-orb1{position:absolute;top:-20%;right:-10%;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(255,210,0,.06) 0%,transparent 70%);pointer-events:none}
-.hero-orb2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(94,209,167,.04) 0%,transparent 70%);pointer-events:none}
-.hero-content{max-width:720px;width:100%;position:relative;z-index:1}
-.hero-content>div{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.22,1,.36,1)}
-.hero-content.loaded>div{opacity:1;transform:translateY(0)}
-.hero-content>div:nth-child(1){transition-delay:.1s}
-.hero-content>div:nth-child(2){transition-delay:.25s}
-.hero-content>div:nth-child(3){transition-delay:.4s}
-.hero-content>div:nth-child(4){transition-delay:.55s}
-.hero-content>div:nth-child(5){transition-delay:.7s}
-.hero-label{font-family:var(--mono);font-size:14px;color:var(--gold);margin-bottom:16px;letter-spacing:1.5px}
-.hero-name{font-size:clamp(42px,8vw,72px);font-weight:800;line-height:1.05;margin:0 0 20px;color:var(--white);letter-spacing:-1px}
-.hero-name em{color:var(--gold);font-style:normal}
-.hero-tagline{font-size:clamp(20px,3.5vw,32px);font-weight:600;color:var(--muted);margin:0 0 28px;line-height:1.35}
-.hero-desc{font-size:16px;color:var(--muted);line-height:1.7;max-width:540px;margin:0 0 36px}
-.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
-.btn-gold{text-decoration:none;font-size:14px;font-weight:700;padding:13px 28px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#e6be00);color:#0a0f1a;border:none;cursor:pointer;box-shadow:0 4px 24px rgba(255,210,0,.2);transition:transform .2s,box-shadow .2s;display:inline-block}
-.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,210,0,.3)}
-.btn-outline{text-decoration:none;font-size:14px;font-weight:600;padding:13px 28px;border-radius:10px;background:transparent;color:var(--text);border:1px solid var(--border-light);cursor:pointer;transition:all .2s;display:inline-block}
-.btn-outline:hover{border-color:var(--gold-mid);color:var(--gold)}
-.section{padding:100px 28px;max-width:1100px;margin:0 auto}
-.section-label{font-family:var(--mono);font-size:13px;color:var(--gold);margin-bottom:10px;letter-spacing:1.2px}
-.section-title{font-size:clamp(28px,5vw,40px);font-weight:800;color:var(--white);margin:0;letter-spacing:-.5px}
-.section-title em{color:var(--gold);font-style:normal}
-.section-bar{width:48px;height:3px;background:var(--gold);border-radius:2px;margin-top:16px}
-.section-head{margin-bottom:48px}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-.about-text{font-size:15px;color:var(--muted);line-height:1.8}
-.about-text p:first-child{margin-top:0}
-.about-text b{color:var(--text);font-weight:600}
-.about-text i{color:var(--gold);font-style:normal}
-.edu-card{padding:20px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s;margin-bottom:16px}
-.edu-card:last-child{margin-bottom:0}
-.edu-card:hover{border-color:var(--gold-mid)}
-.edu-date{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 6px;letter-spacing:.8px}
-.edu-degree{font-size:16px;font-weight:700;color:var(--white);margin:0 0 4px}
-.edu-school{font-size:13px;color:var(--muted);margin:0 0 6px}
-.edu-note{font-size:12px;color:var(--muted);margin:0;font-style:italic}
-.exp-item{border-radius:14px;border:1px solid var(--border);transition:all .3s ease;overflow:hidden;cursor:pointer;margin-bottom:12px}
-.exp-item:last-child{margin-bottom:0}
-.exp-item.open{border-color:var(--gold-mid);background:var(--card)}
-.exp-header{padding:18px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
-.exp-role{font-size:16px;font-weight:700;color:var(--white);margin:0}
-.exp-meta{font-size:13px;color:var(--muted);margin:4px 0 0}
-.exp-date{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0;white-space:nowrap}
-.exp-body{max-height:0;opacity:0;overflow:hidden;transition:max-height .4s ease,opacity .3s ease}
-.exp-item.open .exp-body{max-height:800px;opacity:1}
-.exp-bullets{padding:0 22px 20px;display:flex;flex-direction:column;gap:10px}
-.exp-bullet{display:flex;gap:10px;align-items:flex-start}
-.exp-bullet-dot{color:var(--gold);font-size:10px;margin-top:6px;flex-shrink:0}
-.exp-bullet p{font-size:14px;color:var(--muted);margin:0;line-height:1.65}
-.exp-footer{padding:0 22px 18px}
-.rec-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;border-radius:10px;background:rgba(94,209,167,.08);border:1px solid rgba(94,209,167,.25);font-size:12px;font-weight:600;color:#5ed1a7;text-decoration:none;transition:all .2s;cursor:pointer}
-.rec-badge:hover{background:rgba(94,209,167,.15);border-color:rgba(94,209,167,.45)}
-.section-copy{max-width:720px;font-size:15px;color:var(--muted);line-height:1.8;margin:0 0 34px}
-.project-group{margin-bottom:36px}
-.project-group:last-child{margin-bottom:0}
-.project-group-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:18px}
-.project-kicker{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 6px;letter-spacing:1px;text-transform:uppercase}
-.project-group-title{font-size:24px;font-weight:700;color:var(--white);margin:0}
-.project-group-copy{max-width:620px;font-size:14px;color:var(--muted);line-height:1.7;margin:0}
-.featured-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:8px}
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.project-card{padding:28px;border-radius:16px;background:var(--card);border:1px solid var(--border);transition:all .3s ease;display:flex;flex-direction:column;height:100%}
-.project-card:hover{background:var(--card-hover);border-color:var(--gold-mid);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-.project-card.featured{padding:32px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0)),var(--card)}
-.featured-main{grid-column:span 2}
-.project-bar{width:36px;height:4px;border-radius:2px;margin-bottom:20px}
-.project-eyebrow{font-family:var(--mono);font-size:11px;color:var(--gold);margin:0 0 12px;letter-spacing:.8px;text-transform:uppercase}
-.project-title-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.project-badge{font-family:var(--mono);font-size:10px;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--border-light);color:var(--muted);letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
-.project-title{font-size:19px;font-weight:700;color:var(--white);margin:0 0 12px;line-height:1.3}
-.project-card.featured .project-title{font-size:24px}
-.project-desc{font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 20px;flex:1}
-.project-card.featured .project-desc{font-size:15px}
-.project-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
-.project-tag{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:6px;background:var(--gold-dim);color:var(--gold);font-weight:500}
-.project-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:auto}
-.project-link{font-size:13px;font-weight:600;color:var(--gold);text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:gap .2s}
-.project-link:hover{gap:10px}
-.project-note{font-size:12px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.skill-card{padding:22px;border-radius:14px;background:var(--card);border:1px solid var(--border);transition:border-color .2s}
-.skill-card:hover{border-color:var(--gold-mid)}
-.skill-cat{font-family:var(--mono);font-size:12px;color:var(--gold);margin:0 0 14px;letter-spacing:.5px;font-weight:600}
-.skill-items{display:flex;flex-wrap:wrap;gap:8px}
-.skill-item{font-size:13px;padding:5px 12px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--text)}
-.contact{text-align:center;max-width:700px}
-.contact-desc{font-size:16px;color:var(--muted);line-height:1.7;margin:0 0 36px}
-.contact-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-footer{padding:28px;text-align:center;border-top:1px solid var(--border)}
-footer p{font-family:var(--mono);font-size:12px;color:var(--muted);margin:0}
+.nav-links .resume-link{
+  color:#111;
+  background:var(--gold);
+  padding:9px 14px;
+  border:1px solid rgba(255,255,255,.16);
+}
+.menu-btn{
+  display:none;
+  width:42px;
+  height:42px;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold);
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,210,0,.24);
+  cursor:pointer;
+}
+.menu-btn span,.menu-btn::before,.menu-btn::after{
+  content:"";
+  width:18px;
+  height:2px;
+  display:block;
+  background:currentColor;
+  transition:transform .2s ease,opacity .2s ease;
+}
+.menu-btn{flex-direction:column;gap:4px}
+.menu-btn.open span{opacity:0}
+.menu-btn.open::before{transform:translateY(6px) rotate(45deg)}
+.menu-btn.open::after{transform:translateY(-6px) rotate(-45deg)}
+.mobile-nav{display:none}
+.progress-rail{
+  position:fixed;
+  left:18px;
+  top:50%;
+  z-index:80;
+  width:2px;
+  height:180px;
+  transform:translateY(-50%);
+  background:rgba(255,255,255,.12);
+}
+.progress-rail span{display:block;width:100%;height:0;background:linear-gradient(var(--gold),var(--green));transition:height .1s linear}
+
+/* Hero */
+.hero{
+  position:relative;
+  min-height:88svh;
+  display:flex;
+  align-items:center;
+  overflow:hidden;
+  border-bottom:1px solid rgba(255,210,0,.13);
+}
+#missionScene{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-shade{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(9,9,6,.98) 0%,rgba(9,9,6,.84) 32%,rgba(9,9,6,.24) 70%,rgba(9,9,6,.78) 100%),
+    linear-gradient(180deg,rgba(9,9,6,.88),transparent 32%,rgba(9,9,6,.84) 100%);
+}
+.hero-gridline{
+  position:absolute;
+  inset:auto 0 0;
+  height:26%;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(255,210,0,.18) 1px,transparent 1px),
+    linear-gradient(rgba(255,210,0,.12) 1px,transparent 1px);
+  background-size:80px 80px,80px 80px;
+  transform:perspective(420px) rotateX(62deg);
+  transform-origin:bottom;
+  opacity:.55;
+}
+.hero-content{
+  position:relative;
+  z-index:2;
+  width:min(1180px,calc(100% - 40px));
+  margin:0 auto;
+  padding:112px 0 56px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 360px;
+  gap:42px;
+  align-items:center;
+}
+.hero-main{max-width:760px}
+.hero h1{
+  margin:0;
+  color:var(--white);
+  font-family:var(--display);
+  font-size:5rem;
+  line-height:.9;
+  letter-spacing:0;
+}
+.hero h1 span{display:block;color:var(--gold)}
+.hero-lede{
+  max-width:690px;
+  margin:24px 0 0;
+  color:#d8cfb5;
+  font-size:1.22rem;
+  line-height:1.68;
+}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
+.btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:46px;
+  padding:0 18px;
+  border:1px solid rgba(255,255,255,.18);
+  color:var(--text);
+  text-decoration:none;
+  font-weight:800;
+  background:rgba(255,255,255,.05);
+  overflow:hidden;
+  transition:transform .2s ease,border-color .2s ease,background .2s ease,color .2s ease;
+}
+.btn::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(110deg,transparent 0%,rgba(255,255,255,.28) 46%,transparent 68%);
+  transform:translateX(-120%);
+  transition:transform .55s ease;
+}
+.btn:hover{transform:translateY(-2px);border-color:rgba(255,210,0,.45)}
+.btn:hover::after{transform:translateX(120%)}
+.btn-primary{background:var(--gold);color:#111;border-color:var(--gold)}
+.btn-ghost:hover{color:var(--gold);background:rgba(255,210,0,.08)}
+.hero-instrument{
+  align-self:stretch;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  min-height:390px;
+  padding:18px;
+  border:1px solid rgba(255,210,0,.2);
+  background:
+    linear-gradient(135deg,rgba(255,210,0,.11),transparent 44%),
+    rgba(15,14,9,.72);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(14px);
+}
+.instrument-top{display:flex;justify-content:space-between;gap:14px;color:var(--muted);font-family:var(--mono);font-size:.78rem}
+.signal-bars{display:grid;grid-template-columns:repeat(18,1fr);gap:4px;align-items:end;height:118px;margin:26px 0}
+.signal-bars i{
+  display:block;
+  min-height:10px;
+  background:linear-gradient(180deg,var(--green),var(--gold));
+  opacity:.85;
+  animation:barPulse 1.6s ease-in-out infinite alternate;
+}
+.signal-bars i:nth-child(3n){background:linear-gradient(180deg,var(--cyan),var(--green));animation-delay:.2s}
+.signal-bars i:nth-child(4n){background:linear-gradient(180deg,var(--orange),var(--gold));animation-delay:.4s}
+.signal-bars i:nth-child(5n){animation-delay:.65s}
+@keyframes barPulse{from{transform:scaleY(.55);opacity:.58}to{transform:scaleY(1);opacity:1}}
+.instrument-metric{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.metric{
+  padding:12px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.045);
+}
+.metric b{display:block;color:var(--white);font-family:var(--display);font-size:1.55rem;line-height:1}
+.metric span{display:block;margin-top:7px;color:var(--muted);font-size:.78rem}
+.console-line{
+  margin:18px 0 0;
+  padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.12);
+  color:var(--green);
+  font-family:var(--mono);
+  font-size:.8rem;
+  line-height:1.5;
+}
+.hero.loaded .hero-main,.hero.loaded .hero-instrument{animation:heroIn .9s cubic-bezier(.2,.8,.2,1) both}
+.hero.loaded .hero-instrument{animation-delay:.12s}
+@keyframes heroIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+
+.signal-strip{
+  position:relative;
+  z-index:3;
+  border-top:1px solid rgba(255,210,0,.12);
+  border-bottom:1px solid rgba(255,210,0,.12);
+  background:rgba(255,210,0,.06);
+  overflow:hidden;
+}
+.ticker{
+  display:flex;
+  width:max-content;
+  animation:ticker 28s linear infinite;
+}
+.ticker span{
+  padding:14px 34px;
+  color:var(--text);
+  font-family:var(--mono);
+  font-size:.78rem;
+  white-space:nowrap;
+}
+.ticker b{color:var(--gold);font-weight:700}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* Overview */
+.overview-band{padding:46px 0 80px;border-bottom:1px solid rgba(255,210,0,.12)}
+.overview-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1.3fr;gap:14px}
+.overview-tile{
+  min-height:156px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+}
+.overview-tile strong{display:block;color:var(--white);font-family:var(--display);font-size:2.5rem;line-height:1}
+.overview-tile span{display:block;margin-top:12px;color:var(--muted);line-height:1.5}
+.overview-tile.long{background:linear-gradient(135deg,rgba(67,245,182,.08),rgba(255,210,0,.06))}
+
+/* Field proof */
+.proof-section{
+  padding-top:86px;
+  border-bottom:1px solid rgba(255,210,0,.12);
+  background:
+    linear-gradient(90deg,rgba(255,210,0,.045),transparent 42%),
+    rgba(255,255,255,.018);
+}
+.proof-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:18px;align-items:stretch}
+.proof-card{
+  position:relative;
+  min-height:390px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(145deg,rgba(255,210,0,.1),transparent 34%),
+    rgba(18,17,12,.84);
+  box-shadow:0 18px 60px rgba(0,0,0,.24);
+  overflow:hidden;
+}
+.proof-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.055) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:38px 38px;
+  opacity:.32;
+}
+.proof-card>*{position:relative;z-index:1}
+.proof-tag{
+  display:inline-flex;
+  min-height:28px;
+  align-items:center;
+  padding:0 10px;
+  color:#111;
+  background:var(--accent,var(--gold));
+  font-family:var(--mono);
+  font-size:.72rem;
+  font-weight:900;
+}
+.proof-card h3{
+  margin:24px 0 12px;
+  color:var(--white);
+  font-family:var(--display);
+  font-size:2rem;
+  line-height:1;
+}
+.proof-card p{margin:0;color:#cfc4ab;line-height:1.72}
+.proof-source{margin-top:16px;color:var(--muted);font-family:var(--mono);font-size:.78rem}
+.proof-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+.proof-actions a{
+  color:#111;
+  background:var(--accent,var(--gold));
+  text-decoration:none;
+  font-weight:900;
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.16);
+}
+.proof-actions .quiet-link{color:var(--muted);background:transparent;border-color:rgba(255,255,255,.14)}
+.proof-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}
+.proof-stat{
+  min-height:92px;
+  padding:13px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.045);
+}
+.proof-stat strong{display:block;color:var(--accent,var(--gold));font-family:var(--display);font-size:2rem;line-height:1}
+.proof-stat span{display:block;margin-top:8px;color:var(--muted);font-size:.78rem;line-height:1.35}
+.validation-strip{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:18px;
+}
+.validation-strip span{
+  padding:9px;
+  border:1px solid color-mix(in srgb,var(--accent) 36%,transparent);
+  color:var(--accent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+  font-family:var(--mono);
+  font-size:.72rem;
+}
+
+/* Projects */
+.project-controls{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 24px}
+.filter-btn{
+  min-height:38px;
+  padding:0 14px;
+  cursor:pointer;
+  color:var(--muted);
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.12);
+  font-weight:800;
+  transition:background .2s ease,color .2s ease,border-color .2s ease;
+}
+.filter-btn.active,.filter-btn:hover{color:#111;background:var(--gold);border-color:var(--gold)}
+.project-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:18px;
+  perspective:1200px;
+}
+.project-card{
+  position:relative;
+  grid-column:span 4;
+  min-height:470px;
+  display:flex;
+  flex-direction:column;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 16%,transparent),transparent 34%),
+    rgba(18,17,12,.88);
+  box-shadow:0 18px 60px rgba(0,0,0,.24);
+  transform-style:preserve-3d;
+  transition:opacity .25s ease,transform .25s ease,border-color .25s ease,background .25s ease;
+}
+.project-card:hover{
+  border-color:color-mix(in srgb,var(--accent) 62%,white 0%);
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-6px);
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 22%,transparent),transparent 38%),
+    rgba(22,21,15,.96);
+}
+.project-card.hidden{display:none}
+.project-card.featured{grid-column:span 8;min-height:530px}
+.project-top{display:flex;justify-content:space-between;align-items:center;gap:14px;position:relative;z-index:2}
+.project-status{
+  display:inline-flex;
+  min-height:28px;
+  align-items:center;
+  padding:0 10px;
+  color:#111;
+  background:var(--accent);
+  font-family:var(--mono);
+  font-size:.72rem;
+  font-weight:800;
+}
+.project-index{color:var(--soft);font-family:var(--mono);font-size:.78rem}
+.project-visual{
+  position:relative;
+  height:170px;
+  margin:16px 0 20px;
+  border:1px solid rgba(255,255,255,.12);
+  background:#0c0c09;
+  overflow:hidden;
+  transform:translateZ(26px);
+}
+.project-card.featured .project-visual{height:210px}
+.project-visual::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(180deg,rgba(255,255,255,.06),transparent 38%,rgba(0,0,0,.28));
+}
+.project-card h3{
+  margin:0;
+  color:var(--white);
+  font-family:var(--display);
+  font-size:1.78rem;
+  line-height:1.02;
+  letter-spacing:0;
+}
+.project-card p{margin:13px 0 0;color:#c8bea5;line-height:1.64}
+.project-proof{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0}
+.project-proof span{
+  padding:7px 9px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:.78rem;
+  font-weight:700;
+}
+.project-tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}
+.project-tags span{
+  color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 36%,transparent);
+  background:color-mix(in srgb,var(--accent) 10%,transparent);
+  padding:6px 8px;
+  font-family:var(--mono);
+  font-size:.72rem;
+}
+.project-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:auto}
+.project-actions a{
+  color:#111;
+  background:var(--accent);
+  text-decoration:none;
+  font-weight:900;
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.2);
+  transition:transform .2s ease,filter .2s ease;
+}
+.project-actions a:hover{transform:translateY(-2px);filter:saturate(1.12)}
+.project-actions .quiet-link{color:var(--muted);background:transparent;border-color:rgba(255,255,255,.14)}
+
+/* Project visual systems */
+.court-lines,.field-lines,.finance-chart,.film-bars,.soccer-field,.baseball-diamond,.volley-grid,.cv-frame{position:absolute;inset:0}
+.visual-basketball{
+  background:
+    linear-gradient(90deg,transparent 48%,rgba(255,210,0,.45) 49%,rgba(255,210,0,.45) 51%,transparent 52%),
+    linear-gradient(#15100a,#080806);
+}
+.visual-basketball .arc{
+  position:absolute;
+  width:180px;
+  height:180px;
+  border:2px solid rgba(255,210,0,.5);
+  border-radius:50%;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+}
+.shot{
+  position:absolute;
+  width:7px;
+  height:7px;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+  animation:shotBlink 1.8s ease-in-out infinite;
+}
+.shot:nth-child(2){left:18%;top:30%;animation-delay:.2s}
+.shot:nth-child(3){left:38%;top:62%;animation-delay:.5s}
+.shot:nth-child(4){left:72%;top:38%;animation-delay:.8s}
+.shot:nth-child(5){left:56%;top:22%;animation-delay:1.1s}
+.shot:nth-child(6){left:82%;top:70%;animation-delay:1.4s}
+@keyframes shotBlink{50%{transform:scale(1.8);opacity:.55}}
+.visual-volley{background:linear-gradient(180deg,#111a14,#090907)}
+.volley-grid{display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr)}
+.volley-grid i{border:1px solid rgba(67,245,182,.24);background:rgba(67,245,182,.03)}
+.volley-grid i:nth-child(4n){background:rgba(255,210,0,.12)}
+.volley-grid i:nth-child(7n){background:rgba(67,245,182,.18)}
+.chemistry-line{
+  position:absolute;
+  height:2px;
+  background:linear-gradient(90deg,var(--green),var(--gold));
+  transform-origin:left;
+  box-shadow:0 0 18px rgba(67,245,182,.45);
+}
+.chemistry-line.one{width:58%;left:18%;top:34%;transform:rotate(19deg)}
+.chemistry-line.two{width:44%;left:26%;top:68%;transform:rotate(-24deg)}
+.chemistry-line.three{width:38%;left:46%;top:46%;transform:rotate(38deg)}
+.visual-football{background:linear-gradient(90deg,#10180f,#081008)}
+.field-lines{display:grid;grid-template-columns:repeat(10,1fr)}
+.field-lines i{border-left:1px solid rgba(255,255,255,.18)}
+.route{
+  position:absolute;
+  left:14%;
+  top:62%;
+  width:70%;
+  height:46%;
+  border-top:3px solid var(--accent);
+  border-right:3px solid var(--accent);
+  transform:skewX(-20deg);
+  box-shadow:0 0 18px color-mix(in srgb,var(--accent) 52%,transparent);
+}
+.visual-soccer{background:linear-gradient(180deg,#0b1714,#080a08)}
+.soccer-field{
+  background:
+    linear-gradient(90deg,transparent 49%,rgba(105,217,255,.42) 50%,transparent 51%),
+    linear-gradient(transparent 48%,rgba(105,217,255,.26) 49%,rgba(105,217,255,.26) 51%,transparent 52%);
+}
+.soccer-ring{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:95px;
+  height:95px;
+  border:2px solid rgba(105,217,255,.42);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+}
+.pressure-dot{
+  position:absolute;
+  width:24px;
+  height:24px;
+  background:rgba(255,210,0,.32);
+  border:1px solid rgba(255,210,0,.62);
+}
+.pressure-dot.a{left:18%;top:22%}
+.pressure-dot.b{left:67%;top:52%}
+.pressure-dot.c{left:45%;top:70%}
+.visual-baseball{background:linear-gradient(180deg,#17130b,#080806)}
+.diamond{
+  position:absolute;
+  left:50%;
+  top:52%;
+  width:116px;
+  height:116px;
+  border:2px solid rgba(255,156,58,.58);
+  transform:translate(-50%,-50%) rotate(45deg);
+}
+.base-path{
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:var(--accent);
+  box-shadow:0 0 20px var(--accent);
+  transform:rotate(45deg);
+}
+.base-path.one{left:50%;top:16%}
+.base-path.two{right:20%;top:50%}
+.base-path.three{left:50%;bottom:14%}
+.base-path.four{left:20%;top:50%}
+.visual-finance{background:linear-gradient(180deg,#101316,#080806)}
+.finance-chart{display:flex;align-items:end;gap:8px;padding:20px}
+.finance-chart i{
+  flex:1;
+  background:linear-gradient(180deg,var(--accent),rgba(255,255,255,.1));
+  box-shadow:0 0 18px color-mix(in srgb,var(--accent) 42%,transparent);
+}
+.finance-line{
+  position:absolute;
+  left:14%;
+  right:12%;
+  top:36%;
+  height:3px;
+  background:var(--green);
+  transform:rotate(-10deg);
+  box-shadow:0 0 18px rgba(67,245,182,.5);
+}
+.visual-movie{background:#0a0908}
+.film-bars{
+  display:grid;
+  grid-template-columns:repeat(9,1fr);
+  gap:6px;
+  padding:18px;
+  align-items:end;
+}
+.film-bars i{background:linear-gradient(180deg,var(--accent),rgba(255,255,255,.1))}
+.film-strip{
+  position:absolute;
+  left:0;
+  right:0;
+  height:20px;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 14px,transparent 14px 24px);
+}
+.film-strip.top{top:0}
+.film-strip.bottom{bottom:0}
+.visual-cv img{width:100%;height:100%;object-fit:cover;filter:saturate(1.25) contrast(1.08)}
+.cv-scan{
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:3px;
+  background:var(--accent);
+  box-shadow:0 0 18px var(--accent);
+  animation:scan 2.8s linear infinite;
+  z-index:2;
+}
+@keyframes scan{to{transform:translateY(170px)}}
+
+/* Computer vision lab */
+.cv-lab{
+  border-top:1px solid rgba(255,210,0,.12);
+  border-bottom:1px solid rgba(255,210,0,.12);
+  background:
+    linear-gradient(90deg,rgba(67,245,182,.06),transparent 40%),
+    rgba(0,0,0,.18);
+}
+.cv-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:28px;align-items:start}
+.cv-copy h2{margin:0;color:var(--white);font-family:var(--display);font-size:3rem;line-height:1}
+.cv-copy p{color:var(--muted);line-height:1.75;font-size:1.02rem}
+.cv-status{
+  display:inline-flex;
+  margin-top:12px;
+  padding:8px 10px;
+  color:#111;
+  background:var(--green);
+  font-weight:900;
+}
+.cv-media{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.media-panel{
+  border:1px solid rgba(255,255,255,.12);
+  background:#0a0a07;
+  overflow:hidden;
+}
+.media-panel.wide{grid-column:1/-1}
+.media-panel img,.media-panel video{display:block;width:100%;height:100%;object-fit:cover}
+.media-panel img{aspect-ratio:16/9}
+.media-panel video{max-height:420px;background:#000}
+.caption{
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  padding:10px 12px;
+  color:var(--muted);
+  border-top:1px solid rgba(255,255,255,.1);
+  font-size:.84rem;
+}
+
+/* Home route hub */
+.route-section{
+  position:relative;
+  border-top:1px solid rgba(255,210,0,.12);
+  border-bottom:1px solid rgba(255,210,0,.12);
+  background:
+    radial-gradient(circle at 15% 10%,rgba(67,245,182,.13),transparent 34%),
+    radial-gradient(circle at 84% 22%,rgba(255,210,0,.12),transparent 32%),
+    rgba(0,0,0,.16);
+  overflow:hidden;
+}
+.route-section::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(180deg,transparent,black 16%,black 84%,transparent);
+  opacity:.52;
+}
+.route-section .wrap{position:relative;z-index:1}
+.route-grid{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:16px;
+  perspective:1100px;
+}
+.route-card{
+  position:relative;
+  min-height:330px;
+  grid-column:span 4;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:20px;
+  color:inherit;
+  text-decoration:none;
+  border:1px solid rgba(255,255,255,.13);
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 18%,transparent),transparent 38%),
+    rgba(15,14,10,.9);
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+  overflow:hidden;
+  transition:transform .32s cubic-bezier(.2,.8,.2,1),border-color .32s ease,background .32s ease;
+}
+.route-card:hover{
+  transform:translateY(-8px) rotateX(2deg) rotateY(-2deg);
+  border-color:color-mix(in srgb,var(--accent) 70%,white 0%);
+  background:
+    linear-gradient(145deg,color-mix(in srgb,var(--accent) 25%,transparent),transparent 42%),
+    rgba(18,17,12,.98);
+}
+.route-card.major{grid-column:span 7;min-height:430px}
+.route-card.tall{grid-column:span 5;min-height:430px}
+.route-card.wide{grid-column:span 6}
+.route-card>*{position:relative;z-index:1}
+.route-card::after{
+  content:"";
+  position:absolute;
+  inset:auto -20% -28% 8%;
+  height:45%;
+  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 30%,transparent),transparent 66%);
+  filter:blur(10px);
+  opacity:.85;
+}
+.route-kicker{
+  display:inline-flex;
+  width:max-content;
+  min-height:28px;
+  align-items:center;
+  padding:0 10px;
+  color:#111;
+  background:var(--accent);
+  font-family:var(--mono);
+  font-size:.72rem;
+  font-weight:900;
+  text-transform:uppercase;
+}
+.route-card h3{
+  max-width:620px;
+  margin:20px 0 0;
+  color:var(--white);
+  font-family:var(--display);
+  font-size:2.45rem;
+  line-height:.95;
+}
+.route-card p{max-width:620px;margin:14px 0 0;color:#c8bea5;line-height:1.68}
+.route-card small{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:22px;
+  color:var(--accent);
+  font-family:var(--mono);
+  font-size:.76rem;
+  font-weight:800;
+}
+.route-preview{
+  position:relative;
+  min-height:150px;
+  margin-top:24px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(0,0,0,.28);
+  overflow:hidden;
+}
+.route-orbit{
+  position:absolute;
+  width:190px;
+  height:190px;
+  left:50%;
+  top:50%;
+  border:1px solid color-mix(in srgb,var(--accent) 65%,transparent);
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 42px color-mix(in srgb,var(--accent) 20%,transparent);
+}
+.route-orbit::before,.route-orbit::after{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:var(--accent);
+  box-shadow:0 0 22px var(--accent);
+  animation:routePulse 2.6s ease-in-out infinite;
+}
+.route-orbit::before{left:16%;top:16%}
+.route-orbit::after{right:10%;bottom:20%;animation-delay:1.1s}
+.route-bars{
+  position:absolute;
+  inset:20px;
+  display:flex;
+  align-items:end;
+  gap:8px;
+}
+.route-bars i{
+  flex:1;
+  min-height:18%;
+  background:linear-gradient(180deg,var(--accent),rgba(255,255,255,.08));
+  box-shadow:0 0 18px color-mix(in srgb,var(--accent) 40%,transparent);
+  animation:routeBar 2.4s ease-in-out infinite;
+}
+.route-bars i:nth-child(2n){animation-delay:.35s}
+.route-bars i:nth-child(3n){animation-delay:.7s}
+.route-scan{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,transparent 49%,color-mix(in srgb,var(--accent) 46%,transparent) 50%,transparent 51%),
+    linear-gradient(transparent 49%,color-mix(in srgb,var(--accent) 26%,transparent) 50%,transparent 51%);
+}
+.route-scan::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:0;
+  height:3px;
+  background:var(--accent);
+  box-shadow:0 0 20px var(--accent);
+  animation:scan 3.2s linear infinite;
+}
+.route-map{
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(115deg,transparent 20%,color-mix(in srgb,var(--accent) 55%,transparent) 21%,transparent 22%),
+    linear-gradient(25deg,transparent 36%,rgba(255,255,255,.18) 37%,transparent 38%),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 52px),
+    repeating-linear-gradient(0deg,rgba(255,255,255,.07) 0 1px,transparent 1px 42px);
+}
+@keyframes routePulse{50%{transform:scale(1.7);opacity:.5}}
+@keyframes routeBar{50%{transform:scaleY(.55);opacity:.62}}
+
+/* Process and experience */
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.process-step{
+  min-height:240px;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+}
+.process-step b{display:block;color:var(--gold);font-family:var(--mono);font-size:.82rem}
+.process-step h3{margin:30px 0 10px;color:var(--white);font-family:var(--display);font-size:1.5rem}
+.process-step p{margin:0;color:var(--muted);line-height:1.65}
+.timeline{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+.timeline-item{
+  display:grid;
+  grid-template-columns:210px minmax(0,1fr) 140px;
+  gap:18px;
+  align-items:start;
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+}
+.timeline-item .role{margin:0;color:var(--white);font-family:var(--display);font-size:1.35rem}
+.timeline-item .org{margin:5px 0 0;color:var(--muted)}
+.timeline-item .date{color:var(--gold);font-family:var(--mono);font-size:.78rem;text-align:right}
+.timeline-item p{margin:0;color:#c9bfa8;line-height:1.65}
+.timeline-item a{color:var(--green);font-weight:800;text-decoration:none}
+.timeline-item a:hover{text-decoration:underline}
+
+/* Skills */
+.skills-matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.skill-block{
+  padding:18px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+}
+.skill-block h3{margin:0 0 14px;color:var(--white);font-family:var(--display);font-size:1.26rem}
+.skill-block div{display:flex;flex-wrap:wrap;gap:8px}
+.skill-block span{
+  padding:7px 9px;
+  color:var(--muted);
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(255,255,255,.035);
+  font-size:.82rem;
+}
+
+/* Contact */
+.contact-section{padding:96px 0 74px;border-top:1px solid rgba(255,210,0,.13)}
+.contact-box{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:28px;
+  align-items:center;
+  padding:28px;
+  border:1px solid rgba(255,210,0,.2);
+  background:
+    linear-gradient(135deg,rgba(255,210,0,.11),rgba(67,245,182,.06)),
+    rgba(255,255,255,.04);
+}
+.contact-box h2{margin:0;color:var(--white);font-family:var(--display);font-size:3rem;line-height:1}
+.contact-box p{margin:14px 0 0;color:var(--muted);line-height:1.7}
+.contact-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+footer{padding:26px 0;border-top:1px solid rgba(255,255,255,.1);color:var(--soft);font-family:var(--mono);font-size:.78rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media(max-width:1020px){
+  .progress-rail{display:none}
+  .hero-content{grid-template-columns:1fr}
+  .hero-instrument{max-width:520px;min-height:300px}
+  .overview-grid{grid-template-columns:1fr 1fr}
+  .proof-grid{grid-template-columns:1fr}
+  .route-card,.route-card.major,.route-card.tall,.route-card.wide{grid-column:span 6}
+  .project-card,.project-card.featured{grid-column:span 6}
+  .cv-grid{grid-template-columns:1fr}
+  .process-grid,.skills-matrix{grid-template-columns:1fr 1fr}
+  .timeline-item{grid-template-columns:1fr}
+  .timeline-item .date{text-align:left}
+}
+@media(max-width:760px){
+  .wrap{width:min(100% - 28px,1180px)}
+  .nav-links{display:none}
+  .menu-btn{display:flex}
+  .mobile-nav.open{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    padding:12px 20px 20px;
+    background:rgba(9,9,6,.95);
+    border-top:1px solid rgba(255,210,0,.14);
+  }
+  .mobile-nav a{color:var(--muted);text-decoration:none;font-weight:800;padding:8px 0}
+  .hero{min-height:auto}
+  .hero-content{width:min(100% - 28px,1180px);padding:92px 0 34px}
+  .hero h1{font-size:3.15rem;line-height:.94}
+  .hero-lede{font-size:1.03rem}
+  .hero-instrument{display:none}
+  .section{padding:68px 0}
+  .section-head{grid-template-columns:1fr;gap:16px}
+  .section-title,.cv-copy h2,.contact-box h2{font-size:2.35rem}
+  .overview-band{padding:30px 0 62px}
+  .overview-grid,.proof-stats,.validation-strip,.process-grid,.skills-matrix,.cv-media{grid-template-columns:1fr}
+  .proof-card{min-height:0;padding:18px}
+  .route-card,.route-card.major,.route-card.tall,.route-card.wide{grid-column:1/-1;min-height:290px}
+  .route-card h3{font-size:2rem}
+  .route-preview{min-height:130px}
+  .project-card,.project-card.featured{grid-column:1/-1;min-height:0}
+  .project-card h3{font-size:1.55rem}
+  .project-visual,.project-card.featured .project-visual{height:170px}
+  .contact-box{grid-template-columns:1fr;padding:20px}
+  .contact-actions{justify-content:flex-start}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
 <body>
-
-<nav id="navbar">
-<div class="nav-inner">
-<a href="#hero" class="nav-logo">BK<em>.</em></a>
-<div class="nav-links">
-<a href="#about">About</a>
-<a href="#experience">Experience</a>
-<a href="#projects">Projects</a>
-<a href="#skills">Skills</a>
-<a href="#contact">Contact</a>
-<a href="resume.pdf" target="_blank" class="nav-resume">Resume</a>
-</div>
-<button class="nav-hamburger" id="hamBtn">&#9776;</button>
-</div>
-<div class="nav-mobile" id="mobileNav">
-<a href="#about" class="mob-link">About</a>
-<a href="#experience" class="mob-link">Experience</a>
-<a href="#projects" class="mob-link">Projects</a>
-<a href="#skills" class="mob-link">Skills</a>
-<a href="#contact" class="mob-link">Contact</a>
-<a href="resume.pdf" target="_blank" rel="noopener" class="mob-link mob-resume">Resume</a>
-</div>
+<a href="#projects" class="skip-link">Skip to site routes</a>
+<nav class="topbar" id="topbar">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="brand" aria-label="Bryan Kwan home"><span class="brand-mark">BK</span><span>Bryan Kwan</span></a>
+    <div class="nav-links" aria-label="Primary navigation">
+      <a href="projects.html">Projects</a>
+      <a href="computer-vision.html">Vision Lab</a>
+      <a href="proof.html">Proof</a>
+      <a href="#experience">About</a>
+      <a href="#contact">Contact</a>
+      <a href="resume.pdf" target="_blank" rel="noopener" class="resume-link">Resume</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="projects.html">Projects</a>
+    <a href="computer-vision.html">Vision Lab</a>
+    <a href="proof.html">Proof</a>
+    <a href="#experience">About</a>
+    <a href="#contact">Contact</a>
+    <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
 </nav>
+<div class="progress-rail" aria-hidden="true"><span id="scrollProgress"></span></div>
 
-<section class="hero" id="hero">
-<div class="hero-orb1"></div>
-<div class="hero-orb2"></div>
-<div class="hero-content" id="heroContent">
-<div><p class="hero-label">Hey, I'm</p></div>
-<div><h1 class="hero-name">Bryan Kwan<em>.</em></h1></div>
-<div><h2 class="hero-tagline">I build analytics tools people can actually use.</h2></div>
-<div><p class="hero-desc">M.S. Business Analytics candidate at the University of Toledo building sports analytics dashboards, valuation models, BI workflows, and backend tools that turn messy data into clear decisions.</p></div>
-<div class="hero-btns">
-<a href="#projects" class="btn-gold">View Projects</a>
-<a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
-</div>
-</div>
-</section>
+<main>
+  <section class="hero loaded" id="top">
+    <canvas id="missionScene" aria-hidden="true"></canvas>
+    <div class="hero-shade"></div>
+    <div class="hero-gridline"></div>
+    <div class="hero-content">
+      <div class="hero-main reveal visible">
+        <p class="eyebrow">Analytics portfolio / sports ops / BI / computer vision</p>
+        <h1>Bryan Kwan<span>builds decision tools.</span></h1>
+        <p class="hero-lede">I turn messy sports, finance, and operational data into dashboards, models, and scouting systems that people can actually use under pressure.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="projects.html">Enter project atlas</a>
+          <a class="btn btn-ghost" href="computer-vision.html">Open vision lab &rarr;</a>
+        </div>
+      </div>
+      <aside class="hero-instrument reveal" aria-label="Portfolio telemetry">
+        <div class="instrument-top"><span>PORTFOLIO OPS</span><span>LIVE BUILDS</span></div>
+        <div class="signal-bars" aria-hidden="true">
+          <i style="height:48%"></i><i style="height:78%"></i><i style="height:58%"></i><i style="height:94%"></i><i style="height:38%"></i><i style="height:70%"></i><i style="height:52%"></i><i style="height:86%"></i><i style="height:64%"></i><i style="height:96%"></i><i style="height:44%"></i><i style="height:74%"></i><i style="height:57%"></i><i style="height:84%"></i><i style="height:41%"></i><i style="height:68%"></i><i style="height:90%"></i><i style="height:60%"></i>
+        </div>
+        <div class="instrument-metric">
+          <div class="metric"><b>8</b><span>featured projects</span></div>
+          <div class="metric"><b>6</b><span>hosted demos</span></div>
+          <div class="metric"><b>5</b><span>sports systems</span></div>
+          <div class="metric"><b>1</b><span>vision lab</span></div>
+        </div>
+        <div class="console-line">MODEL STACK: SQL + JS + PYTHON + WORKERS + BI + COMPUTER VISION</div>
+      </aside>
+    </div>
+  </section>
 
-<section class="section" id="about">
-<div class="section-head reveal"><p class="section-label">01</p><h2 class="section-title">About Me<em>.</em></h2><div class="section-bar"></div></div>
-<div class="about-grid">
-<div class="about-text reveal" style="transition-delay:.1s">
-<p>I'm a graduate student at the <b>University of Toledo</b> finishing my M.S. in Business Analytics with a concentration in Marketing. I also hold a B.S. in Marketing and Professional Sales &#8212; graduated <i>Summa Cum Laude</i> with a 3.94 GPA.</p>
-<p>My work sits at the intersection of analytics, business strategy, and sports. Whether it's building valuation models for NCAA rosters, engineering SQL pipelines for revenue analytics, or designing Power BI dashboards for executive visibility &#8212; I'm focused on turning raw data into something leadership can actually act on.</p>
-<p>Outside of analytics I speak four languages (English, Mandarin, Cantonese, and Malay) and I'm always looking for new problems to solve with data.</p>
-</div>
-<div class="reveal" style="transition-delay:.25s">
-<div class="edu-card"><p class="edu-date">Aug 2024 &#8211; May 2026</p><p class="edu-degree">M.S. Business Analytics</p><p class="edu-school">University of Toledo &#183; GPA: 4.0</p><p class="edu-note">Concentration in Marketing</p></div>
-<div class="edu-card"><p class="edu-date">Aug 2021 &#8211; May 2024</p><p class="edu-degree">B.S. Marketing and Professional Sales</p><p class="edu-school">University of Toledo &#183; GPA: 3.94</p><p class="edu-note">Summa Cum Laude &#183; Phi Kappa Phi</p></div>
-</div>
-</div>
-</section>
+  <div class="signal-strip" aria-hidden="true">
+    <div class="ticker">
+      <span><b>Toledo Athletics</b> featured intern</span>
+      <span><b>MAC Tournament</b> 3/3 winners</span>
+      <span><b>Basketball</b> valuation curves</span>
+      <span><b>Volleyball</b> setter chemistry</span>
+      <span><b>Football</b> ops planning</span>
+      <span><b>Soccer</b> fit modeling</span>
+      <span><b>Baseball</b> player universe</span>
+      <span><b>Computer vision</b> heatmaps</span>
+      <span><b>Finance</b> OLS forecasts</span>
+      <span><b>Movies</b> Power BI story</span>
+      <span><b>Toledo Athletics</b> featured intern</span>
+      <span><b>MAC Tournament</b> 3/3 winners</span>
+      <span><b>Basketball</b> valuation curves</span>
+      <span><b>Volleyball</b> setter chemistry</span>
+      <span><b>Football</b> ops planning</span>
+      <span><b>Soccer</b> fit modeling</span>
+      <span><b>Baseball</b> player universe</span>
+      <span><b>Computer vision</b> heatmaps</span>
+      <span><b>Finance</b> OLS forecasts</span>
+      <span><b>Movies</b> Power BI story</span>
+    </div>
+  </div>
 
-<section class="section" id="experience">
-<div class="section-head reveal"><p class="section-label">02</p><h2 class="section-title">Experience<em>.</em></h2><div class="section-bar"></div></div>
+  <section class="overview-band">
+    <div class="wrap overview-grid">
+      <div class="overview-tile reveal"><strong>Sports</strong><span>Dashboards for basketball, volleyball, football, soccer, and baseball workflows.</span></div>
+      <div class="overview-tile reveal"><strong>Models</strong><span>Scoring, valuation, fit grades, forecasts, player profiles, and scenario planning.</span></div>
+      <div class="overview-tile reveal"><strong>Interfaces</strong><span>Hosted browser builds with filters, charts, exports, demos, and scouting surfaces.</span></div>
+      <div class="overview-tile long reveal"><strong>Point of view</strong><span>Build the data pipeline, ship the interface, then make the output legible enough for coaches, analysts, and leaders to act on.</span></div>
+    </div>
+  </section>
 
-<div class="exp-item open reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Data Science and Sports Analytics Intern</p><p class="exp-meta">University of Toledo Athletics &#183; Toledo, OH</p></div><p class="exp-date">Feb 2026 &#8211; Present</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Partner with senior athletics leadership to deliver analytics that support operations, revenue strategy, and student-athlete performance decisions.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Build and maintain dashboards + KPI reporting for operational efficiency, fan engagement, and revenue growth initiatives.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Develop regression-based player evaluation models using advanced efficiency metrics; apply feature selection and multicollinearity reduction to improve interpretability and reliability.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Design constrained optimization / integer programming frameworks to evaluate roster construction scenarios under budget and structural constraints.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Translate complex analysis into clear recommendations for non-technical stakeholders, driving faster decision-making and alignment.</p></div>
-</div></div>
-</div>
+  <section class="section proof-section" id="field-proof">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Field proof</p>
+          <h2 class="section-title">Recognized work, validated model.</h2>
+        </div>
+        <p class="section-copy">Two pieces of evidence sit behind the basketball work: Toledo Athletics publicly featured the internship program and my role in the men's basketball project, and the MAC Tournament report validates the model against real postseason outcomes.</p>
+      </div>
+      <div class="proof-grid">
+        <article class="proof-card reveal" style="--accent:#ffd200">
+          <span class="proof-tag">TOLEDO ATHLETICS FEATURE</span>
+          <h3>Featured in Rockets article on the data internship program.</h3>
+          <p>University of Toledo Athletics profiled its first-year Data Science Internship Program and named me among the interns supporting real department projects. The article connects my work to the men's basketball analytics tool and highlights the goal of building something coaches could use for decision-making, from data collection and modeling through a functional interface.</p>
+          <div class="proof-source">Published by Toledo Athletics / April 20, 2026</div>
+          <div class="proof-actions">
+            <a href="https://utrockets.com/news/2026/4/15/toledo-athletics-data-internship-program-aids-the-rockets-spurs-student-careers" target="_blank" rel="noopener">Read article &rarr;</a>
+          </div>
+        </article>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Academic Support Assistant</p><p class="exp-meta">UToledo Neff College of Business &#183; Toledo, OH</p></div><p class="exp-date">Oct 2025 &#8211; Jan 2026</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported students through data-driven advising workflows (degree audits, prerequisites, registration paths) to improve enrollment accuracy and speed.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Diagnosed student issues, identified root causes, and provided step-by-step system guidance across advising and registration platforms.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated academic policies clearly and consistently, strengthening customer-support style service and issue resolution.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Promoted tutoring, workshops, and student org resources to increase student engagement and retention.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Escalated complex cases efficiently to professional advisors while maintaining documentation and process quality.</p></div>
-</div></div>
-</div>
+        <article class="proof-card reveal" style="--accent:#43f5b6">
+          <span class="proof-tag">MAC TOURNAMENT VALIDATION</span>
+          <h3>Monte Carlo + AI scouting report held up under tournament pressure.</h3>
+          <p>For Toledo's 2026 MAC Tournament run, I ran a simulation and opponent-scouting workflow that blended win-probability distributions with Gemini-assisted game-script analysis. The post-tournament validation showed the model framed uncertainty well and identified the key risks, including Akron's second-half run profile and late-game three-point danger.</p>
+          <div class="proof-stats">
+            <div class="proof-stat"><strong>1.07</strong><span>Toledo score MAE in points</span></div>
+            <div class="proof-stat"><strong>3/3</strong><span>game winners inside model call</span></div>
+            <div class="proof-stat"><strong>2/2</strong><span>close games pre-flagged</span></div>
+            <div class="proof-stat"><strong>1.1</strong><span>Akron final margin error</span></div>
+          </div>
+          <div class="validation-strip">
+            <span>30.4% UMass blowout scenario modeled</span>
+            <span>Akron -4.1 projected / Akron -3 actual</span>
+            <span>CBD API + ESPN + Gemini 2.5 Flash</span>
+          </div>
+          <div class="proof-actions">
+            <a href="mac-tournament-model-validation.html.pdf" target="_blank" rel="noopener">Open validation PDF &rarr;</a>
+            <a class="quiet-link" href="projects.html#basketball">See basketball build</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Market Analyst</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">May 2025 &#8211; Jul 2025</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted competitive market research and pricing analysis to support profitability and marketplace positioning across e-commerce channels.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Analyzed sales trends and customer behavior to identify high-opportunity products and recommend pricing adjustments.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built/maintained competitor tracking systems and recurring reporting to enable faster, data-backed pricing decisions.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Presented market insights and pricing recommendations to senior leadership with clear takeaways and next steps.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Collaborated with purchasing, marketing, and SEO teams to align pricing strategy with demand, promotions, and performance goals.</p></div>
-</div>
-<div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge">&#128196; Letter of Recommendation from Manager</a></div>
-</div>
-</div>
+  <section class="section route-section" id="projects">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Site routes</p>
+          <h2 class="section-title">Choose the part of the portfolio you want to inspect.</h2>
+        </div>
+        <p class="section-copy">Start with the big picture here, then jump into the dedicated page for project demos, computer-vision output, model validation, or resume materials.</p>
+      </div>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">E-Commerce Specialist</p><p class="exp-meta">Modern Builders Supply &#183; Toledo, OH</p></div><p class="exp-date">Oct 2024 &#8211; May 2025</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Optimized Walmart and eBay listings using market analysis, keyword strategy, and conversion-focused merchandising to improve visibility and sales performance.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove 25%+ YoY Walmart sales growth, including a 120% increase in March 2025 vs. March 2024, by refining selection, pricing, and listing execution.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered consistent MoM growth on eBay through pricing adjustments, product prioritization, and search optimization.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built custom SQL logic to improve internal data workflows and strengthen recommendation/selection decisions.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced actionable insights from marketplace data to support smarter product, pricing, and inventory moves.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated cross-functionally to align channel strategy and improve operational accuracy in catalog management.</p></div>
-</div>
-<div class="exp-footer"><a href="recommendation.pdf" target="_blank" class="rec-badge">&#128196; Letter of Recommendation from Manager</a></div>
-</div>
-</div>
+      <div class="route-grid">
+        <a class="route-card major reveal" href="projects.html" style="--accent:#ffd200">
+          <div>
+            <span class="route-kicker">Project atlas</span>
+            <h3>All dashboards, models, and demos in one dedicated project atlas.</h3>
+            <p>Basketball, volleyball, football, soccer, baseball, finance, movie ratings, and the in-progress computer vision work now have a proper discovery page with filters, proof points, and direct demo links.</p>
+            <small>Open the project atlas &rarr;</small>
+          </div>
+          <div class="route-preview" aria-hidden="true">
+            <div class="route-orbit"></div>
+            <div class="route-bars">
+              <i style="height:42%"></i><i style="height:76%"></i><i style="height:58%"></i><i style="height:91%"></i><i style="height:64%"></i><i style="height:84%"></i><i style="height:49%"></i><i style="height:70%"></i>
+            </div>
+          </div>
+        </a>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Marketing Intern</p><p class="exp-meta">Compass Group (Chartwells) &#183; Toledo, OH</p></div><p class="exp-date">Aug 2023 &#8211; Jul 2024</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing strategy for national brands and internal concepts through campaign execution, event marketing, and performance tracking.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Helped plan and execute events that improved customer engagement by pairing creative concepts with operational coordination and post-event insights.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed digital communications and content planning to strengthen brand presence and increase student awareness.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Produced reports and updates for stakeholders by translating engagement and activation outcomes into clear recommendations.</p></div>
-</div></div>
-</div>
+        <a class="route-card tall reveal" href="computer-vision.html" style="--accent:#ff5b4a">
+          <div>
+            <span class="route-kicker">Computer Vision Lab</span>
+            <h3>A focused lab page for detections, heatmaps, video output, and roadmap.</h3>
+            <p>The vision project has its own space for output media, current limitations, and the next engineering steps.</p>
+            <small>Enter the lab &rarr;</small>
+          </div>
+          <div class="route-preview" aria-hidden="true">
+            <img src="compvision/all_players.png" alt="" style="width:100%;height:100%;object-fit:cover;filter:saturate(1.2) contrast(1.05)"/>
+            <div class="route-scan"></div>
+          </div>
+        </a>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Sales and Marketing Intern</p><p class="exp-meta">Greek House &#183; Jacksonville, FL (Remote)</p></div><p class="exp-date">May 2023 &#8211; Aug 2023</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Drove outbound outreach to decision-makers using organized lead workflows to generate interest in custom apparel solutions.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built relationships with prospects and existing customers through persuasive communication and timely follow-up, strengthening sales pipeline health.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported marketing efforts through content and social updates that improved brand consistency and top-of-funnel engagement.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with internal teams to ensure customer needs were met from discovery to fulfillment, reinforcing retention and satisfaction.</p></div>
-</div></div>
-</div>
+        <a class="route-card wide reveal" href="proof.html" style="--accent:#43f5b6">
+          <div>
+            <span class="route-kicker">Proof board</span>
+            <h3>Feature article plus MAC Tournament model validation.</h3>
+            <p>A focused page for the Toledo Athletics feature and the postseason validation numbers: 1.07 point Toledo score MAE, 3/3 winners in model range, and close-game flags that held up.</p>
+            <small>Open proof board &rarr;</small>
+          </div>
+          <div class="route-preview" aria-hidden="true"><div class="route-map"></div></div>
+        </a>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Summer Camp Counselor</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Summers 2023, 2024, 2025</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Led daily program operations for groups of campers by planning activities, managing schedules, and ensuring a safe, structured environment.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Practiced real-time decision-making and problem-solving by de-escalating conflicts and handling behavioral issues with consistency and empathy.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Coordinated with counselor teams to execute events smoothly, demonstrating leadership, teamwork, and operational discipline.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Communicated clearly with campers and staff to maintain engagement, set expectations, and reinforce positive experiences.</p></div>
-</div></div>
-</div>
+        <a class="route-card wide reveal" href="resume.pdf" target="_blank" rel="noopener" style="--accent:#69d9ff">
+          <div>
+            <span class="route-kicker">Fast read</span>
+            <h3>Resume, recommendation, and contact paths stay one click away.</h3>
+            <p>The site can be explored like a product, while the core documents stay easy to reach for recruiters, coaches, and analytics teams.</p>
+            <small>Open resume &rarr;</small>
+          </div>
+          <div class="route-preview" aria-hidden="true">
+            <div class="route-bars">
+              <i style="height:82%"></i><i style="height:55%"></i><i style="height:68%"></i><i style="height:43%"></i><i style="height:92%"></i><i style="height:74%"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">International Student Assistant</p><p class="exp-meta">University of Toledo &#183; Toledo, OH</p></div><p class="exp-date">Feb 2023 &#8211; May 2023</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Supported international office operations across recruitment and student services through organized admin processes and service-based communication.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Used digital marketing and content updates to improve engagement across social platforms and support enrollment visibility.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inbox triage and routine communications, ensuring timely responses and a strong service experience for prospective/current students.</p></div>
-</div></div>
-</div>
+  <section class="section" id="process">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Operating style</p>
+          <h2 class="section-title">The pattern behind the builds.</h2>
+        </div>
+        <p class="section-copy">The projects vary by sport and audience, but the workflow is consistent: find the decision, normalize the data, model the tradeoff, then ship an interface that does not require a technical translator.</p>
+      </div>
+      <div class="process-grid">
+        <div class="process-step reveal"><b>01</b><h3>Ingest</h3><p>APIs, CSV exports, Excel workbooks, public rosters, boxscores, and generated datasets get shaped into stable inputs.</p></div>
+        <div class="process-step reveal"><b>02</b><h3>Score</h3><p>Build rankings, fit grades, valuation curves, forecasts, and role-specific metrics that match the actual workflow.</p></div>
+        <div class="process-step reveal"><b>03</b><h3>Explain</h3><p>Turn model output into profiles, reports, side-by-side comparisons, scenario views, and clear next steps.</p></div>
+        <div class="process-step reveal"><b>04</b><h3>Ship</h3><p>Publish browser-first tools with responsive layouts, export flows, local storage, and backend hooks when needed.</p></div>
+      </div>
+    </div>
+  </section>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Marketing Specialist</p><p class="exp-meta">Vitals Official Enterprise &#183; Hybrid</p></div><p class="exp-date">Mar 2021 &#8211; Feb 2023</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Executed digital marketing initiatives across social and web channels to drive engagement, brand awareness, and sales activity.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Conducted cost and supplier analysis to improve margin efficiency and support better operational decisions.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Performed primary/secondary research to develop customer insight and guide product/service improvements.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Balanced marketing creativity with business analytics by connecting campaigns to measurable goals and performance indicators.</p></div>
-</div></div>
-</div>
+  <section class="section" id="experience">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Experience</p>
+          <h2 class="section-title">Analytics plus business context.</h2>
+        </div>
+        <p class="section-copy">The portfolio is project-heavy because that is where the work is easiest to inspect, but the background matters too: athletics analytics, market analysis, e-commerce growth, and stakeholder-facing reporting.</p>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item reveal">
+          <div><p class="role">Data Science and Sports Analytics Intern</p><p class="org">University of Toledo Athletics</p></div>
+          <p>Partnering with athletics leadership on dashboards, KPI reporting, player evaluation models, roster construction scenarios, and decision-ready recommendations. Featured by Toledo Athletics for work connected to the men's basketball analytics project. <a href="https://utrockets.com/news/2026/4/15/toledo-athletics-data-internship-program-aids-the-rockets-spurs-student-careers" target="_blank" rel="noopener">Read feature</a></p>
+          <div class="date">Feb 2026 - Present</div>
+        </div>
+        <div class="timeline-item reveal">
+          <div><p class="role">Market Analyst / E-Commerce Specialist</p><p class="org">Modern Builders Supply</p></div>
+          <p>Built pricing, marketplace, competitor, and SQL-driven workflows that supported product decisions and measurable Walmart/eBay sales growth. <a href="recommendation.pdf" target="_blank" rel="noopener">Recommendation letter</a></p>
+          <div class="date">Oct 2024 - Jul 2025</div>
+        </div>
+        <div class="timeline-item reveal">
+          <div><p class="role">M.S. Business Analytics</p><p class="org">University of Toledo</p></div>
+          <p>Graduate concentration in Marketing. Earlier B.S. in Marketing and Professional Sales, Summa Cum Laude, Phi Kappa Phi, 3.94 GPA.</p>
+          <div class="date">2024 - 2026</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">Starbucks &#183; Toledo, OH</p></div><p class="exp-date">Aug 2021 &#8211; Sep 2022</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Delivered high-volume customer service while maintaining speed, accuracy, and quality standards in a fast-paced environment.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Managed inventory stocking and station readiness to support smooth operations and reduce service bottlenecks.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Built customer loyalty through consistent communication, professionalism, and service recovery.</p></div>
-</div></div>
-</div>
+  <section class="section" id="skills">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Stack</p>
+          <h2 class="section-title">Tools I keep reaching for.</h2>
+        </div>
+        <p class="section-copy">My strongest lane is the intersection of modeling, dashboard design, and practical business communication.</p>
+      </div>
+      <div class="skills-matrix">
+        <div class="skill-block reveal"><h3>Analytics</h3><div><span>Regression</span><span>Optimization</span><span>Valuation</span><span>Forecasting</span><span>Scenario simulation</span></div></div>
+        <div class="skill-block reveal"><h3>Data</h3><div><span>Python</span><span>SQL</span><span>JavaScript</span><span>TypeScript</span><span>R</span><span>KNIME</span></div></div>
+        <div class="skill-block reveal"><h3>BI and UI</h3><div><span>Power BI</span><span>Tableau</span><span>Excel</span><span>Power Query</span><span>Dashboard design</span></div></div>
+        <div class="skill-block reveal"><h3>Systems</h3><div><span>Cloudflare Workers</span><span>API integration</span><span>ETL</span><span>Auth flows</span><span>Automation</span></div></div>
+      </div>
+    </div>
+  </section>
 
-<div class="exp-item reveal" onclick="toggleExp(this)">
-<div class="exp-header"><div><p class="exp-role">Barista</p><p class="exp-meta">{x} coffee</p></div><p class="exp-date">Jan 2019 &#8211; Mar 2019</p></div>
-<div class="exp-body"><div class="exp-bullets">
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Provided personalized customer service by recommending products based on preferences, strengthening repeat business.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Maintained high standards for cleanliness, workflow organization, and drink/food quality.</p></div>
-<div class="exp-bullet"><span class="exp-bullet-dot">&#9656;</span><p>Developed strong product knowledge and communication skills through daily customer interaction and service delivery.</p></div>
-</div></div>
-</div>
+  <section class="contact-section" id="contact">
+    <div class="wrap contact-box reveal">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Open to analytics, BI, and data science roles.</h2>
+        <p>I am especially excited by work where the analysis has to survive contact with real decisions: sports operations, revenue strategy, product analytics, and executive reporting.</p>
+      </div>
+      <div class="contact-actions">
+        <a class="btn btn-primary" href="mailto:bryan.kwan@rockets.utoledo.edu">Email me</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</main>
 
-</section>
-
-<section class="section" id="projects">
-<div class="section-head reveal"><p class="section-label">03</p><h2 class="section-title">Selected Work<em>.</em></h2><div class="section-bar"></div></div>
-<p class="section-copy reveal">My portfolio is centered on projects that best represent how I work: build the model, ship the interface, and connect the pipeline behind it. The featured work below shows the strongest mix of public dashboards, sports analytics, and technical tooling.</p>
-
-<div class="project-group">
-<div class="project-group-head reveal">
-<div>
-<p class="project-kicker">Featured Work</p>
-<h3 class="project-group-title">Best representative projects</h3>
-</div>
-<p class="project-group-copy"> </p>
-</div>
-<div class="featured-grid">
-<div class="project-card featured featured-main reveal">
-<div class="project-bar" style="background:#FFD200"></div>
-<p class="project-eyebrow">Flagship dashboard</p>
-<div class="project-title-row"><h3 class="project-title">NCAA Basketball Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
-<p class="project-desc">A full scouting product for NCAA MBB/WBB that combines live player data, weighted composite scoring, valuation curves, archetypes, roster building, team matchup analysis, shot charts, and AI-assisted search in one browser-based dashboard.</p>
-<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Cloudflare Workers</span><span class="project-tag">ESPN API</span><span class="project-tag">CBBD API</span><span class="project-tag">Gemini AI</span></div>
-<div class="project-actions"><a href="https://bryanhkwan.github.io/basketball-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
-</div>
-
-<div class="project-card featured reveal">
-<div class="project-bar" style="background:#5ed1a7"></div>
-<p class="project-eyebrow">Public dashboard</p>
-<div class="project-title-row"><h3 class="project-title">NCAA Soccer Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
-<p class="project-desc">A scouting board for NCAA women's soccer with percentile-based player scoring, role-specific archetypes, Toledo fit grading, turnover analysis, and exportable reports built for faster evaluation across the MAC and national player pool.</p>
-<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Data Pipeline</span><span class="project-tag">Scouting Reports</span></div>
-<div class="project-actions"><a href="https://bryanhkwan.github.io/soccer-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
-</div>
-
-<div class="project-card featured reveal">
-<div class="project-bar" style="background:#7dd3fc"></div>
-<p class="project-eyebrow">Technical tooling</p>
-<div class="project-title-row"><h3 class="project-title">Swagger-MCP</h3><span class="project-badge">No live demo</span></div>
-<p class="project-desc">Built tooling around Swagger/OpenAPI specs to generate MCP-ready models, endpoint helpers, and schema-aware tool definitions for AI-assisted API integration workflows, reducing manual setup when wrapping APIs for agent use.</p>
-<div class="project-tags"><span class="project-tag">TypeScript</span><span class="project-tag">MCP</span><span class="project-tag">OpenAPI</span><span class="project-tag">Node.js</span></div>
-<div class="project-actions"><span class="project-note">Selected technical build and workflow project.</span></div>
-</div>
-</div>
-</div>
-
-<div class="project-group">
-<div class="project-group-head reveal">
-<div>
-<p class="project-kicker">Supporting Work</p>
-<h3 class="project-group-title">Additional range</h3>
-</div>
-<p class="project-group-copy">These projects still add value, but they work best as supporting evidence of range instead of competing with the flagship work above.</p>
-</div>
-<div class="projects-grid">
-<div class="project-card reveal">
-<div class="project-bar" style="background:#c084fc"></div>
-<p class="project-eyebrow">Framework extension</p>
-<div class="project-title-row"><h3 class="project-title">NCAA Volleyball Scouting Dashboard</h3><span class="project-badge">Public build</span></div>
-<p class="project-desc">A second public scouting dashboard that adapts the broader valuation framework to volleyball with position-specific weights, roster workflows, valuation bands, and AI-assisted player search.</p>
-<div class="project-tags"><span class="project-tag">HTML/CSS/JS</span><span class="project-tag">Sports Analytics</span><span class="project-tag">GitHub Pages</span></div>
-<div class="project-actions"><a href="https://bryanhkwan.github.io/volleyball-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
-</div>
-
-<div class="project-card reveal">
-<div class="project-bar" style="background:#ffe36a"></div>
-<p class="project-eyebrow">Backend system</p>
-<div class="project-title-row"><h3 class="project-title">Dashboard API and Auth Layer</h3><span class="project-badge">No live demo</span></div>
-<p class="project-desc">A Cloudflare Workers backend handling login, sessions, note storage, and authenticated dashboard workflows. It supports the product layer behind my public scouting tools rather than existing as a standalone frontend demo.</p>
-<div class="project-tags"><span class="project-tag">Cloudflare Workers</span><span class="project-tag">SQL</span><span class="project-tag">Auth</span><span class="project-tag">API Design</span></div>
-<div class="project-actions"><span class="project-note">Infrastructure powering dashboard features.</span></div>
-</div>
-
-<div class="project-card reveal">
-<div class="project-bar" style="background:#f9a84d"></div>
-<p class="project-eyebrow">BI case study</p>
-<div class="project-title-row"><h3 class="project-title">Movie Ratings Dashboard</h3><span class="project-badge">Public build</span></div>
-<p class="project-desc">A Power BI case study that cleans and models movie ratings data in Power Query, then turns it into a polished narrative dashboard focused on ratings, genres, and audience behavior.</p>
-<div class="project-tags"><span class="project-tag">Power BI</span><span class="project-tag">Power Query</span><span class="project-tag">Excel</span><span class="project-tag">Data Visualization</span></div>
-<div class="project-actions"><a href="https://bryanhkwan.github.io/movie-ratings-dashboard/" target="_blank" rel="noopener" class="project-link">Live Demo &#8594;</a></div>
-</div>
-</div>
-</section>
-
-<section class="section" id="skills">
-<div class="section-head reveal"><p class="section-label">04</p><h2 class="section-title">Core Skills<em>.</em></h2><div class="section-bar"></div></div>
-<div class="skills-grid">
-
-<div class="skill-card reveal"><p class="skill-cat">Advanced Analytics and Modeling</p><div class="skill-items">
-<span class="skill-item">Predictive Modeling</span><span class="skill-item">Regression</span><span class="skill-item">Optimization Modeling</span><span class="skill-item">Scenario Simulation</span><span class="skill-item">Cluster Analysis</span><span class="skill-item">Valuation Modeling</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Business and Revenue Analytics</p><div class="skill-items">
-<span class="skill-item">Revenue Forecasting</span><span class="skill-item">Pricing Analysis</span><span class="skill-item">Fan Engagement Analytics</span><span class="skill-item">Market Benchmarking</span><span class="skill-item">KPI Reporting</span><span class="skill-item">Profitability Analysis</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Programming and Data Tools</p><div class="skill-items">
-<span class="skill-item">Python</span><span class="skill-item">SQL</span><span class="skill-item">JavaScript</span><span class="skill-item">TypeScript</span><span class="skill-item">R</span><span class="skill-item">KNIME</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Data Visualization and BI</p><div class="skill-items">
-<span class="skill-item">Power BI</span><span class="skill-item">Tableau</span><span class="skill-item">Excel</span><span class="skill-item">Power Query</span><span class="skill-item">Dashboard Design</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Data Engineering and Architecture</p><div class="skill-items">
-<span class="skill-item">Data Modeling</span><span class="skill-item">ETL Pipelines</span><span class="skill-item">API Integration</span><span class="skill-item">Cloudflare Workers</span><span class="skill-item">Automation Scripts</span><span class="skill-item">Authentication Flows</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Sports and Decision Analytics</p><div class="skill-items">
-<span class="skill-item">Roster Evaluation</span><span class="skill-item">Player Valuation</span><span class="skill-item">Scouting Workflows</span><span class="skill-item">Fit Analysis</span><span class="skill-item">Operational Dashboards</span><span class="skill-item">Executive Reporting</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Communication and Leadership</p><div class="skill-items">
-<span class="skill-item">Data Storytelling</span><span class="skill-item">Stakeholder Communication</span><span class="skill-item">Cross-Functional Collaboration</span><span class="skill-item">Strategic Recommendations</span><span class="skill-item">Process Improvement</span>
-</div></div>
-
-<div class="skill-card reveal"><p class="skill-cat">Languages</p><div class="skill-items">
-<span class="skill-item">English</span><span class="skill-item">Mandarin</span><span class="skill-item">Cantonese</span><span class="skill-item">Malay</span>
-</div></div>
-
-</div>
-</section>
-
-<section class="section contact" id="contact" style="padding-bottom:80px">
-<div class="reveal">
-<p class="section-label">05</p>
-<h2 class="section-title">Get In Touch<em>.</em></h2>
-<div class="section-bar" style="margin:16px auto 0"></div>
-<p class="contact-desc" style="margin-top:28px">I'm currently open to full-time opportunities in analytics, data science, and business intelligence. Whether it's a role, a project, or just a conversation &#8212; feel free to reach out.</p>
-<div class="contact-btns">
-<a href="mailto:bryan.kwan@rockets.utoledo.edu" class="btn-gold">bryan.kwan@rockets.utoledo.edu</a>
-<a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" class="btn-outline">LinkedIn &#8594;</a>
-</div>
-</div>
-</section>
-
-<footer><p>Built by Bryan Kwan &#183; 2026</p></footer>
+<footer>
+  <div class="wrap">
+    <span>Built by Bryan Kwan / 2026</span>
+    <span>Sports analytics + BI + computer vision</span>
+  </div>
+</footer>
 
 <script>
-setTimeout(function(){document.getElementById('heroContent').classList.add('loaded')},100);
+const topbar=document.getElementById('topbar');
+const progress=document.getElementById('scrollProgress');
+const menuBtn=document.getElementById('menuBtn');
+const mobileNav=document.getElementById('mobileNav');
 
-var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:0.12});
-document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+function updateChrome(){
+  const y=window.scrollY||0;
+  topbar.classList.toggle('scrolled',y>28);
+  const max=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=max>0?Math.min(100,Math.max(0,(y/max)*100)):0;
+  progress.style.height=pct+'%';
+}
+window.addEventListener('scroll',updateChrome,{passive:true});
+updateChrome();
 
-window.addEventListener('scroll',function(){document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>40)},{passive:true});
+menuBtn.addEventListener('click',function(){
+  const open=mobileNav.classList.toggle('open');
+  menuBtn.classList.toggle('open',open);
+  menuBtn.setAttribute('aria-expanded',String(open));
+  menuBtn.setAttribute('aria-label',open?'Close navigation':'Open navigation');
+  mobileNav.setAttribute('aria-hidden',String(!open));
+});
+mobileNav.querySelectorAll('a').forEach(function(link){
+  link.addEventListener('click',function(){
+    mobileNav.classList.remove('open');
+    menuBtn.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded','false');
+    menuBtn.setAttribute('aria-label','Open navigation');
+    mobileNav.setAttribute('aria-hidden','true');
+  });
+});
 
-document.getElementById('hamBtn').addEventListener('click',function(){document.getElementById('mobileNav').classList.toggle('open')});
-document.querySelectorAll('.mob-link').forEach(function(a){a.addEventListener('click',function(){document.getElementById('mobileNav').classList.remove('open')})});
+const revealObserver=new IntersectionObserver(function(entries){
+  entries.forEach(function(entry){
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal').forEach(function(el){revealObserver.observe(el)});
 
-function toggleExp(el){var w=el.classList.contains('open');document.querySelectorAll('.exp-item').forEach(function(i){i.classList.remove('open')});if(!w)el.classList.add('open')}
+</script>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+
+const canvas=document.getElementById('missionScene');
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(canvas&&!reduce){
+  const renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(44,1,.1,100);
+  camera.position.set(0,2.8,9.2);
+
+  const root=new THREE.Group();
+  scene.add(root);
+
+  const ambient=new THREE.AmbientLight(0xffffff,.6);
+  scene.add(ambient);
+  const key=new THREE.DirectionalLight(0xfff2b0,1.8);
+  key.position.set(4,6,5);
+  scene.add(key);
+  const cyan=new THREE.PointLight(0x43f5b6,2.2,18);
+  cyan.position.set(-4,2.2,4);
+  scene.add(cyan);
+  const gold=new THREE.PointLight(0xffd200,2.4,16);
+  gold.position.set(3,-.2,3);
+  scene.add(gold);
+
+  const materials={
+    gold:new THREE.MeshStandardMaterial({color:0xffd200,metalness:.72,roughness:.22,emissive:0x3a2b00,emissiveIntensity:.5}),
+    green:new THREE.MeshStandardMaterial({color:0x43f5b6,metalness:.62,roughness:.2,emissive:0x073526,emissiveIntensity:.42}),
+    cyan:new THREE.MeshStandardMaterial({color:0x69d9ff,metalness:.65,roughness:.18,emissive:0x0a2a33,emissiveIntensity:.38}),
+    orange:new THREE.MeshStandardMaterial({color:0xff9c3a,metalness:.58,roughness:.22,emissive:0x321400,emissiveIntensity:.4}),
+    red:new THREE.MeshStandardMaterial({color:0xff5b4a,metalness:.58,roughness:.24,emissive:0x330703,emissiveIntensity:.42}),
+    dark:new THREE.MeshStandardMaterial({color:0x1b1910,metalness:.35,roughness:.55})
+  };
+
+  const ringGeo=new THREE.TorusGeometry(1.7,.018,12,160);
+  for(let i=0;i<5;i++){
+    const ring=new THREE.Mesh(ringGeo,i%2?materials.green:materials.gold);
+    ring.rotation.x=Math.PI/2+(i*.18);
+    ring.rotation.y=i*.45;
+    ring.scale.setScalar(1+i*.24);
+    root.add(ring);
+  }
+
+  const plankGeo=new THREE.BoxGeometry(.08,1,.08);
+  const bars=[];
+  for(let i=0;i<72;i++){
+    const mat=[materials.gold,materials.green,materials.cyan,materials.orange][i%4];
+    const bar=new THREE.Mesh(plankGeo,mat);
+    const angle=(i/72)*Math.PI*2;
+    const radius=2.25+Math.sin(i)*.28;
+    const height=.25+((i*17)%100)/100*1.4;
+    bar.position.set(Math.cos(angle)*radius,height/2-.8,Math.sin(angle)*radius);
+    bar.scale.y=height;
+    bar.rotation.y=-angle;
+    bar.userData={base:height,phase:i*.25};
+    bars.push(bar);
+    root.add(bar);
+  }
+
+  const panelGeo=new THREE.BoxGeometry(1.15,.72,.045);
+  const panelMats=[materials.gold,materials.green,materials.cyan,materials.orange,materials.red];
+  for(let i=0;i<8;i++){
+    const panel=new THREE.Mesh(panelGeo,panelMats[i%panelMats.length]);
+    const angle=(i/8)*Math.PI*2;
+    panel.position.set(Math.cos(angle)*3.4,.55+Math.sin(i*.8)*.6,Math.sin(angle)*3.4);
+    panel.rotation.y=-angle+Math.PI/2;
+    panel.scale.set(.72,.72,.72);
+    root.add(panel);
+  }
+
+  const gridGroup=new THREE.Group();
+  const gridMat=new THREE.LineBasicMaterial({color:0xffd200,transparent:true,opacity:.2});
+  const points=[];
+  for(let i=-10;i<=10;i++){
+    points.push(new THREE.Vector3(i*.55,-1.2,-5.5),new THREE.Vector3(i*.55,-1.2,5.5));
+    points.push(new THREE.Vector3(-5.5,-1.2,i*.55),new THREE.Vector3(5.5,-1.2,i*.55));
+  }
+  const gridGeo=new THREE.BufferGeometry().setFromPoints(points);
+  gridGroup.add(new THREE.LineSegments(gridGeo,gridMat));
+  root.add(gridGroup);
+
+  const cursor={x:0,y:0};
+  window.addEventListener('pointermove',function(event){
+    cursor.x=(event.clientX/window.innerWidth-.5)*2;
+    cursor.y=(event.clientY/window.innerHeight-.5)*2;
+  },{passive:true});
+
+  function resize(){
+    const rect=canvas.getBoundingClientRect();
+    const width=Math.max(1,rect.width);
+    const height=Math.max(1,rect.height);
+    renderer.setSize(width,height,false);
+    camera.aspect=width/height;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize',resize,{passive:true});
+  resize();
+
+  function animate(time){
+    const t=time*.001;
+    root.rotation.y=t*.18;
+    root.rotation.x=Math.sin(t*.42)*.08;
+    bars.forEach(function(bar){
+      const h=bar.userData.base*(.82+Math.sin(t*1.8+bar.userData.phase)*.18);
+      bar.scale.y=Math.max(.08,h);
+      bar.position.y=h/2-.8;
+    });
+    camera.position.x+=((cursor.x*1.1)-camera.position.x)*.035;
+    camera.position.y+=((2.8-cursor.y*.45)-camera.position.y)*.035;
+    camera.lookAt(0,.1,0);
+    renderer.render(scene,camera);
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+}
 </script>
 </body>
 </html>

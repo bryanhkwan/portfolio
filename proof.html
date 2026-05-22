@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Proof Board | Bryan Kwan</title>
+<meta name="description" content="Bryan Kwan proof board featuring the Toledo Athletics article and MAC Tournament basketball model validation results."/>
+<link rel="preconnect" href="https://api.fontshare.com"/>
+<link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800,900&f[]=satoshi@400,500,600,700,800&f[]=jet-brains-mono@400,500,700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="portfolio-pages.css"/>
+</head>
+<body>
+<a href="#proof-board" class="skip-link">Skip to proof board</a>
+<nav class="topbar" id="topbar">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="brand" aria-label="Bryan Kwan home"><span class="brand-mark">BK</span><span>Bryan Kwan</span></a>
+    <div class="nav-links" aria-label="Primary navigation">
+      <a href="projects.html">Projects</a>
+      <a href="computer-vision.html">Vision Lab</a>
+      <a class="active" href="proof.html" aria-current="page">Proof</a>
+      <a href="index.html#experience">About</a>
+      <a href="index.html#contact">Contact</a>
+      <a href="resume.pdf" target="_blank" rel="noopener" class="resume-link">Resume</a>
+    </div>
+    <button class="menu-btn" id="menuBtn" type="button" aria-label="Open navigation" aria-expanded="false"><span></span></button>
+  </div>
+  <div class="mobile-nav" id="mobileNav" aria-hidden="true">
+    <a href="projects.html">Projects</a>
+    <a href="computer-vision.html">Vision Lab</a>
+    <a class="active" href="proof.html" aria-current="page">Proof</a>
+    <a href="index.html#experience">About</a>
+    <a href="index.html#contact">Contact</a>
+    <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+  </div>
+</nav>
+
+<main>
+  <section class="page-hero compact">
+    <div class="hero-grid">
+      <div class="hero-copy reveal visible">
+        <p class="eyebrow">Proof board</p>
+        <h1>Credibility pieces<span>in one place.</span></h1>
+        <p>This page collects the public Toledo Athletics feature and the MAC Tournament model validation so the basketball work has context, external recognition, and measured results in one place.</p>
+        <div class="hero-actions">
+          <a class="btn green" href="#proof-board">See evidence</a>
+          <a class="btn ghost" href="projects.html#basketball">Open basketball project &rarr;</a>
+        </div>
+      </div>
+      <aside class="hero-panel reveal" aria-label="Proof board telemetry">
+        <div class="panel-top"><span>MODEL VALIDATION</span><span>MAC RUN</span></div>
+        <div class="command-orb"></div>
+        <div class="panel-bars" aria-hidden="true">
+          <i style="height:88%"></i><i style="height:74%"></i><i style="height:96%"></i><i style="height:52%"></i><i style="height:68%"></i><i style="height:82%"></i>
+        </div>
+        <div class="panel-bottom"><span>3/3 WINNERS</span><span>1.07 MAE</span></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section" id="proof-board">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Evidence</p>
+          <h2 class="section-title">Featured work, validated under tournament pressure.</h2>
+        </div>
+        <p class="section-copy">The article establishes the real-world department context. The validation report shows the model did not just look nice in a dashboard; it held up against the shape of actual MAC Tournament games.</p>
+      </div>
+
+      <div class="proof-layout">
+        <article class="evidence-card reveal" style="--accent:#ffd200">
+          <span class="status">TOLEDO ATHLETICS FEATURE</span>
+          <h2>Featured in Rockets article on the data internship program.</h2>
+          <p>University of Toledo Athletics profiled its first-year Data Science Internship Program and named me among the interns supporting real department projects. The article connects my work to the men's basketball analytics tool and the goal of building something coaches could use for decision-making.</p>
+          <p class="source-line">Published by Toledo Athletics / April 20, 2026</p>
+          <div class="hero-actions">
+            <a class="btn" href="https://utrockets.com/news/2026/4/15/toledo-athletics-data-internship-program-aids-the-rockets-spurs-student-careers" target="_blank" rel="noopener">Read article &rarr;</a>
+          </div>
+        </article>
+
+        <article class="evidence-card reveal" style="--accent:#43f5b6">
+          <span class="status">MAC TOURNAMENT VALIDATION</span>
+          <h2>Monte Carlo + AI scouting report matched the tournament shape.</h2>
+          <p>For Toledo's 2026 MAC Tournament run, I ran a simulation and opponent-scouting workflow that blended win-probability distributions with Gemini-assisted game-script analysis. The post-tournament validation showed strong score calibration and useful uncertainty framing.</p>
+          <div class="score-grid">
+            <div class="score-tile"><strong>1.07</strong><span>Toledo score MAE in points</span></div>
+            <div class="score-tile"><strong>3/3</strong><span>winners in model range</span></div>
+            <div class="score-tile"><strong>2/2</strong><span>close games pre-flagged</span></div>
+            <div class="score-tile"><strong>1.1</strong><span>Akron final margin error</span></div>
+          </div>
+          <div class="hero-actions">
+            <a class="btn green" href="mac-tournament-model-validation.html.pdf" target="_blank" rel="noopener">Open validation PDF &rarr;</a>
+            <a class="btn ghost" href="projects.html#basketball">See dashboard</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Tournament readout</p>
+          <h2 class="section-title">The model did not need to be perfect. It needed to be useful.</h2>
+        </div>
+        <p class="section-copy">The strongest signal was not pretending the model could remove uncertainty. It correctly framed close-game risk, blowout paths, and late-game danger zones that actually mattered.</p>
+      </div>
+
+      <div class="game-grid">
+        <article class="game-card reveal" style="--accent:#ffd200">
+          <h3>Bowling Green</h3>
+          <p class="meta">Quarterfinal / Toledo 77, BG 76</p>
+          <p>Projected as a coin-flip finish and came in almost exactly there. The report flagged Toledo's jumper path, rim-finishing risk, Bowling Green three-point danger, and free throws as decisive.</p>
+        </article>
+        <article class="game-card reveal" style="--accent:#43f5b6">
+          <h3>UMass</h3>
+          <p class="meta">Semifinal / Toledo by 10</p>
+          <p>The base projection was close, but the model assigned a real 30.4% Toledo blowout path. That scenario hit, with UMass jumper regression and game-script volatility showing up.</p>
+        </article>
+        <article class="game-card reveal" style="--accent:#ff5b4a">
+          <h3>Akron</h3>
+          <p class="meta">Championship / Akron by 3</p>
+          <p>The model projected Akron by 4.1 and the final margin was Akron by 3. It also flagged second-half explosiveness and late three-point danger, which became the final-game story.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Built by Bryan Kwan / 2026</span>
+    <span><a href="index.html">Home</a> / <a href="projects.html">Projects</a> / <a href="computer-vision.html">Vision Lab</a></span>
+  </div>
+</footer>
+
+<script src="portfolio-pages.js"></script>
+</body>
+</html>
