@@ -18,6 +18,7 @@ test('all pages render without runtime errors, broken resources, or horizontal o
 });
 test('scouting priorities change the actual ranking and shot controls update accessible output', async ({ page }) => {
   await page.goto('');
+  await page.locator('.scouting-lab').scrollIntoViewIfNeeded();
   const priority = page.getByLabel('What does the team need?');
   await expect(priority).toBeEnabled();
   await expect(page.locator('.rank-row').first()).toContainText('Sample B');
@@ -35,23 +36,22 @@ test('scouting priorities change the actual ranking and shot controls update acc
   await expect(page.locator('.shot-court')).toHaveAttribute('aria-label', /Left side: \d+ attempts; Interior:/);
   await expect(page.locator('.zone-count')).toHaveCount(4);
 });
-test('project filters, heatmaps, and video loading behave as intended', async ({ page }) => {
+test('project filters and the updated CourtVision case lead to the intended content', async ({ page }) => {
   await page.goto('work/');
   await page.getByRole('button', { name: 'Vision', exact: true }).click();
   await expect(page.locator('.index-project:visible')).toHaveCount(1);
   await expect(page.locator('.result-count')).toHaveText('1 project');
   await page.getByRole('button', { name: 'All work', exact: true }).click();
   await expect(page.locator('.index-project:visible')).toHaveCount(9);
-  const videoRequests: string[] = [];
-  page.on('request', request => { if (request.url().endsWith('.mp4')) videoRequests.push(request.url()); });
+  const privateRequests: string[] = [];
+  page.on('request', request => { if (request.url().includes('courtvision.bryanhkwan.workers.dev') || request.url().endsWith('.mp4')) privateRequests.push(request.url()); });
   await page.goto('work/courtvision/');
-  await expect(page.locator('video')).toHaveAttribute('preload', 'none');
-  await expect(page.locator('video')).not.toHaveAttribute('autoplay');
-  await expect(page.locator('[data-heatmap="0"]')).toBeVisible();
-  await page.getByRole('button', { name: 'Team 1', exact: true }).click();
-  await expect(page.locator('[data-heatmap="1"]')).toBeVisible();
-  await expect(page.locator('[data-heatmap="0"]')).toBeHidden();
-  expect(videoRequests).toHaveLength(0);
+  await expect(page.locator('h1')).toHaveText('CourtVision.');
+  await expect(page.locator('.replay-console')).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Coach sign in' })).toHaveAttribute('href', 'https://courtvision.bryanhkwan.workers.dev/v2/');
+  await expect(page.locator('video, img[src*="compvision/"]')).toHaveCount(0);
+  await expect(page.locator('#approach')).toContainText('Keep the teaching moment.');
+  expect(privateRequests).toHaveLength(0);
 });
 test('legacy URLs and document links remain available', async ({ page, request }) => {
   await page.goto('projects.html#basketball');
@@ -73,6 +73,8 @@ test('keyboard navigation and mobile menu are usable', async ({ page, isMobile }
     await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Work', exact: true })).toBeVisible();
     await page.keyboard.press('Escape'); await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   }
+  await page.locator('.scouting-lab').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('button', { name: 'Shot profile', exact: true })).toBeEnabled();
   await page.getByRole('button', { name: 'Shot profile', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('.shot-court')).toBeVisible();
@@ -90,6 +92,8 @@ test('the portfolio is readable and navigable without JavaScript', async ({ brow
   const page = await context.newPage();
   await page.goto(baseURL!);
   await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('.replay-court')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Play sample replay' })).toBeDisabled();
   await expect(page.locator('.rank-row').first()).toContainText('Sample B');
   await expect(page.getByRole('button', { name: 'Shot profile', exact: true })).toBeDisabled();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Work', exact: true })).toBeVisible();
@@ -101,9 +105,10 @@ test('the portfolio is readable and navigable without JavaScript', async ({ brow
 test('reduced motion and representative layouts', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('');
-  await expect(page.getByLabel('What does the team need?')).toBeEnabled();
+  await expect(page.getByRole('button', { name: 'Play sample replay' })).toBeEnabled();
   expect(await page.locator('.hero-line > span').first().evaluate(el => getComputedStyle(el).transform)).toBe('none');
   await page.screenshot({ path: testInfo.outputPath('courtside-home.png'), fullPage: true, scale: 'css' });
+  await page.locator('.scouting-lab').scrollIntoViewIfNeeded();
   await page.getByRole('button', { name: 'Shot profile', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('courtside-shot-profile.png'), fullPage: false, scale: 'css' });
   await page.goto('work/astros/');
@@ -121,4 +126,44 @@ test('reduced motion and representative layouts', async ({ page }, testInfo) => 
       return range.getBoundingClientRect().width <= el.getBoundingClientRect().width + 1;
     })), `Hero text must fit at ${width}px`).toBe(true);
   }
+});
+
+test('CourtVision walkthrough responds to view, time and teaching-moment controls', async ({ page }) => {
+  await page.goto('');
+  const time = page.getByRole('slider', { name: 'Replay time' });
+  await expect(time).toBeEnabled();
+  await time.fill('4.8');
+  await expect(page.locator('.replay-time')).toHaveText('00:04.8');
+  await expect(page.locator('.console-note')).toContainText('weak-side player');
+  await page.getByRole('button', { name: 'Movement', exact: true }).click();
+  await expect(page.locator('.replay-court polyline')).toHaveCount(6);
+  await page.getByRole('button', { name: 'Mark moment' }).click();
+  await expect(page.getByRole('status')).toContainText('00:04.8');
+  await page.getByRole('button', { name: 'Clear', exact: true }).click();
+  await expect(page.locator('.saved-moment')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Shot map', exact: true }).click();
+  await expect(page.locator('.replay-court')).toHaveAttribute('aria-label', /7 makes and 5 misses/);
+  await expect(time).toHaveCount(0);
+  await page.getByRole('button', { name: 'Replay', exact: true }).click();
+  await expect(time).toHaveValue('4.8');
+  const audit = await new AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
+  expect(audit.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
+});
+
+test('replay is user-controlled and pauses when the stage leaves view', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('');
+  const time = page.getByRole('slider', { name: 'Replay time' });
+  await expect(time).toBeEnabled();
+  await expect(time).toHaveValue('2.4');
+  await page.getByRole('button', { name: 'Play sample replay' }).click();
+  await expect.poll(async()=>Number(await time.inputValue())).toBeGreaterThan(2.5);
+  await page.getByRole('button', { name: 'Pause sample replay' }).click();
+  const paused = await time.inputValue();
+  await page.waitForTimeout(150);
+  expect(await time.inputValue()).toBe(paused);
+  await page.getByRole('button', { name: 'Play sample replay' }).click();
+  await page.locator('.site-footer').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('button', { name: 'Play sample replay' })).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Pause sample replay' })).toHaveCount(0);
 });

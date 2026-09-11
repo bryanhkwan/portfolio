@@ -1,6 +1,6 @@
-# Bryan Kwan — Courtside
+# Bryan Kwan — Sports analytics & data products
 
-An interactive portfolio for sports analytics and data/product work. Built with Astro, TypeScript, a React scouting island, and GSAP. The rest of the site ships as static HTML.
+An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual language. Built with Astro, TypeScript, selective React components, and GSAP. Case-study content ships as static HTML.
 
 **Live:** https://bryanhkwan.github.io/portfolio/
 
@@ -19,8 +19,9 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 
 - `src/pages/` — homepage, project index, four case studies, research, about, and 404.
 - `src/components/ScoutingLab.tsx` — roster priorities and an interactive shot profile.
+- `src/components/CourtReplay.tsx` — a public illustrative court walkthrough, with playback, scrubbing, movement history, shot locations, and temporary teaching-moment markers.
 - `src/data/` — project metadata and clearly labeled fictional scouting examples.
-- `src/styles/` — Courtside typography, responsive layouts, and reduced-motion styles.
+- `src/styles/constellation.css` — the active navy/gold design system and responsive product interfaces; shared layout primitives remain in the other stylesheets.
 - `src/layouts/SiteLayout.astro` — shared navigation, metadata, contact, and footer.
 - `public/` — downloadable documents, aggregate figures, and previously published CourtVision media.
 - `tests/` — scoring tests and browser/accessibility checks.
@@ -36,7 +37,7 @@ npx playwright install chromium
 npm test
 ```
 
-Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, ranking changes, shot controls, filters, heatmaps, document links, keyboard navigation, automated accessibility, reduced motion, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
+Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, reduced motion, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
 
 ## Publishing
 
@@ -46,8 +47,10 @@ The `site` and `base` settings in `astro.config.mjs` target this repository's ex
 
 ## Content and media
 
-The homepage scouting exercise uses fictional players and illustrative data. Historical basketball results are explicitly limited to the documented three-game sample. CourtVision is described as a prototype with incomplete projection coverage. The Astros analyst exercise shows observational associations, not an achieved revenue increase or a client engagement.
+The court walkthrough and scouting exercise use fictional players and authored illustrative data. The walkthrough is a small portfolio interaction, not the private CourtVision runtime or a recording of team evidence. Playback begins only on request and pauses when hidden or offscreen. Moment markers last for the current component session.
 
-Only aggregate Astros/research figures are included; respondent-level case data is not published. CourtVision assets and the existing resume, recommendation, and validation PDF retain their public URLs. The annotated video loads only on demand with `preload="none"`. Fonts are served locally.
+CourtVision's case study reflects the current hosted coaching platform: film, source-synchronized replay, player context, coach-board tools, exports, and private delivery. Its model and reconstruction limitations remain explicit. Historical basketball results are limited to the documented three-game sample. The Astros exercise shows observational associations, not an achieved revenue increase or a client engagement.
+
+Only aggregate Astros/research figures are included; respondent-level case data is not published. Earlier CourtVision assets retain their public URLs for compatibility but are no longer used in the showcase. Current team footage, identities, private packages, credentials, and source remain private. The portal link leads to the approved-coach sign-in page. Existing resume, recommendation, and validation PDF URLs still work. Fonts are served locally.
 
 The previous HTML/CSS/JS files and original asset copies were preserved locally in the ignored `.local-backup/pre-courtside/` directory during migration. Private project inventory and concept exploration files are also excluded from publication.

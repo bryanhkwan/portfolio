@@ -56,7 +56,7 @@ export default function ScoutingLab({ compact = false }: { compact?: boolean }) 
         {view === 'zones' && zones.map(({ x, y, width, height, count }, i) => {
           return <g key={i}><rect x={x} y={y} width={width} height={height} fill="var(--red)" opacity={.06 + count / 24} /><text x={x + width / 2} y={y + height - 28} textAnchor="middle" className="zone-count">{count} attempts</text></g>;
         })}
-        <g fill="none" stroke="#8e9388" strokeWidth="1.2"><path d="M25 15H475V325H25ZM170 15V166H330V15M170 166A80 80 0 0 0 330 166M60 15V70C60 294 440 294 440 70V15"/><path d="M232 38H268M250 41v9"/><circle cx="250" cy="57" r="8"/><path d="M222 57a28 28 0 0 0 56 0"/></g>
+        <g fill="none" stroke="#628db8" strokeWidth="1.2"><path d="M25 15H475V325H25ZM170 15V166H330V15M170 166A80 80 0 0 0 330 166M60 15V70C60 294 440 294 440 70V15"/><path d="M232 38H268M250 41v9"/><circle cx="250" cy="57" r="8"/><path d="M222 57a28 28 0 0 0 56 0"/></g>
         {view === 'dots' && player.shots.map(([x,y,isMade], i) => isMade ? <circle key={i} cx={x * 5} cy={y * 4} r="6" fill="var(--red)" stroke="var(--paper)" strokeWidth="2" /> : <path key={i} d={`M${x * 5 - 4} ${y * 4 - 4}l8 8m0 -8l-8 8`} stroke="var(--ink)" strokeWidth="2" />)}
       </svg>
       <div className="shot-caption"><span>{view === 'dots' ? '● Make / × Miss' : 'Darker = more attempts'}</span><span>{made}/{player.shots.length} sample makes</span></div>
