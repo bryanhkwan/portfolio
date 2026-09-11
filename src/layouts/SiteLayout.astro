@@ -1,0 +1,56 @@
+---
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/600.css';
+import '../styles/global.css';
+import '../styles/pages.css';
+import { href, email } from '../lib/paths';
+interface Props { title?: string; description?: string; active?: string; }
+const { title = 'Bryan Kwan — Sports analytics & data products', description = 'I build tools that turn sports data into decisions. Explore basketball scouting, CourtVision, business analytics, and reproducible research.', active = '' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f5f4ee" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="nav-shell">
+        <a class="wordmark" href={href()} aria-label="Bryan Kwan home">BRYAN KWAN<span>.</span></a>
+        <span class="nav-note">ANALYSIS INTO ACTION</span>
+        <button class="menu-toggle" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false" type="button">Menu <span aria-hidden="true">+</span></button>
+        <nav id="primary-nav" aria-label="Primary navigation">
+          <a href={href('work/')} aria-current={active === 'work' ? 'page' : undefined}>Work</a>
+          <a href={href('research/')} aria-current={active === 'research' ? 'page' : undefined}>Research</a>
+          <a href={href('about/')} aria-current={active === 'about' ? 'page' : undefined}>About</a>
+          <a class="nav-resume" href={href('BryanKwan_Updated_Resume.pdf')} target="_blank" rel="noopener">Resume <span aria-hidden="true">↗</span><span class="sr-only"> (PDF, opens in a new tab)</span></a>
+        </nav>
+      </div>
+    </header>
+    <main id="main"><slot /></main>
+    <section class="contact-block" id="contact" aria-labelledby="contact-heading">
+      <div class="wrap contact-grid">
+        <div><p class="eyebrow">THE NEXT CHAPTER</p><h2 id="contact-heading">LET’S PUT<br>DATA TO WORK<span>.</span></h2></div>
+        <div><p>I’m interested in sports analytics and data/product roles where the work helps someone make a better decision.</p><a class="button button-dark" href={`mailto:${email}`}>Get in touch <span aria-hidden="true">↗</span></a><a class="text-link" href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" rel="noopener">Find me on LinkedIn <span aria-hidden="true">↗</span></a></div>
+      </div>
+    </section>
+    <footer class="site-footer wrap"><a href={href()} class="footer-brand">BK<span>.</span></a><span>BRYAN KWAN / 2026</span><a href="https://github.com/bryanhkwan/portfolio" target="_blank" rel="noopener">View the source ↗</a><a href="#main">Back to top ↑</a></footer>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

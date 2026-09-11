@@ -1,0 +1,124 @@
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+const routes = ['', 'work/', 'work/basketball/', 'work/courtvision/', 'work/astros/', 'work/volleyball/', 'research/', 'about/'];
+test('all pages render without runtime errors, broken resources, or horizontal overflow', async ({ page }, testInfo) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  page.on('response', response => { if (response.status() >= 400 && new URL(response.url()).origin === new URL(testInfo.project.use.baseURL as string || 'http://127.0.0.1:4322').origin) errors.push(`${response.status()} ${response.url()}`); });
+  for (const route of routes) {
+    const response = await page.goto(route);
+    expect(response?.status(), route).toBe(200);
+    await expect(page.locator('h1')).toBeVisible();
+    await page.locator('.site-footer').scrollIntoViewIfNeeded();
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), { message: `Overflow on ${route}` }).toBe(true);
+  }
+  expect(errors).toEqual([]);
+});
+test('scouting priorities change the actual ranking and shot controls update accessible output', async ({ page }) => {
+  await page.goto('');
+  const priority = page.getByLabel('What does the team need?');
+  await expect(priority).toBeEnabled();
+  await expect(page.locator('.rank-row').first()).toContainText('Sample B');
+  await priority.selectOption('shooting');
+  await expect(page.locator('.rank-row').first()).toContainText('Sample A');
+  await expect(page.locator('.rank-row').first()).toContainText('82.4');
+  await priority.selectOption('defense');
+  await expect(page.locator('.rank-row').first()).toContainText('Sample C');
+  await page.getByText('How the score works').click();
+  await expect(page.getByText(/defense × 0.70/)).toBeVisible();
+  await page.getByRole('button', { name: 'Shot profile', exact: true }).click();
+  await page.getByLabel('Player', { exact: true }).selectOption('a');
+  await expect(page.locator('.shot-court')).toHaveAttribute('aria-label', /Sample A/);
+  await page.getByRole('button', { name: 'Zones', exact: true }).click();
+  await expect(page.locator('.shot-court')).toHaveAttribute('aria-label', /Left side: \d+ attempts; Interior:/);
+  await expect(page.locator('.zone-count')).toHaveCount(4);
+});
+test('project filters, heatmaps, and video loading behave as intended', async ({ page }) => {
+  await page.goto('work/');
+  await page.getByRole('button', { name: 'Vision', exact: true }).click();
+  await expect(page.locator('.index-project:visible')).toHaveCount(1);
+  await expect(page.locator('.result-count')).toHaveText('1 project');
+  await page.getByRole('button', { name: 'All work', exact: true }).click();
+  await expect(page.locator('.index-project:visible')).toHaveCount(9);
+  const videoRequests: string[] = [];
+  page.on('request', request => { if (request.url().endsWith('.mp4')) videoRequests.push(request.url()); });
+  await page.goto('work/courtvision/');
+  await expect(page.locator('video')).toHaveAttribute('preload', 'none');
+  await expect(page.locator('video')).not.toHaveAttribute('autoplay');
+  await expect(page.locator('[data-heatmap="0"]')).toBeVisible();
+  await page.getByRole('button', { name: 'Team 1', exact: true }).click();
+  await expect(page.locator('[data-heatmap="1"]')).toBeVisible();
+  await expect(page.locator('[data-heatmap="0"]')).toBeHidden();
+  expect(videoRequests).toHaveLength(0);
+});
+test('legacy URLs and document links remain available', async ({ page, request }) => {
+  await page.goto('projects.html#basketball');
+  await expect(page).toHaveURL(/\/work\/#basketball$/);
+  await page.goto('computer-vision.html');
+  await expect(page).toHaveURL(/\/work\/courtvision\/$/);
+  await page.goto('proof.html');
+  await expect(page).toHaveURL(/\/work\/basketball\/#validation$/);
+  for (const resource of ['BryanKwan_Updated_Resume.pdf', 'recommendation.pdf', 'mac-tournament-model-validation.html.pdf', 'talent-environment-research.pdf', 'compvision/all_players.png']) {
+    const response = await request.head(resource); expect(response.status(), resource).toBe(200);
+  }
+});
+test('keyboard navigation and mobile menu are usable', async ({ page, isMobile }) => {
+  await page.goto('');
+  if (!isMobile) { await page.keyboard.press('Tab'); await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused(); }
+  if (isMobile) {
+    const toggle = page.locator('.menu-toggle');
+    await toggle.click(); await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Work', exact: true })).toBeVisible();
+    await page.keyboard.press('Escape'); await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  }
+  await page.getByRole('button', { name: 'Shot profile', exact: true }).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.shot-court')).toBeVisible();
+});
+test('core routes and interactive states pass automated accessibility checks', async ({ page }) => {
+  for (const route of ['', 'work/', 'work/courtvision/', 'work/astros/', 'research/', 'about/']) {
+    await page.goto(route);
+    await expect(page.locator('h1')).toBeVisible();
+    const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa']).analyze();
+    expect(results.violations.map(v => ({ id: v.id, nodes: v.nodes.map(n => n.target) })), route).toEqual([]);
+  }
+});
+test('the portfolio is readable and navigable without JavaScript', async ({ browser, baseURL, isMobile }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false, viewport: isMobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 } });
+  const page = await context.newPage();
+  await page.goto(baseURL!);
+  await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('.rank-row').first()).toContainText('Sample B');
+  await expect(page.getByRole('button', { name: 'Shot profile', exact: true })).toBeDisabled();
+  await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Work', exact: true })).toBeVisible();
+  await page.goto(new URL('work/', baseURL).href);
+  await expect(page.locator('.index-project:visible')).toHaveCount(9);
+  await expect(page.getByRole('button', { name: 'Vision', exact: true })).toBeDisabled();
+  await context.close();
+});
+test('reduced motion and representative layouts', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('');
+  await expect(page.getByLabel('What does the team need?')).toBeEnabled();
+  expect(await page.locator('.hero-line > span').first().evaluate(el => getComputedStyle(el).transform)).toBe('none');
+  await page.screenshot({ path: testInfo.outputPath('courtside-home.png'), fullPage: true, scale: 'css' });
+  await page.getByRole('button', { name: 'Shot profile', exact: true }).click();
+  await page.screenshot({ path: testInfo.outputPath('courtside-shot-profile.png'), fullPage: false, scale: 'css' });
+  await page.goto('work/astros/');
+  await page.locator('#evidence').scrollIntoViewIfNeeded();
+  await page.screenshot({ path: testInfo.outputPath('courtside-case-study.png'), fullPage: true, scale: 'css' });
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto('work/courtvision/');
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1)).toBe(true);
+  for (const width of [360, 768, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('');
+    await page.evaluate(() => document.fonts.ready);
+    expect(await page.locator('.hero-line > span').evaluateAll(elements => elements.every(el => {
+      const range = document.createRange(); range.selectNodeContents(el);
+      return range.getBoundingClientRect().width <= el.getBoundingClientRect().width + 1;
+    })), `Hero text must fit at ${width}px`).toBe(true);
+  }
+});

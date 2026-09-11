@@ -1,0 +1,40 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import ScoutingLab from '../components/ScoutingLab';
+import { href, articleUrl } from '../lib/paths';
+---
+<SiteLayout>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <div class="hero-copy"><p class="eyebrow"><span class="square" aria-hidden="true"></span> SPORTS ANALYTICS / DATA PRODUCTS</p><h1 id="hero-title"><span class="hero-line"><span>SEE THE</span></span><span class="hero-line"><span>GAME</span></span><span class="hero-line red"><span>DIFFERENTLY.</span></span></h1><div class="hero-bottom"><span class="eyebrow hero-index">01 /</span><div><p>I build tools that turn sports data into decisions you can actually use.</p><a href="#selected-work" class="text-link">Explore the work <span aria-hidden="true">↓</span></a></div></div></div>
+    <ScoutingLab client:load />
+  </section>
+  <div class="hero-bottom-bar wrap"><span>MODELING. INTERFACES. REAL QUESTIONS.</span><a href={href('work/basketball/')}>Inside the basketball platform <span aria-hidden="true">↗</span></a></div>
+  <section class="section wrap" id="selected-work">
+    <div class="section-heading" data-reveal><div><p class="eyebrow red">SELECTED WORK / 2026</p><h2>FROM A QUESTION<br>TO SOMETHING USEFUL.</h2></div><p>Three ways I connect analysis with the people making the call.</p></div>
+    <div class="selected-work">
+      <a class="project-feature basketball-feature" href={href('work/basketball/')} data-reveal>
+        <div class="feature-top"><span class="eyebrow">01 / SCOUTING & ROSTER STRATEGY</span><span class="round-arrow" aria-hidden="true">↗</span></div>
+        <div class="basketball-type" aria-hidden="true"><span>THE RIGHT</span><span>PLAYER.</span><span class="outline-type">THE RIGHT FIT.</span></div>
+        <div class="feature-bottom"><div><h3>Basketball decision platform</h3><p>Connect player evaluation, shot analysis, and roster constraints.</p></div><span class="feature-label">EXPLORE CASE STUDY</span></div>
+      </a>
+      <div class="feature-pair">
+        <a class="project-feature vision-feature" href={href('work/courtvision/')} data-reveal>
+          <div class="feature-media"><img src={href('compvision/all_players.png')} width="1784" height="1031" alt="Saved basketball player detections from CourtVision" loading="lazy" /><span class="media-stamp">SAVED DETECTION OUTPUT</span></div>
+          <div class="feature-copy"><p class="eyebrow">02 / COMPUTER VISION</p><h3>From film to a<br>coaching conversation.</h3><div class="feature-link"><span>CourtVision · evolving prototype</span><span aria-hidden="true">↗</span></div></div>
+        </a>
+        <a class="project-feature astros-feature" href={href('work/astros/')} data-reveal>
+          <div class="astros-visual"><p class="eyebrow">A QUESTION OF RETURN</p><div class="return-number">25.7<span>%</span></div><span>observed repurchase / 1,800 surveys</span><div class="survey-track" aria-hidden="true"><span></span></div></div>
+          <div class="feature-copy"><p class="eyebrow">03 / BUSINESS ANALYTICS</p><h3>What brings<br>a fan back?</h3><div class="feature-link"><span>Astros ticketing · analyst case study</span><span aria-hidden="true">↗</span></div></div>
+        </a>
+      </div>
+    </div>
+  </section>
+  <aside class="recognition-band"><div class="wrap recognition-grid"><p class="eyebrow">IN THE FIELD</p><p>Building with a purpose.<br><strong>Recognized by Toledo Athletics.</strong></p><a href={articleUrl} target="_blank" rel="noopener" class="text-link">Read the feature <span aria-hidden="true">↗</span></a></div></aside>
+  <section class="section wrap" id="more-work">
+    <div class="section-heading" data-reveal><div><p class="eyebrow red">THE WIDER PLAYBOOK</p><h2>DIFFERENT SPORTS.<br>THE SAME CURIOSITY.</h2></div><a href={href('work/')} class="text-link">Browse all work <span aria-hidden="true">↗</span></a></div>
+    <div class="volleyball-spotlight" data-reveal><div><p class="eyebrow">FEATURED WORKFLOW / VOLLEYBALL</p><h3>From practice exports<br>to better questions.</h3><p>A browser-based workflow for session comparisons, player development, and setter–hitter chemistry.</p><a href={href('work/volleyball/')} class="text-link">Explore the workflow <span aria-hidden="true">↗</span></a></div><ol class="workflow-steps"><li><span>01</span><div><strong>Bring in the sessions</strong><p>CSV and spreadsheet exports</p></div></li><li><span>02</span><div><strong>Make comparisons fair</strong><p>Volume-weighted, role-aware metrics</p></div></li><li><span>03</span><div><strong>Find the connection</strong><p>Setter–hitter chemistry & development</p></div></li></ol></div>
+    <div class="suite-links"><a href={href('work/#football')}><span>Football</span><span>Roster & operations ↗</span></a><a href={href('work/#soccer')}><span>Soccer</span><span>Role fit & recruitment ↗</span></a><a href={href('work/#baseball')}><span>Baseball</span><span>Player data & coverage ↗</span></a></div>
+  </section>
+  <section class="research-teaser"><div class="wrap research-teaser-grid"><p class="eyebrow">BEYOND THE DASHBOARD</p><div><h2>TALENT IS GLOBAL.<br><span>OPPORTUNITY IS LOCAL.</span></h2><p>An exploratory research manuscript on development environments and elite athlete representation.</p><a href={href('research/')} class="text-link">Follow the research <span aria-hidden="true">↗</span></a></div><span class="research-index" aria-hidden="true">R / 01</span></div></section>
+  <section class="section wrap about-teaser" id="experience" data-reveal><p class="eyebrow red">THE PERSON BEHIND THE WORK</p><div><h2>AN ANALYST WHO<br>LIKES TO BUILD.</h2><p>My work sits between sports, business analytics, and product development. I’m interested in the whole process: finding the question, shaping the data, and making the answer useful.</p><a href={href('about/')} class="text-link">More about me <span aria-hidden="true">↗</span></a></div></section>
+</SiteLayout>

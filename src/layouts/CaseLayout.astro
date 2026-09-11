@@ -1,0 +1,11 @@
+---
+import SiteLayout from './SiteLayout.astro';
+import { href } from '../lib/paths';
+interface Props { title: string; description: string; eyebrow: string; heading: string; role: string; status: string; stack: string; chapters?: { id: string; label: string }[]; }
+const { title, description, eyebrow, heading, role, status, stack, chapters = [{ id:'question',label:'01 / The question' },{ id:'approach',label:'02 / The approach' },{ id:'evidence',label:'03 / The evidence' },{ id:'limitations',label:'04 / What’s next' },{ id:'artifacts',label:'05 / Explore it' }] } = Astro.props;
+---
+<SiteLayout title={`${title} — Bryan Kwan`} description={description} active="work">
+  <section class="page-hero"><div class="wrap"><a class="breadcrumb" href={href('work/')}><span aria-hidden="true">←</span> All work</a><p class="eyebrow red" style="margin-top:32px">{eyebrow}</p><h1>{heading}</h1><p class="lede">{description}</p><div class="case-meta"><div><span>My contribution</span><p>{role}</p></div><div><span>Project status</span><p>{status}</p></div><div><span>Built with</span><p>{stack}</p></div></div></div></section>
+  <div class="wrap case-layout"><nav class="chapter-nav" aria-label="Case study chapters"><p>IN THIS STUDY</p>{chapters.map(chapter => <a href={`#${chapter.id}`}>{chapter.label}</a>)}</nav><article class="case-body"><slot /></article></div>
+  <div class="wrap next-project"><a href={href('work/')} class="text-link">Back to the playbook <span aria-hidden="true">↗</span></a></div>
+</SiteLayout>
