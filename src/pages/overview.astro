@@ -1,0 +1,140 @@
+---
+import QuickViewLayout from '../layouts/QuickViewLayout.astro';
+import { projects } from '../data/projects';
+import { href, email, articleUrl } from '../lib/paths';
+import '../styles/quick-view.css';
+
+const resume = href('BryanKwan_Updated_Resume.pdf');
+const selectedWork = projects.filter(project => project.case);
+const details: Record<string, { category: string; title: string; summary: string; contribution: string; evidence: string; context: string }> = {
+  'computer-vision': {
+    category: 'Computer vision / Product engineering',
+    title: 'CourtVision',
+    summary: 'A coaching workspace connecting source film, spatial replay, player context, and saved teaching moments.',
+    contribution: 'The Python vision pipeline, React coaching interface, interactive replay, and controlled delivery workflow.',
+    evidence: 'Film review, player profiles, notes, and session exports form a working private platform. The public case study includes an illustrative walkthrough.',
+    context: 'Private platform · Reconstruction quality varies by source',
+  },
+  basketball: {
+    category: 'Sports analytics / Scouting & roster strategy',
+    title: 'Basketball decision platform',
+    summary: 'Player evaluation, spatial shot analysis, and roster constraints connected in one scouting workflow.',
+    contribution: 'Scouting interfaces, configurable evaluation tools, and roster scenarios within Toledo Athletics’ data internship program.',
+    evidence: 'A working dashboard with role-specific comparisons and constrained roster construction. Toledo Athletics’ published feature provides independent context.',
+    context: 'Working dashboard · Saved validation covers three games',
+  },
+  astros: {
+    category: 'Business analytics / Analyst exercise',
+    title: 'What brings a fan back?',
+    summary: 'An Astros ticketing case study identifying which part of the fan experience deserves an operational experiment.',
+    contribution: 'Validated survey/game joins, Python analysis, logistic regression, and an executive recommendation using 1,800 supplied surveys.',
+    evidence: 'Higher concessions ratings were associated with 28.0% repurchase versus 20.3% for lower ratings, informing a proposed pilot.',
+    context: 'Supplied case data · Observational findings, not achieved sales lift',
+  },
+  volleyball: {
+    category: 'Sports analytics / Data product development',
+    title: 'Volleyball performance',
+    summary: 'Practice exports become contextual player comparisons and setter–hitter insights.',
+    contribution: 'CSV/XLSX ingestion, persistent local storage, session merging, and interactive analytical workflows.',
+    evidence: 'A working browser dashboard combines volume-aware comparisons, minimum-sample guards, and player-development views.',
+    context: 'Working dashboard · Imported data stays in the local browser',
+  },
+};
+---
+
+<QuickViewLayout title="Bryan Kwan — Sports analytics & data products | Quick view" description="A concise overview of Bryan Kwan’s selected projects, experience, analytical skills, and education. Explore the work, view the résumé, or get in touch.">
+  <section class="qv-hero" aria-labelledby="qv-title">
+    <div class="qv-wrap">
+      <div class="qv-hero-meta"><p class="qv-eyebrow">The portfolio, at a glance</p><p>Toledo, Ohio</p></div>
+      <div class="qv-hero-grid">
+        <div>
+          <h1 id="qv-title">Bryan Kwan<span aria-hidden="true">.</span></h1>
+          <p class="qv-positioning">Sports analytics<br /> & data products.</p>
+        </div>
+        <div class="qv-intro">
+          <p>I turn messy data into tools people can use—from player evaluation and coaching workflows to business analysis.</p>
+          <div class="qv-hero-actions">
+            <a class="qv-button qv-button-gold" href={resume} target="_blank" rel="noopener">View résumé <span class="qv-file-type">PDF</span><span aria-hidden="true">↗</span><span class="qv-sr-only"> (opens in a new tab)</span></a>
+            <a class="qv-button qv-button-outline" href={`mailto:${email}`}>Email Bryan <span aria-hidden="true">↗</span></a>
+          </div>
+          <a class="qv-hero-link" href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" rel="noopener">Connect on LinkedIn <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <nav class="qv-section-nav" aria-label="Quick view sections">
+        <a href="#projects">Selected work <span aria-hidden="true">01</span></a>
+        <a href="#experience">Experience <span aria-hidden="true">02</span></a>
+        <a href="#about">Background <span aria-hidden="true">03</span></a>
+        <a href="#contact">Contact <span aria-hidden="true">04</span></a>
+      </nav>
+    </div>
+  </section>
+
+  <section id="projects" class="qv-section qv-work qv-wrap" aria-labelledby="qv-work-title">
+    <div class="qv-section-heading">
+      <div><p class="qv-eyebrow">01 / Selected work</p><h2 id="qv-work-title">From question to product.</h2></div>
+      <p>Four projects. The problem, my contribution, and the evidence you can explore.</p>
+    </div>
+    <div class="qv-project-list">
+      {selectedWork.map((project, index) => {
+        const detail = details[project.id];
+        return <article class="qv-project" aria-labelledby={`qv-project-${project.id}`}>
+          <span class="qv-project-number" aria-hidden="true">0{index + 1}</span>
+          <div class="qv-project-summary">
+            <p class="qv-category">{detail.category}</p>
+            <h3 id={`qv-project-${project.id}`}>{detail.title}</h3>
+            <p>{detail.summary}</p>
+            <ul class="qv-stack" aria-label={`${detail.title} technologies`}>{project.stack.map(tool => <li>{tool}</li>)}</ul>
+          </div>
+          <div class="qv-project-detail">
+            <dl><div><dt>My contribution</dt><dd>{detail.contribution}</dd></div><div><dt>Evidence</dt><dd>{detail.evidence}</dd></div></dl>
+            <p class="qv-project-context">{detail.context}</p>
+            <div class="qv-project-links">
+              <a class="qv-text-link" href={href(`work/${project.case}/`)}>View case study <span class="qv-sr-only">— {detail.title}</span><span aria-hidden="true">↗</span></a>
+              {project.demo && <a class="qv-text-link qv-text-link-muted" href={project.demo} target="_blank" rel="noopener">Open dashboard <span class="qv-sr-only">— {detail.title} (opens in a new tab)</span><span aria-hidden="true">↗</span></a>}
+            </div>
+          </div>
+        </article>;
+      })}
+    </div>
+    <div class="qv-work-end"><p>More work across sports operations, finance, and business intelligence.</p><a class="qv-text-link" href={href('work/')}>Browse all projects <span aria-hidden="true">↗</span></a></div>
+  </section>
+
+  <section id="experience" class="qv-section qv-experience" aria-labelledby="qv-experience-title">
+    <div class="qv-wrap qv-section-grid">
+      <div class="qv-section-label"><p class="qv-eyebrow">02 / Experience</p><h2 id="qv-experience-title">Where I’ve<br /> put it to work.</h2><a class="qv-text-link" href={resume} target="_blank" rel="noopener">Full résumé <span class="qv-file-type">PDF</span><span aria-hidden="true">↗</span></a></div>
+      <div class="qv-experience-list">
+        <article class="qv-job">
+          <div class="qv-job-heading"><h3>University of Toledo Athletics</h3><p><time datetime="2026-01">Jan 2026</time>–Present</p></div>
+          <p class="qv-job-role">Data Science and Sports Analytics Intern</p>
+          <p>Build analytical tools that connect player evaluation, scouting, and roster decisions. Work spans configurable models, interactive dashboards, scenario analysis, and data validation within the department’s data internship program.</p>
+          <a class="qv-text-link" href={articleUrl} target="_blank" rel="noopener">Toledo Athletics feature <span aria-hidden="true">↗</span><span class="qv-sr-only"> (opens in a new tab)</span></a>
+        </article>
+        <article class="qv-job">
+          <div class="qv-job-heading"><h3>Modern Builders Supply</h3><p><time datetime="2024-10">Oct 2024</time>–<time datetime="2025-07">Jul 2025</time></p></div>
+          <div class="qv-job-progression"><p><strong>Market Analyst</strong><span>May–Jul 2025</span></p><p><strong>E-Commerce Specialist</strong><span>Oct 2024–May 2025</span></p></div>
+          <p>Connected pricing, marketplace, and competitor data to commercial decisions. Used SQL-driven workflows and product analysis to support catalog management, positioning, and reporting.</p>
+          <a class="qv-text-link" href={href('recommendation.pdf')} target="_blank" rel="noopener">Recommendation letter <span class="qv-file-type">PDF</span><span aria-hidden="true">↗</span></a>
+        </article>
+        <article class="qv-job qv-job-compact">
+          <div class="qv-job-heading"><h3>Chartwells Compass Group</h3><p><time datetime="2023-08">Aug 2023</time>–<time datetime="2024-07">Jul 2024</time></p></div>
+          <p class="qv-job-role">Marketing Intern</p>
+          <p>Analyzed campaign performance and audience behavior, and supported student-facing events and engagement.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="qv-section qv-background qv-wrap" aria-labelledby="qv-background-title">
+    <div class="qv-section-heading"><div><p class="qv-eyebrow">03 / Background</p><h2 id="qv-background-title">Analytical depth.<br />A builder’s mindset.</h2></div><p>I think about the model and the interface together. The result should be understandable, its assumptions visible, and the next step clear.</p></div>
+    <div class="qv-background-grid">
+      <div class="qv-skills"><h3>The toolkit</h3><dl><div><dt>Analysis</dt><dd>Regression, forecasting, optimization, scenario simulation, and model evaluation.</dd></div><div><dt>Data & development</dt><dd>Python, SQL, R, JavaScript, TypeScript, React, APIs, and Cloudflare.</dd></div><div><dt>Communication</dt><dd>Power BI, Tableau, Excel, interactive dashboards, and decision-focused reporting.</dd></div></dl></div>
+      <div class="qv-education"><h3>University of Toledo</h3><div><p class="qv-education-degree">Master’s in Business Analytics</p><p>2024–2026 · Marketing concentration</p></div><div><p class="qv-education-degree">Bachelor’s in Marketing<br />& Professional Sales</p><p>2021–2024 · Digital marketing minor</p></div><a class="qv-text-link" href={href('about/')}>More about me <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <aside id="research" class="qv-research" aria-labelledby="qv-research-title"><div><p class="qv-eyebrow">Independent research / July 2026</p><h3 id="qv-research-title">Talent is global. Opportunity is local.</h3><p>A reproducible comparison of public athlete records and development indicators, with validated country mappings and documented limitations. An independent exploratory manuscript.</p></div><a class="qv-text-link" href={href('research/')}>Read the research <span aria-hidden="true">↗</span></a></aside>
+  </section>
+
+  <section id="contact" class="qv-contact" aria-labelledby="qv-contact-title">
+    <div class="qv-wrap qv-contact-grid"><div><p class="qv-eyebrow">04 / Contact</p><h2 id="qv-contact-title">Let’s talk about<br />what comes next.</h2><p>I’m interested in sports analytics and data/product roles where the work helps someone make a better decision.</p><a class="qv-contact-email" href={`mailto:${email}`}>{email}<span aria-hidden="true">↗</span></a></div><div class="qv-contact-links"><a href={resume} target="_blank" rel="noopener"><span>View résumé <span class="qv-file-type">PDF</span></span><span aria-hidden="true">↗</span></a><a href="https://www.linkedin.com/in/bryanhkwan/" target="_blank" rel="noopener"><span>LinkedIn</span><span aria-hidden="true">↗</span></a><a href="https://github.com/bryanhkwan" target="_blank" rel="noopener"><span>GitHub</span><span aria-hidden="true">↗</span></a></div></div>
+  </section>
+  <footer class="qv-footer"><div class="qv-wrap"><p>Bryan Kwan <span>/</span> Home Court</p><a href="#main">Back to top <span aria-hidden="true">↑</span></a></div></footer>
+</QuickViewLayout>

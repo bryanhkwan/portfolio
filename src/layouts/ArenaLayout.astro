@@ -7,6 +7,7 @@ import '../styles/pages.css';
 import '../styles/constellation.css';
 import '../styles/arena.css';
 import { href } from '../lib/paths';
+import PortfolioPreference from '../components/PortfolioPreference.astro';
 const title = 'Bryan Kwan — Sports analytics & data products';
 const description = 'Welcome to my home court. Explore projects, experience, and research through an interactive architectural study of Toledo’s Savage Arena.';
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -25,6 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
     <title>{title}</title>
+    <PortfolioPreference arenaEntry />
   </head>
   <body>
     <a class="skip-link" href="#arena-menu">Skip to portfolio navigation</a>

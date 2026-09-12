@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 import type { ArenaEngine, ArenaMotionSource } from '../lib/arena/engine';
 import { arenaChapters, destinationFromHash, destinationHash, type ArenaDestination, type JourneyState } from '../data/arena-chapters';
 import ArenaChapter from './ArenaChapter';
+import PortfolioViewSwitch from './PortfolioViewSwitch';
 import { href } from '../lib/paths';
 function ArenaPoster() {
   const project = (x: number, y: number, z: number) => `${450 + x * 7.1 - z * 6.2},${350 + x * 2.9 + z * 3.6 - y * 12}`;
@@ -108,11 +109,6 @@ export default function SavageArena() {
     });
     return () => cancelAnimationFrame(focusFrame);
   }, [state]);
-  useEffect(() => {
-    if (status !== 'fallback') return;
-    const style = document.createElement('style'); style.textContent = '@view-transition { navigation: none; }'; document.head.appendChild(style);
-    return () => style.remove();
-  }, [status]);
   const exterior = state.phase === 'exterior';
   const overview = state.phase === 'overview';
   const travelling = ['entering', 'travelling', 'returning'].includes(state.phase);
@@ -120,7 +116,7 @@ export default function SavageArena() {
   const close = () => navigate('overview');
   return <section ref={root} className="arena-experience" aria-label="Home Court — Bryan Kwan’s interactive portfolio" data-status={status} data-phase={state.phase} data-destination={state.destination} data-panel={Boolean(chapter)} data-effects={effects} data-drag={drag}>
     <div className="arena-stage">
-      <div className="arena-stage-heading"><a href={href()} onClick={event => follow(event, 'exterior')} aria-label="Return to Home Court entrance"><span className="arena-home-symbol" aria-hidden="true">BK</span><span>BRYAN KWAN <span className="arena-heading-divider">/</span> HOME COURT</span></a><span className="arena-edition">SAVAGE ARENA <span className="arena-heading-divider">/</span> TOLEDO, OHIO</span></div>
+      <div className="arena-stage-heading"><a href={href()} onClick={event => follow(event, 'exterior')} aria-label="Return to Home Court entrance"><span className="arena-home-symbol" aria-hidden="true">BK</span><span className="arena-brand-copy">BRYAN KWAN <span className="arena-heading-divider">/</span> HOME COURT</span></a><span className="arena-edition">SAVAGE ARENA <span className="arena-heading-divider">/</span> TOLEDO, OHIO</span><PortfolioViewSwitch current="arena" /></div>
       <div className="arena-scene">
         <ArenaPoster/><div className="arena-canvas-host" ref={host}/>
         <div data-arena-display="" className="arena-display" hidden={state.phase !== 'section'}>

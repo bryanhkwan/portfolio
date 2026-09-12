@@ -4,6 +4,12 @@ An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual
 
 **Live:** https://bryanhkwan.github.io/portfolio/
 
+**Quick view:** https://bryanhkwan.github.io/portfolio/overview/
+
+The visible **Interactive / Quick view** switch offers two complete ways to browse. Quick view is a conventional, printable page with positioning, a résumé link, four selected projects, experience, education, skills, research, and contact. Its content is static HTML with ordinary document scrolling; it does not load the arena, React hydration, GSAP, or an animated replay.
+
+An explicit mode selection is saved locally when browser storage is available. A later visit to the bare homepage opens the saved Quick view, while explicit arena hashes and browser Back/Forward retain their destinations. Case-study return links lead back to Quick view when it is selected. Both mode links and all Quick view content remain usable without JavaScript or storage; motion preference and portfolio mode are independent choices.
+
 ## Local development
 
 Use Node 24 and npm. On Windows PowerShell, use `npm.cmd` if script execution policy blocks `npm.ps1`.
@@ -18,6 +24,9 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 ## Structure
 
 - `src/pages/` — homepage, project index, four case studies, research, about, and 404.
+- `src/pages/overview.astro` and `src/styles/quick-view.css` — recruiter-oriented reading view, responsive editorial layout, and print styles.
+- `src/layouts/QuickViewLayout.astro` — lightweight static reading shell with local fonts and no client framework hydration.
+- `src/components/PortfolioViewSwitch.tsx` and `PortfolioPreference.astro` — native mode links, remembered landing choice, and case-study return behavior.
 - `src/components/ScoutingLab.tsx` — roster priorities and an interactive shot profile.
 - `src/layouts/ArenaLayout.astro` - dedicated homepage shell with a bounded dynamic viewport and no shared footer.
 - `src/components/SavageArena.tsx` - centered hero, persistent destination navigation, screen handoff, history, focus management, and illustrated fallback.

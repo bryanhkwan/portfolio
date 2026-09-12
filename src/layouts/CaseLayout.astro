@@ -7,5 +7,5 @@ const { title, description, eyebrow, heading, role, status, stack, chapters = [{
 <SiteLayout title={`${title} — Bryan Kwan`} description={description} active="work">
   <section class="page-hero"><div class="wrap"><a class="breadcrumb" href={href('work/')}><span aria-hidden="true">←</span> All work</a><p class="eyebrow red" style="margin-top:32px">{eyebrow}</p><h1>{heading}</h1><p class="lede">{description}</p><div class="case-meta"><div><span>My contribution</span><p>{role}</p></div><div><span>Project status</span><p>{status}</p></div><div><span>Built with</span><p>{stack}</p></div></div></div></section>
   <div class="wrap case-layout"><nav class="chapter-nav" aria-label="Case study chapters"><p>IN THIS STUDY</p>{chapters.map(chapter => <a href={`#${chapter.id}`}>{chapter.label}</a>)}</nav><article class="case-body"><slot /></article></div>
-  <div class="wrap next-project"><a href={href("#arena-projects")} class="text-link">← Return to Home Court</a><a href={href('work/')} class="text-link">Back to the playbook <span aria-hidden="true">↗</span></a></div>
+  <div class="wrap next-project"><a data-portfolio-return href={href("#arena-projects")} class="text-link">← Return to Home Court</a><a href={href('work/')} class="text-link">Back to the playbook <span aria-hidden="true">↗</span></a></div>
 </SiteLayout>

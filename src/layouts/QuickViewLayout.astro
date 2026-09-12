@@ -1,0 +1,36 @@
+---
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/600.css';
+import PortfolioViewSwitch from '../components/PortfolioViewSwitch';
+import PortfolioPreference from '../components/PortfolioPreference.astro';
+import { href } from '../lib/paths';
+interface Props { title?: string; description?: string; }
+const { title = 'Bryan Kwan — Sports analytics & data products | Quick view', description = 'A concise overview of Bryan Kwan’s projects, experience, and background in sports analytics, business analytics, and data product development.' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#071b32" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
+    <title>{title}</title>
+    <PortfolioPreference />
+  </head>
+  <body class="quick-view">
+    <a class="qv-skip-link" href="#main">Skip to content</a>
+    <header class="qv-header"><div class="qv-header-inner">
+      <a class="qv-brand" href={href('overview/')} aria-label="Bryan Kwan quick view"><span aria-hidden="true">BK</span><span>Bryan Kwan</span></a>
+      <PortfolioViewSwitch current="quick" />
+    </div></header>
+    <main id="main" tabindex="-1"><slot /></main>
+  </body>
+</html>

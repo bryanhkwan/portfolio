@@ -1,0 +1,39 @@
+---
+import { href } from '../lib/paths';
+interface Props { arenaEntry?: boolean; }
+const { arenaEntry = false } = Astro.props;
+const quickURL = href('overview/');
+---
+<script is:inline define:vars={{ arenaEntry, quickURL }}>
+(() => {
+  const key = 'portfolio-view';
+  const read = () => { try { return localStorage.getItem(key); } catch { return null; } };
+  const navigation = performance.getEntriesByType('navigation')[0];
+  // Explicit arena deep links and browser history always retain their destination.
+  if (arenaEntry && !location.hash && navigation?.type !== 'back_forward' && read() === 'quick') {
+    location.replace(quickURL);
+    return;
+  }
+  document.addEventListener('click', event => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const link = event.target instanceof Element ? event.target.closest('a[data-portfolio-view]') : null;
+    if (!link || (link.target && link.target !== '_self')) return;
+    const choice = link.dataset.portfolioView;
+    if (choice === 'quick' || choice === 'arena') {
+      try { localStorage.setItem(key, choice); } catch { /* The native link still works without storage. */ }
+    }
+  });
+  const updateReturnLinks = () => {
+    const quick = read() === 'quick';
+    document.querySelectorAll('[data-portfolio-return]').forEach(link => {
+      link.dataset.arenaHref ??= link.getAttribute('href');
+      link.dataset.arenaLabel ??= link.textContent;
+      link.setAttribute('href', quick ? `${quickURL}#projects` : link.dataset.arenaHref);
+      link.textContent = quick ? 'Back to Quick view' : link.dataset.arenaLabel;
+    });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateReturnLinks, { once:true });
+  else updateReturnLinks();
+  window.addEventListener('pageshow', updateReturnLinks);
+})();
+</script>

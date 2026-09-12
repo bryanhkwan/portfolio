@@ -5,7 +5,9 @@ import '@fontsource/dm-sans/600.css';
 import '../styles/global.css';
 import '../styles/pages.css';
 import '../styles/constellation.css';
+import '../styles/portfolio-mode.css';
 import { href, email } from '../lib/paths';
+import PortfolioPreference from '../components/PortfolioPreference.astro';
 interface Props { title?: string; description?: string; active?: string; }
 const { title = 'Bryan Kwan — Sports analytics & data products', description = 'I build tools that turn sports data into decisions. Explore basketball scouting, CourtVision, business analytics, and reproducible research.', active = '' } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
@@ -24,6 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
     <title>{title}</title>
+    <PortfolioPreference />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -33,6 +36,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <span class="nav-note">ANALYTICS / ENGINEERING</span>
         <button class="menu-toggle" aria-label="Open navigation" aria-controls="primary-nav" aria-expanded="false" type="button">Menu <span aria-hidden="true">+</span></button>
         <nav id="primary-nav" aria-label="Primary navigation">
+          <a href={href('overview/')} data-portfolio-view="quick">Quick view</a>
           <a href={href('work/')} aria-current={active === 'work' ? 'page' : undefined}>Work</a>
           <a href={href('research/')} aria-current={active === 'research' ? 'page' : undefined}>Research</a>
           <a href={href('about/')} aria-current={active === 'about' ? 'page' : undefined}>About</a>
