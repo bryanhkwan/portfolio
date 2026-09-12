@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { ArenaEngine, ArenaView } from '../lib/arena/engine';
+import type { ArenaEngine, ArenaMotion, ArenaView } from '../lib/arena/engine';
 import { href } from '../lib/paths';
 
 function ArenaPoster() {
@@ -36,15 +36,19 @@ export default function SavageArena() {
   const [tracking, setTracking] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [drag, setDrag] = useState(false);
+  const [effects, setEffects] = useState(false);
+  const [motion, setMotion] = useState<ArenaMotion>('paused');
   useEffect(() => {
     let cancelled = false;
     import('../lib/arena/engine').then(({ mountArena }) => {
       if (cancelled || !host.current) return;
       engine.current = mountArena(host.current, {
         ready: () => { if (!cancelled) setStatus('ready'); },
-        failed: () => { if (!cancelled) { setStatus('fallback'); setPlaying(false); } },
+        failed: () => { if (!cancelled) { setStatus('fallback'); setPlaying(false); setEffects(false); setMotion('paused'); } },
         paused: () => { if (!cancelled) setPlaying(false); },
         viewChanged: value => { if (!cancelled) setView(value); },
+        motionChanged: value => { if (!cancelled) setMotion(value); },
+        effectsChanged: value => { if (!cancelled) setEffects(value); },
       });
     }).catch(() => { if (!cancelled) setStatus('fallback'); });
     return () => { cancelled = true; engine.current?.dispose(); engine.current = null; };
@@ -64,7 +68,7 @@ export default function SavageArena() {
     const next = !tracking; setTracking(next); engine.current?.setTracking(next);
     if (!next) setPlaying(false);
   }
-  return <section className="arena-experience" aria-labelledby="hero-title" data-status={status} data-camera={view} data-drag={drag}>
+  return <section className="arena-experience" aria-labelledby="hero-title" data-status={status} data-camera={view} data-drag={drag} data-effects={effects} data-motion={motion}>
     <div className="arena-hero wrap">
       <div className="arena-copy">
         <p className="eyebrow arena-kicker"><span className="signal-dot" aria-hidden="true"/> BRYAN KWAN / SPORTS & DATA</p>
@@ -84,6 +88,10 @@ export default function SavageArena() {
       </div>
     </div>
     <div className="arena-control-shell wrap">
+      <div className="arena-ambient-bar">
+        <p><span className="arena-ambient-dot" aria-hidden="true"/>{!ready ? 'SAVAGE ARENA / X-RAY STUDY' : motion === 'orbiting' ? 'CLOCKWISE ORBIT' : motion === 'returning' ? 'RETURNING TO HOME COURT' : motion === 'paused' ? 'EFFECTS PAUSED' : 'EXPLORE / RETURNS AFTER 3 SECONDS'}</p>
+        <button className="arena-effects-toggle" disabled={!ready} onClick={() => engine.current?.setEffects(!effects)}><span aria-hidden="true">{effects ? 'Ⅱ' : '▷'}</span>{effects ? 'Pause effects' : 'Resume effects'}</button>
+      </div>
       <div className="arena-control-bar">
         <div className="arena-view-controls" role="group" aria-label="Arena camera views">
           {(['orbit','courtside','top'] as const).map(value => <button key={value} disabled={!ready} aria-pressed={view === value} onClick={() => changeView(value)}>{value === 'orbit' && <Icon name="orbit"/>}{value === 'orbit' ? 'Orbit' : value === 'courtside' ? 'Courtside' : 'Top down'}</button>)}

@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import toledoRocketSvg from '../../assets/toledo-rocket.svg?raw';
 
 /** An illustrative architectural reconstruction, not a surveyed arena model. */
 export interface SavageArenaModel {
@@ -395,9 +396,21 @@ function buildCourt(parent: THREE.Group) {
   const labels = canvasTexture(2048, 1280, (ctx) => {
     const px = (x: number) => (x / 34 + 0.5) * 2048;
     const pz = (z: number) => (z / 21.25 + 0.5) * 1280;
+    // Preserve the official vector artwork and proportions at 8.4 metres wide.
+    // Drawing it synchronously also keeps the first rendered frame complete.
+    const rocket = new DOMParser().parseFromString(toledoRocketSvg, 'image/svg+xml');
+    const rocketScale = (2048 / 34) * 8.4 / 78;
+    ctx.save();
+    ctx.translate(px(0), pz(0));
+    ctx.scale(rocketScale, rocketScale);
+    ctx.translate(-39, -15);
+    for (const path of rocket.querySelectorAll('path')) {
+      ctx.fillStyle = path.getAttribute('fill') ?? '#FFCD00';
+      ctx.fill(new Path2D(path.getAttribute('d') ?? ''), path.getAttribute('fill-rule') === 'evenodd' ? 'evenodd' : 'nonzero');
+    }
+    ctx.restore();
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#e6b957'; ctx.font = 'italic 900 112px Arial, sans-serif';
-    ctx.save(); ctx.translate(px(0), pz(0)); ctx.rotate(-Math.PI / 2); ctx.fillText('UT', 0, 0); ctx.restore();
+    ctx.fillStyle = '#e6b957';
     ctx.font = '700 39px Arial, sans-serif';
     ctx.fillText('S A V A G E   A R E N A', px(0), pz(7.99));
     ctx.fillStyle = '#b2cdd0'; ctx.font = '600 25px Arial, sans-serif';
@@ -412,7 +425,7 @@ function buildCourt(parent: THREE.Group) {
   }));
   labelMesh.rotation.x = -Math.PI / 2;
   labelMesh.position.y = 0.048;
-  labelMesh.name = 'Court lettering';
+  labelMesh.name = 'Official Toledo rocket and court lettering';
   parent.add(labelMesh);
 }
 

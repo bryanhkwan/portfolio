@@ -20,7 +20,8 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 - `src/pages/` — homepage, project index, four case studies, research, about, and 404.
 - `src/components/ScoutingLab.tsx` — roster priorities and an interactive shot profile.
 - `src/components/SavageArena.tsx` — the arena hero, accessible camera/layer controls, and a server-rendered illustration for loading, no-JavaScript, and WebGL fallback states.
-- `src/lib/arena/` — procedural arena geometry and a dynamically loaded, demand-driven Three.js renderer. Approximately 4,500 instanced seats, exposed trusses, a suspended scoreboard, hoops, and an illustrative movement layer; no external model or texture requests.
+- `src/lib/arena/` — procedural arena geometry, a dynamically loaded Three.js renderer, a single-draw cloud bank, and a shader-based scanline glitch. Approximately 4,500 instanced seats, exposed trusses, a suspended scoreboard, hoops, and an illustrative movement layer; no external model or texture requests.
+- `src/assets/toledo-rocket.svg` — the official gold rocket paths, drawn synchronously onto the center-court texture; source attribution is included in the SVG.
 - `src/styles/arena.css` — homepage architectural art direction, responsive scene framing, and interaction controls.
 - `src/components/CourtReplay.tsx` — a public illustrative court walkthrough, with playback, scrubbing, movement history, shot locations, and temporary teaching-moment markers.
 - `src/data/` — project metadata and clearly labeled fictional scouting examples.
@@ -42,7 +43,9 @@ npm test
 
 Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, rendered arena camera/layer changes, dragging, reduced-motion idle/play/pause behavior, WebGL failure, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
 
-The arena renders only when its view changes or the visitor plays movement. A short establishing camera move respects reduced motion. Playback pauses offscreen and in hidden tabs. Mouse-wheel scrolling remains page scrolling; touch visitors opt into dragging. Camera presets and rotation buttons provide alternatives to dragging. The arena is an artistic reconstruction, not a measured digital twin, and the movement layer is fictional. The reference photo and stock reference image are not distributed with the site.
+The arena rotates clockwise above a drifting cyan cloud bank. Interaction suspends rotation; after three idle seconds the camera and arena return to the default view, preserving the selected layers. A brief scanline glitch repeats every six active seconds. Pause effects freezes the ambient animation independently of the illustrative movement playback. Reduced-motion visitors start with a still scene and can explicitly enable effects. All rendering stops offscreen and in hidden tabs; movement playback stays paused when returning. Continuous effects use paced frames to leave time for input on software WebGL renderers.
+
+Mouse-wheel scrolling remains page scrolling; touch visitors opt into dragging. Camera presets and rotation buttons provide alternatives to dragging. The arena is an artistic reconstruction, not a measured digital twin, and the movement layer is fictional. The reference photo and stock reference image are not distributed with the site. Browser motion checks also cover clockwise rendered movement, paused cloud stability, glitch cadence, held dragging, the three-second idle return, and layer preservation.
 
 ## Publishing
 
