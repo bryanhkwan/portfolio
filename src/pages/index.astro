@@ -1,20 +1,13 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import CourtReplay from '../components/CourtReplay';
+import SavageArena from '../components/SavageArena';
+import '../styles/arena.css';
 import ScoutingLab from '../components/ScoutingLab';
 import { href, articleUrl } from '../lib/paths';
 ---
 <SiteLayout>
-  <section class="intro-scene wrap" aria-labelledby="hero-title">
-    <div class="intro-copy">
-      <p class="eyebrow"><span class="signal-dot" aria-hidden="true"></span> SPORTS ANALYTICS & DATA PRODUCTS</p>
-      <h1 id="hero-title"><span class="hero-line"><span>See the game.</span></span><span class="hero-line"><span>Build what’s</span></span><span class="hero-line gold"><span>next.</span></span></h1>
-      <p class="intro-description">I’m Bryan Kwan. I turn sports data into tools people can use—from a coach’s film room to a better roster decision.</p>
-      <div class="intro-actions"><a href="#selected-work" class="button button-dark">Explore the work <span aria-hidden="true">↗</span></a><a href={href('about/')} class="quiet-link">Meet Bryan <span aria-hidden="true">→</span></a></div>
-      <div class="intro-signature"><span class="signature-line" aria-hidden="true"></span><span>Analytics. Engineering. A feel for the game.</span></div>
-    </div>
-    <div class="intro-product"><div class="product-overline"><span>FEATURED BUILD / 01</span><a href={href('work/courtvision/')}>Inside CourtVision <span aria-hidden="true">↗</span></a></div><CourtReplay client:load /></div>
-  </section>
+  <SavageArena client:load />
   <aside class="recognition-band"><div class="wrap recognition-grid"><div class="recognition-monogram" aria-hidden="true">UT</div><div><span class="eyebrow">UNIVERSITY OF TOLEDO ATHLETICS</span><p>Real questions. A place to put the work to use.</p></div><a href={articleUrl} target="_blank" rel="noopener" class="text-link">Featured by Toledo Athletics <span aria-hidden="true">↗</span></a></div></aside>
   <section class="section wrap" id="selected-work">
     <div class="section-heading" data-reveal><div><p class="eyebrow gold">01 / SELECTED WORK</p><h2>Built around<br>a better decision.</h2></div><p>From the moment on film to the question in the data. A few projects that show how I work.</p></div>
@@ -30,6 +23,7 @@ import { href, articleUrl } from '../lib/paths';
         </div><div class="workspace-bottom"><span>Python → React → 3D → Private cloud</span><span aria-hidden="true">↗</span></div>
       </div>
     </article>
+    <div class="arena-proof"><div class="arena-proof-copy" data-reveal><p class="eyebrow gold">FROM THE ARENA TO THE ANALYSIS</p><h3>Follow the moment.<br/>Find the meaning.</h3><p>A different angle can change the conversation. Scrub a sample possession, trace player movement, or mark a teaching moment.</p><a href={href('work/courtvision/')} class="text-link">Inside the CourtVision workspace <span aria-hidden="true">↗</span></a></div><CourtReplay client:load /></div>
     <div class="project-pair">
       <a class="work-card roster-card" href={href('work/basketball/')} data-reveal><div class="work-card-top"><span class="eyebrow">02 / BASKETBALL ANALYTICS</span><span class="card-arrow" aria-hidden="true">↗</span></div><div class="roster-visual" aria-hidden="true"><div><span>SCOUT</span><i></i><span>COMPARE</span><i></i><span>CONSTRUCT</span></div><svg viewBox="0 0 460 132"><path d="M20 102H440M20 65H440M20 28H440" stroke="#25425f" stroke-dasharray="3 6"/><path d="M30 96L100 73L175 78L245 39L325 50L430 15" fill="none" stroke="#ffd200" stroke-width="2"/><path d="M30 80L100 91L175 52L245 67L325 33L430 46" fill="none" stroke="#85bfff" stroke-width="2"/><g fill="#ffd200"><circle cx="100" cy="73" r="4"/><circle cx="245" cy="39" r="4"/><circle cx="430" cy="15" r="4"/></g></svg><span>Illustrative comparison</span></div><h3>The right player.<br>The right fit.</h3><p>Scouting, explainable evaluation, and roster constraints in one decision platform.</p><div class="work-card-footer"><span>Working dashboard</span><span>Read case study →</span></div></a>
       <a class="work-card business-card" href={href('work/astros/')} data-reveal><div class="work-card-top"><span class="eyebrow">03 / BUSINESS ANALYTICS</span><span class="card-arrow" aria-hidden="true">↗</span></div><div class="business-visual"><span class="eyebrow">OBSERVED REPEAT PURCHASE</span><strong>25.7<span>%</span></strong><div class="business-track" aria-hidden="true"><span></span></div><span>462 repurchasers · 1,800 surveys</span></div><h3>What brings<br>a fan back?</h3><p>Turning fan-experience data into a focused operational experiment.</p><div class="work-card-footer"><span>Astros analyst case study</span><span>Read case study →</span></div></a>

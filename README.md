@@ -1,6 +1,6 @@
 # Bryan Kwan — Sports analytics & data products
 
-An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual language. Built with Astro, TypeScript, selective React components, and GSAP. Case-study content ships as static HTML.
+An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual language. The homepage centers on an original Three.js x-ray study of Savage Arena, inspired by Bryan's photograph. Built with Astro, TypeScript, selective React components, Three.js, and GSAP. Case-study content ships as static HTML.
 
 **Live:** https://bryanhkwan.github.io/portfolio/
 
@@ -19,6 +19,9 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 
 - `src/pages/` — homepage, project index, four case studies, research, about, and 404.
 - `src/components/ScoutingLab.tsx` — roster priorities and an interactive shot profile.
+- `src/components/SavageArena.tsx` — the arena hero, accessible camera/layer controls, and a server-rendered illustration for loading, no-JavaScript, and WebGL fallback states.
+- `src/lib/arena/` — procedural arena geometry and a dynamically loaded, demand-driven Three.js renderer. Approximately 4,500 instanced seats, exposed trusses, a suspended scoreboard, hoops, and an illustrative movement layer; no external model or texture requests.
+- `src/styles/arena.css` — homepage architectural art direction, responsive scene framing, and interaction controls.
 - `src/components/CourtReplay.tsx` — a public illustrative court walkthrough, with playback, scrubbing, movement history, shot locations, and temporary teaching-moment markers.
 - `src/data/` — project metadata and clearly labeled fictional scouting examples.
 - `src/styles/constellation.css` — the active navy/gold design system and responsive product interfaces; shared layout primitives remain in the other stylesheets.
@@ -37,7 +40,9 @@ npx playwright install chromium
 npm test
 ```
 
-Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, reduced motion, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
+Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, rendered arena camera/layer changes, dragging, reduced-motion idle/play/pause behavior, WebGL failure, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
+
+The arena renders only when its view changes or the visitor plays movement. A short establishing camera move respects reduced motion. Playback pauses offscreen and in hidden tabs. Mouse-wheel scrolling remains page scrolling; touch visitors opt into dragging. Camera presets and rotation buttons provide alternatives to dragging. The arena is an artistic reconstruction, not a measured digital twin, and the movement layer is fictional. The reference photo and stock reference image are not distributed with the site.
 
 ## Publishing
 
