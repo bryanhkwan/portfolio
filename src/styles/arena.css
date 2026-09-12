@@ -33,6 +33,11 @@
 .arena-render-label { font: .65rem var(--mono); letter-spacing: .08em; color: var(--muted); margin-left: auto; }
 .arena-gesture { position: absolute; bottom: 22px; left: 19%; right: 7%; text-align: left; color: var(--muted); font: .68rem var(--mono); }
 .arena-touch-toggle { display: none; }
+.arena-motion-notice { position: absolute; z-index: 2; bottom: 126px; left: 19%; right: 7%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid #426479; border-radius: 5px; background: rgb(4 16 30 / 95%); box-shadow: 0 12px 40px #02091455; }
+.arena-motion-notice strong { color: var(--ink); font-size: .86rem; font-weight: 500; }
+.arena-motion-notice p { color: var(--secondary); font-size: .74rem; line-height: 1.6; margin-top: 4px; max-width: 280px; }
+.arena-motion-notice button { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: 8px; min-height: 44px; padding: 10px 14px; color: #061426; background: var(--gold); border: 1px solid var(--gold); border-radius: 3px; font-size: .75rem; font-weight: 600; }
+.arena-motion-notice button:hover { background: #ffe260; }
 .arena-control-shell { position: relative; z-index: 3; }
 .arena-ambient-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; margin-bottom: 6px; }
 .arena-ambient-bar p { display: flex; align-items: center; gap: 9px; color: var(--secondary); font: .61rem var(--mono); letter-spacing: .06em; }
@@ -82,6 +87,7 @@
   .arena-proof { gap: 36px; }
 }
 @media(max-width:850px) {
+  .arena-motion-notice { left: 30px; right: 30px; bottom: 118px; }
   .arena-hero { min-height: 0; display: flex; flex-direction: column; align-items: stretch; }
   .arena-copy { padding: 38px 0 0; max-width: none; }
   .arena-copy h1 { font-size: clamp(3.2rem,8.4vw,4.6rem); margin-block: 23px 20px; }
@@ -107,6 +113,10 @@
   .arena-proof-copy { max-width: 550px; }
 }
 @media(max-width:550px) {
+  .arena-motion-notice { left: 22px; right: 22px; bottom: 129px; padding: 12px; gap: 10px; }
+  .arena-motion-notice strong { font-size: .77rem; }
+  .arena-motion-notice p { font-size: .67rem; }
+  .arena-motion-notice button { padding-inline: 10px; font-size: .67rem; }
   .arena-ambient-bar { gap: 12px; }
   .arena-ambient-bar p { max-width: 195px; font-size: .55rem; line-height: 1.7; }
   .arena-effects-toggle { font-size: .67rem; padding-inline: 10px; }

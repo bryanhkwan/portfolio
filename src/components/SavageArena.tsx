@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { ArenaEngine, ArenaMotion, ArenaView } from '../lib/arena/engine';
+import type { ArenaEngine, ArenaMotion, ArenaMotionSource, ArenaView } from '../lib/arena/engine';
 import { href } from '../lib/paths';
 
 function ArenaPoster() {
@@ -38,6 +38,7 @@ export default function SavageArena() {
   const [drag, setDrag] = useState(false);
   const [effects, setEffects] = useState(false);
   const [motion, setMotion] = useState<ArenaMotion>('paused');
+  const [motionSource, setMotionSource] = useState<ArenaMotionSource>('visitor');
   useEffect(() => {
     let cancelled = false;
     import('../lib/arena/engine').then(({ mountArena }) => {
@@ -48,7 +49,7 @@ export default function SavageArena() {
         paused: () => { if (!cancelled) setPlaying(false); },
         viewChanged: value => { if (!cancelled) setView(value); },
         motionChanged: value => { if (!cancelled) setMotion(value); },
-        effectsChanged: value => { if (!cancelled) setEffects(value); },
+        effectsChanged: (value, source) => { if (!cancelled) { setEffects(value); setMotionSource(source); } },
       });
     }).catch(() => { if (!cancelled) setStatus('fallback'); });
     return () => { cancelled = true; engine.current?.dispose(); engine.current = null; };
@@ -68,7 +69,7 @@ export default function SavageArena() {
     const next = !tracking; setTracking(next); engine.current?.setTracking(next);
     if (!next) setPlaying(false);
   }
-  return <section className="arena-experience" aria-labelledby="hero-title" data-status={status} data-camera={view} data-drag={drag} data-effects={effects} data-motion={motion}>
+  return <section className="arena-experience" aria-labelledby="hero-title" data-status={status} data-camera={view} data-drag={drag} data-effects={effects} data-motion={motion} data-motion-source={motionSource}>
     <div className="arena-hero wrap">
       <div className="arena-copy">
         <p className="eyebrow arena-kicker"><span className="signal-dot" aria-hidden="true"/> BRYAN KWAN / SPORTS & DATA</p>
@@ -80,6 +81,7 @@ export default function SavageArena() {
       <div className="arena-visual">
         <div className="arena-location"><span>SAVAGE ARENA</span><span>UNIVERSITY OF TOLEDO</span></div>
         <div className="arena-render-area"><ArenaPoster/><div className="arena-canvas-host" ref={host}/></div>
+        {ready && !effects && <div className="arena-motion-notice"><div><strong>See the arena in motion.</strong><p>{motionSource === 'device' ? 'Your device asks for reduced motion. You can enable it here.' : 'Rotation, clouds, and glitch effects are paused.'}</p></div><button onClick={() => engine.current?.setEffects(true)}><span aria-hidden="true">▷</span>Start animation</button></div>}
         <div className="arena-scene-note"><span className="arena-axis" aria-hidden="true"><i/>Y<span>X</span></span><div><span className="arena-edition">01 — HOME COURT</span><p>Another way to see the game.</p></div><span className="arena-render-label">X-RAY / 3D STUDY</span></div>
         <div className="arena-gesture" id="arena-instructions">
           <span>{status === 'fallback' ? 'Static arena illustration · 3D unavailable in this browser' : ready ? 'Drag to orbit · use view controls to explore' : 'An architectural study of Savage Arena'}</span>
@@ -89,7 +91,7 @@ export default function SavageArena() {
     </div>
     <div className="arena-control-shell wrap">
       <div className="arena-ambient-bar">
-        <p><span className="arena-ambient-dot" aria-hidden="true"/>{!ready ? 'SAVAGE ARENA / X-RAY STUDY' : motion === 'orbiting' ? 'CLOCKWISE ORBIT' : motion === 'returning' ? 'RETURNING TO HOME COURT' : motion === 'paused' ? 'EFFECTS PAUSED' : 'EXPLORE / RETURNS AFTER 3 SECONDS'}</p>
+        <p><span className="arena-ambient-dot" aria-hidden="true"/>{!ready ? 'SAVAGE ARENA / X-RAY STUDY' : motion === 'orbiting' ? 'CLOCKWISE ORBIT' : motion === 'returning' ? 'RETURNING TO HOME COURT' : motion === 'paused' ? motionSource === 'device' ? 'PAUSED BY DEVICE MOTION SETTING' : 'EFFECTS PAUSED' : 'EXPLORE / RETURNS AFTER 3 SECONDS'}</p>
         <button className="arena-effects-toggle" disabled={!ready} onClick={() => engine.current?.setEffects(!effects)}><span aria-hidden="true">{effects ? 'Ⅱ' : '▷'}</span>{effects ? 'Pause effects' : 'Resume effects'}</button>
       </div>
       <div className="arena-control-bar">

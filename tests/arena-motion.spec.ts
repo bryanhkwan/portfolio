@@ -202,6 +202,20 @@ test('a held mouse drag stays interactive and starts the idle countdown only on 
   expect(errors).toEqual([]);
 });
 
+test('moving the cursor over the arena without dragging does not pause rotation', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'Hover is a mouse interaction.');
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  const { arena, canvas } = await readyArena(page);
+  const bounds = await canvas.boundingBox();
+  const before = await rotation(canvas);
+  for (let i = 0; i < 4; i++) {
+    await page.mouse.move(bounds!.x + bounds!.width * (.45 + i * .04), bounds!.y + bounds!.height * .5);
+    await page.waitForTimeout(150);
+    await expect(arena).toHaveAttribute('data-motion', 'orbiting', { timeout: 500 });
+  }
+  expect(await rotation(canvas)).toBeLessThan(before);
+});
+
 test('reduced motion starts still, allows explicit effects, and stops when the preference changes', async ({ page }) => {
   const errors = runtimeErrors(page);
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -209,13 +223,22 @@ test('reduced motion starts still, allows explicit effects, and stops when the p
   await expect(arena).toHaveAttribute('data-effects', 'false');
   await expect(arena).toHaveAttribute('data-motion', 'paused');
   await expect(canvas).toHaveAttribute('data-glitch', 'false');
+  await expect(arena.getByText('Your device asks for reduced motion. You can enable it here.')).toBeVisible();
   const before = await rotation(canvas);
   await page.waitForTimeout(400);
   expect(await rotation(canvas)).toBe(before);
-  await arena.getByRole('button', { name: 'Resume effects', exact: true }).click();
+  await arena.getByRole('button', { name: 'Start animation', exact: true }).click();
   await expect(arena).toHaveAttribute('data-effects', 'true');
+  await expect(arena).toHaveAttribute('data-motion', 'orbiting', { timeout: 1000 });
   await canvas.scrollIntoViewIfNeeded();
   await expect.poll(() => rotation(canvas)).toBeLessThan(before);
+  // Explicit motion choices survive navigation even when Windows requests a still page.
+  await page.reload();
+  await expect(arena).toHaveAttribute('data-status', 'ready');
+  await canvas.scrollIntoViewIfNeeded();
+  await expect(arena).toHaveAttribute('data-effects', 'true');
+  await expect(arena).toHaveAttribute('data-motion', 'orbiting');
+  await expect(arena.getByRole('button', { name: 'Start animation', exact: true })).toHaveCount(0);
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(arena).toHaveAttribute('data-effects', 'false');
@@ -224,5 +247,23 @@ test('reduced motion starts still, allows explicit effects, and stops when the p
   const stopped = await rotation(canvas);
   await page.waitForTimeout(400);
   expect(await rotation(canvas)).toBe(stopped);
+  expect(errors).toEqual([]);
+});
+
+test('animation can be enabled when the browser blocks preference storage', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.addInitScript(() => {
+    for (const name of ['getItem', 'setItem', 'removeItem']) {
+      Object.defineProperty(Storage.prototype, name, { value: () => { throw new DOMException('Storage blocked', 'SecurityError'); } });
+    }
+  });
+  const errors = runtimeErrors(page);
+  const { arena, canvas } = await readyArena(page);
+  await arena.getByRole('button', { name: 'Start animation', exact: true }).click();
+  await expect(arena).toHaveAttribute('data-motion', 'orbiting', { timeout: 1000 });
+  const before = await rotation(canvas);
+  await expect.poll(() => rotation(canvas)).toBeLessThan(before);
+  await arena.getByRole('button', { name: 'Pause effects', exact: true }).click();
+  await expect(arena).toHaveAttribute('data-effects', 'false');
   expect(errors).toEqual([]);
 });

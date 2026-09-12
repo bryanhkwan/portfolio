@@ -6,6 +6,20 @@ import { createArenaGlitch } from './glitch';
 
 export type ArenaView = 'orbit' | 'courtside' | 'top';
 export type ArenaMotion = 'orbiting' | 'interacting' | 'waiting' | 'returning' | 'paused';
+export type ArenaMotionSource = 'device' | 'visitor';
+const effectsPreferenceKey = 'savage-arena-effects';
+function readEffectsPreference(): boolean | null {
+  try {
+    const value = localStorage.getItem(effectsPreferenceKey);
+    return value === 'on' ? true : value === 'off' ? false : null;
+  } catch { return null; }
+}
+function saveEffectsPreference(value: boolean | null) {
+  try {
+    if (value === null) localStorage.removeItem(effectsPreferenceKey);
+    else localStorage.setItem(effectsPreferenceKey, value ? 'on' : 'off');
+  } catch { /* Animation controls still work when storage is unavailable. */ }
+}
 export interface ArenaEngine {
   setView(view: ArenaView): void;
   setRoof(visible: boolean): void;
@@ -20,7 +34,7 @@ export interface ArenaEngine {
 /** Direct manipulation is immediate; ambient effects use a paced render loop. */
 export function mountArena(host: HTMLElement, callbacks: {
   ready(): void; failed(): void; paused(): void; viewChanged(view: ArenaView): void;
-  motionChanged(motion: ArenaMotion): void; effectsChanged(enabled: boolean): void;
+  motionChanged(motion: ArenaMotion): void; effectsChanged(enabled: boolean, source: ArenaMotionSource): void;
 }): ArenaEngine {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.65));
@@ -69,11 +83,12 @@ export function mountArena(host: HTMLElement, callbacks: {
 
   let disposed = false, failed = false, ready = false, inView = true, frame = 0, ambientTimer = 0;
   let playing = false, seconds = 0, previous = 0, ambienceSeconds = 0;
-  let effects = !reduced.matches, motion: ArenaMotion = effects ? 'orbiting' : 'paused';
+  const preference = readEffectsPreference();
+  let effects = preference ?? !reduced.matches, motion: ArenaMotion = effects ? 'orbiting' : 'paused';
   let pointerHeld = false, idleUntil = 0, glitchCount = 0, lastGlitchCycle = 0, glitchStart = -1;
   let tween: { start: number; from: THREE.Vector3; to: THREE.Vector3; fromTarget: THREE.Vector3;
     toTarget: THREE.Vector3; fromAngle: number; toAngle: number; resume: boolean } | null = null;
-  callbacks.effectsChanged(effects); callbacks.motionChanged(motion);
+  callbacks.effectsChanged(effects, !effects && preference === null ? 'device' : 'visitor'); callbacks.motionChanged(motion);
   canvas.dataset.glitch = 'false'; canvas.dataset.glitchCount = '0';
 
   function setMotion(value: ArenaMotion) {
@@ -181,19 +196,20 @@ export function mountArena(host: HTMLElement, callbacks: {
     if (document.hidden) suspend();
     else { if (motion === 'waiting') idleUntil = performance.now() + 3000; requestRender(); }
   }
-  function setEffects(value: boolean) {
+  function setEffects(value: boolean, source: ArenaMotionSource = 'visitor') {
     effects = value; previous = 0; glitchStart = -1;
+    saveEffectsPreference(source === 'visitor' ? value : null);
     if (!value) {
       if (tween?.resume) tween = null;
       setMotion('paused');
     } else if (pointerHeld) setMotion('interacting');
-    else { idleUntil = performance.now() + 3000; setMotion('waiting'); }
-    callbacks.effectsChanged(value); requestRender();
+    else moveToView('orbit', false, true);
+    callbacks.effectsChanged(value, source); requestRender();
   }
   function reduceMotion() {
     controls.enableDamping = !reduced.matches;
     if (reduced.matches) {
-      pausePlayback(); setEffects(false);
+      pausePlayback(); setEffects(false, 'device');
       if (tween) { camera.position.copy(tween.to); controls.target.copy(tween.toTarget); model.group.rotation.y = 0; tween = null; }
     }
     requestRender();
@@ -212,7 +228,7 @@ export function mountArena(host: HTMLElement, callbacks: {
   }
   function dragStart() { pointerHeld = true; tween = null; markInteraction(); callbacks.viewChanged('orbit'); }
   function dragEnd() { pointerHeld = false; markInteraction(); }
-  function pointerMove(event: PointerEvent) { if (event.pointerType === 'mouse' || pointerHeld) markInteraction(); }
+  function pointerMove() { if (pointerHeld) markInteraction(); }
   function contextLost(event: Event) {
     event.preventDefault(); failed = true; suspend(); callbacks.failed();
   }
