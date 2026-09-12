@@ -65,11 +65,12 @@ export function mountArena(host: HTMLElement, callbacks: {
     new THREE.Float32BufferAttribute(groundPoints, 3)), new THREE.LineBasicMaterial({ color: 0x4c8299, transparent: true, opacity: .19 }));
   scene.add(guides);
 
-  let disposed = false, failed = false, ready = false, inView = true, frame = 0;
+  let disposed = false, failed = false, ready = false, inView = true, frame = 0, playbackTimer = 0;
   let playing = false, seconds = 0, previous = 0;
   let tween: { start: number; from: THREE.Vector3; to: THREE.Vector3; fromTarget: THREE.Vector3; toTarget: THREE.Vector3 } | null = null;
 
   function requestRender() {
+    clearTimeout(playbackTimer); playbackTimer = 0;
     if (!disposed && !failed && inView && !document.hidden && !frame) frame = requestAnimationFrame(render);
   }
   function render(now: number) {
@@ -90,7 +91,12 @@ export function mountArena(host: HTMLElement, callbacks: {
     const moving = controls.update();
     renderer.render(scene, camera);
     if (!ready) { ready = true; callbacks.ready(); }
-    if (playing || tween || moving) requestRender();
+    if (tween || moving) requestRender();
+    else if (playing) {
+      // A paced analytical replay leaves time for input and software rendering.
+      // Camera transitions and direct manipulation retain immediate frame updates.
+      playbackTimer = window.setTimeout(requestRender, 34);
+    }
   }
   function setView(view: ArenaView, immediate = false) {
     const positions: Record<ArenaView, [number, number, number]> = {
@@ -118,6 +124,7 @@ export function mountArena(host: HTMLElement, callbacks: {
     requestRender();
   }
   function pause() {
+    clearTimeout(playbackTimer); playbackTimer = 0;
     if (playing) { playing = false; callbacks.paused(); }
     previous = 0;
   }
@@ -175,7 +182,7 @@ export function mountArena(host: HTMLElement, callbacks: {
     setDrag(enabled) { controls.enabled = !coarse.matches || enabled; canvas.style.touchAction = coarse.matches && enabled ? 'none' : 'pan-y'; },
     rotate,
     dispose() {
-      disposed = true; cancelAnimationFrame(frame); observer.disconnect(); intersection.disconnect();
+      disposed = true; cancelAnimationFrame(frame); clearTimeout(playbackTimer); observer.disconnect(); intersection.disconnect();
       document.removeEventListener('visibilitychange', visibility); reduced.removeEventListener('change', reduceMotion);
       canvas.removeEventListener('keydown', keydown); canvas.removeEventListener('webglcontextlost', contextLost);
       controls.dispose();

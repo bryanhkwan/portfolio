@@ -43,20 +43,32 @@ async function expectCanvasChanges(canvas: Locator, previous: Buffer) {
 
 async function canvasFrame(canvas: Locator, path?: string) {
   const page = canvas.page();
-  // Demand-driven rendering resumes when the scene enters the viewport.
-  await canvas.scrollIntoViewIfNeeded();
-  await drawnFrames(page);
-  const bounds = await canvas.boundingBox();
-  const viewport = page.viewportSize();
-  expect(bounds).not.toBeNull();
-  expect(viewport).not.toBeNull();
-  const x = Math.max(0, Math.ceil(bounds!.x));
-  const y = Math.max(0, Math.ceil(bounds!.y));
-  // The artwork intentionally bleeds horizontally on phones; capture its visible
-  // pixels without asking the browser to capture outside its actual viewport.
-  const width = Math.min(viewport!.width, Math.floor(bounds!.x + bounds!.width)) - x;
-  const height = Math.min(viewport!.height, Math.floor(bounds!.y + bounds!.height)) - y;
-  return page.screenshot({ clip: { x, y, width, height }, scale: 'css', path });
+  // Keep capture preparation in one browser call: software WebGL can make each
+  // additional locator round trip expensive while movement is playing.
+  const clip = await page.evaluate(async () => {
+    const element = document.querySelector<HTMLCanvasElement>('.arena-experience canvas');
+    if (!element) throw new Error('The rendered arena canvas is missing.');
+    const initial = element.getBoundingClientRect();
+    // Horizontal artwork bleed is intentional. Only scroll when needed to bring
+    // the scene vertically into view, then let demand-driven rendering resume.
+    if (initial.top < 0 || initial.bottom > innerHeight) {
+      element.scrollIntoView({ block: 'center', inline: 'nearest', behavior: 'instant' });
+    }
+    await new Promise<void>(resolve => {
+      requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+    });
+    const bounds = element.getBoundingClientRect();
+    const x = Math.max(0, Math.ceil(bounds.x));
+    const y = Math.max(0, Math.ceil(bounds.y));
+    return {
+      x, y,
+      width: Math.min(innerWidth, Math.floor(bounds.right)) - x,
+      height: Math.min(innerHeight, Math.floor(bounds.bottom)) - y,
+    };
+  });
+  expect(clip.width).toBeGreaterThan(0);
+  expect(clip.height).toBeGreaterThan(0);
+  return page.screenshot({ clip, scale: 'css', path });
 }
 
 async function expectCanvasStill(page: Page, canvas: Locator) {
