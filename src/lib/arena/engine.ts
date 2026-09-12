@@ -117,9 +117,12 @@ export function mountArena(host: HTMLElement, callbacks: {
   function render(now: number) {
     frame = 0;
     if (disposed || failed || !inView || document.hidden) return;
-    const delta = previous ? Math.min((now - previous) / 1000, .08) : 0; previous = now;
+    const elapsed = previous ? Math.max(0, (now - previous) / 1000) : 0;
+    const delta = Math.min(elapsed, .08); previous = now;
     if (effects) seconds += delta;
-    journey.step(delta);
+    // Authored camera durations follow real elapsed time even on a software GPU.
+    // Ambient simulation remains capped; suspend() clears previous to exclude time offscreen.
+    journey.step(elapsed);
     if (journey.state.phase === 'exterior' && effects && !held && now >= idleUntil && !journey.moving) {
       if (idleUntil) { idleUntil = 0; journey.resetExterior(); }
       else model.group.rotation.y -= delta * .075;
@@ -146,8 +149,11 @@ export function mountArena(host: HTMLElement, callbacks: {
   }
   function resize() {
     const bounds = host.getBoundingClientRect(); if (!bounds.width || !bounds.height || disposed) return;
-    width = bounds.width; height = bounds.height; camera.aspect = width / height; camera.fov = camera.aspect < 1 ? 48 : 40;
-    camera.updateProjectionMatrix(); renderer.setSize(width, height); journey.resize(camera.aspect < .9); requestRender();
+    width = bounds.width; height = bounds.height; camera.aspect = width / height;
+    // Panel layout must not change the authored destination mid-flight.
+    const phone = window.innerWidth <= 760;
+    camera.fov = phone ? 48 : 40;
+    camera.updateProjectionMatrix(); renderer.setSize(width, height); journey.resize(phone); requestRender();
   }
   function suspend() { clearTimeout(timer); timer = 0; cancelAnimationFrame(frame); frame = 0; previous = 0; held = false; down = null; }
   function visibility() { if (document.hidden) suspend(); else requestRender(); }
@@ -155,7 +161,7 @@ export function mountArena(host: HTMLElement, callbacks: {
     effects = value; previous = 0; savePreference(source === 'visitor' ? value : null);
     if (!value && journey.moving) journey.skip(); callbacks.effectsChanged(value, source); requestRender();
   }
-  function motionChanged() { controls.enableDamping = !reduced.matches; if (reduced.matches) setEffects(false, 'device'); requestRender(); }
+  function motionChanged(event: MediaQueryListEvent) { controls.enableDamping = !event.matches; if (event.matches) setEffects(false, 'device'); requestRender(); }
   function rotate(direction: number) {
     if (journey.moving || journey.state.phase === 'section') return;
     const delta = camera.position.clone().sub(controls.target).applyAxisAngle(new THREE.Vector3(0, 1, 0), direction * Math.PI / 9);

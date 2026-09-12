@@ -24,13 +24,26 @@ test('the entrance moves the actual camera, reveals the roof, and can be skipped
   const arena = page.locator('.arena-experience'), canvas = arena.locator('canvas');
   const position = await canvas.getAttribute('data-camera-position');
   await page.getByRole('link', { name: 'Enter the arena', exact: true }).click();
-  await expect(arena).toHaveAttribute('data-phase', 'entering');
-  await expect.poll(() => canvas.getAttribute('data-camera-position')).not.toBe(position);
-  await page.getByRole('button', { name: 'Skip entrance' }).click();
   await settled(page, 'overview');
+  expect(await canvas.getAttribute('data-camera-position')).not.toBe(position);
   await expect(canvas).toHaveAttribute('data-roof-visible', 'false');
   await expect(canvas).toHaveAttribute('data-scoreboard-visible', 'true');
   await expect(page.locator('[data-anchor]:visible')).toHaveCount(5);
+  await page.getByRole('link', { name: 'Return to Home Court entrance', exact: true }).click();
+  await settled(page, 'exterior');
+  // Activate the real Skip button as it appears. Protocol/scroll checks on a software GPU
+  // can themselves outlast the entire 2.7s entrance, so observe this transient control in-page.
+  const skipped = await page.evaluate(() => new Promise<boolean>(resolve => {
+    const root = document.querySelector('.arena-experience')!;
+    const observer = new MutationObserver(() => {
+      const skip = root.querySelector<HTMLButtonElement>('.arena-travel-status button');
+      if (skip?.textContent?.includes('Skip entrance')) { observer.disconnect(); clearTimeout(timeout); skip.click(); resolve(true); }
+    });
+    const timeout = setTimeout(() => { observer.disconnect(); resolve(false); }, 5000);
+    observer.observe(root, { childList: true, subtree: true });
+    root.querySelector<HTMLAnchorElement>('.arena-enter')!.click();
+  }));
+  expect(skipped).toBe(true); await settled(page, 'overview');
   expect(problems).toEqual([]);
 });
 
