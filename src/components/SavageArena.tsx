@@ -38,6 +38,9 @@ export default function SavageArena() {
   function navigate(destination: ArenaDestination, immediate = false, record = true) {
     desired.current = destination;
     focusAfterTravel.current = true;
+    // The mobile menu sits below the reading panel. Reveal the stage before starting
+    // its camera journey, since rendering intentionally pauses outside the viewport.
+    root.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
     if (record) {
       const hash = destinationHash(destination);
       if (location.hash !== hash) history.pushState(null, '', hash);

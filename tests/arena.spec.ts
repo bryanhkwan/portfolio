@@ -96,10 +96,16 @@ test('selecting the court geometry opens Projects without a label click', async 
   await expect(page.locator('.arena-chapter')).toHaveAttribute('data-chapter', 'projects');
 });
 
-test('deep links, Back and Forward, refresh, and interrupted travel restore the correct section', async ({ page }) => {
+test('deep links, Back and Forward, refresh, and interrupted travel restore the correct section', async ({ page, isMobile }) => {
   const problems = errors(page);
   await page.emulateMedia({ reducedMotion: 'no-preference' }); await ready(page, '#arena-projects');
   await settled(page, 'section');
+  if (isMobile) {
+    await page.locator('.arena-chapter-nav').evaluate(nav => {
+      window.scrollTo({ top: scrollY + nav.getBoundingClientRect().top - 100, behavior: 'instant' });
+    });
+    await expect(page.locator('.arena-canvas-host canvas')).not.toBeInViewport();
+  }
   await page.locator('.arena-chapter-nav [data-destination="experience"]').click();
   await page.locator('.arena-chapter-nav [data-destination="research"]').click();
   await page.locator('.arena-chapter-nav [data-destination="contact"]').click(); await settled(page, 'section');

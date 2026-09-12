@@ -33,21 +33,30 @@ export function createArenaJourney(camera: THREE.PerspectiveCamera, controls: Or
   }
   function applyAppearance() { model.setInterior(appearance.interior); }
   function notify(phase: JourneyState['phase']) { state = { ...state, phase }; changed(state); }
-  function settle() {
-    timeline?.kill(); timeline = null;
+  function flushDrag() {
+    // Consume the remaining OrbitControls delta before an authored camera move.
+    // Its decay is frame-based, so even a three-second pause can leave inertia on slow GPUs.
+    const damping = controls.enableDamping;
+    controls.enableDamping = false; controls.update(); controls.enableDamping = damping;
+  }
+  function applyPose() {
+    flushDrag();
     const pose = poseFor(state.destination);
     camera.position.set(...pose.position); controls.target.set(...pose.target);
+    controls.update();
+  }
+  function settle() {
+    timeline?.kill(); timeline = null;
+    applyPose();
     model.group.rotation.y = 0;
     appearance.interior = state.destination === 'exterior' ? 0 : 1;
-    applyAppearance(); controls.update();
+    applyAppearance();
     notify(state.destination === 'exterior' ? 'exterior' : state.destination === 'overview' ? 'overview' : 'section');
   }
   function travel(destination: ArenaDestination, immediate = false) {
     const wasExterior = state.phase === 'exterior';
     timeline?.kill(); timeline = null;
-    // Flush accumulated drag damping before taking ownership of the camera.
-    const damping = controls.enableDamping;
-    controls.enableDamping = false; controls.update(); controls.enableDamping = damping;
+    flushDrag();
     state = { destination, phase: destination === 'exterior' ? 'returning' : wasExterior ? 'entering' : 'travelling' };
     if (immediate) { settle(); return; }
     changed(state);
@@ -82,6 +91,7 @@ export function createArenaJourney(camera: THREE.PerspectiveCamera, controls: Or
     resetExterior() {
       if (state.phase !== 'exterior') return;
       timeline?.kill(); clock = 0;
+      flushDrag();
       const pose = poseFor('exterior');
       timeline = gsap.timeline({ paused: true, defaults: { duration: .9, ease: 'power2.out' }, onComplete: settle });
       timeline.to(camera.position, vec(pose.position), 0).to(controls.target, vec(pose.target), 0);
@@ -89,7 +99,7 @@ export function createArenaJourney(camera: THREE.PerspectiveCamera, controls: Or
     cancelExteriorReset() { if (state.phase === 'exterior') { timeline?.kill(); timeline = null; } },
     skip: settle,
     step(delta: number) { if (timeline) { clock += delta; timeline.totalTime(clock); } },
-    resize(isNarrow: boolean) { narrow = isNarrow; if (!timeline) { const pose = poseFor(state.destination); camera.position.set(...pose.position); controls.target.set(...pose.target); controls.update(); } },
+    resize(isNarrow: boolean) { narrow = isNarrow; if (!timeline) applyPose(); },
     dispose() { timeline?.kill(); timeline = null; },
   };
 }
