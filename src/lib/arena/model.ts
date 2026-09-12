@@ -5,11 +5,14 @@ import toledoRocketSvg from '../../assets/toledo-rocket.svg?raw';
 export interface SavageArenaModel {
   group: THREE.Group;
   roof: THREE.Group;
+  scoreboard: THREE.Group;
   seating: THREE.Group;
   structure: THREE.Group;
   court: THREE.Group;
   tracking: THREE.Group;
   update: (seconds: number) => void;
+  setInterior: (amount: number) => void;
+  setScoreboard: (title: string) => void;
 }
 
 type Point = [number, number, number];
@@ -299,7 +302,9 @@ function buildRoof(parent: THREE.Group) {
   purlins.addTo(parent, 0x79bed3, 0.13, 'Roof purlins and cross bracing');
   panels.addTo(parent, 0x337c98, 0.055, 'Cutaway roof plane');
   lights.addTo(parent, 0xd9f6ff, 0.83, 'Overhead light bars');
+}
 
+function buildScoreboard(parent: THREE.Group) {
   const scoreboardFrame = new Linework();
   scoreboardFrame.box(0, 11.85, 0, 6.1, 3.45, 4.35);
   scoreboardFrame.box(0, 10.06, 0, 6.35, 0.14, 4.6);
@@ -308,16 +313,18 @@ function buildRoof(parent: THREE.Group) {
     for (const z of [-1.55, 1.55]) scoreboardFrame.line([x, 13.65, z], [x, 16.55, z]);
   }
   scoreboardFrame.addTo(parent, ICE, 0.69, 'Suspended scoreboard and rigging');
-  const screenTexture = canvasTexture(1024, 512, (ctx) => {
+  let screenContext: CanvasRenderingContext2D;
+  const draw = (ctx: CanvasRenderingContext2D, title: string) => {
     ctx.fillStyle = '#071a29'; ctx.fillRect(0, 0, 1024, 512);
     ctx.fillStyle = '#dbad46'; ctx.fillRect(0, 0, 1024, 8);
     ctx.fillStyle = '#7197a6'; ctx.font = '500 28px Arial, sans-serif'; ctx.textAlign = 'center';
     ctx.fillText('UNIVERSITY OF TOLEDO', 512, 77);
     ctx.fillStyle = '#f0c45c'; ctx.font = 'italic 900 144px Arial, sans-serif'; ctx.fillText('TOLEDO', 501, 264);
     ctx.strokeStyle = '#52758c'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(90, 317); ctx.lineTo(934, 317); ctx.stroke();
-    ctx.fillStyle = '#b6d6e2'; ctx.font = '600 44px Arial, sans-serif'; ctx.fillText('SAVAGE ARENA', 512, 395);
+    ctx.fillStyle = '#b6d6e2'; ctx.font = '600 44px Arial, sans-serif'; ctx.fillText(title.toUpperCase(), 512, 395);
     ctx.fillStyle = '#648496'; ctx.font = '500 20px Arial, sans-serif'; ctx.fillText('HOME OF THE ROCKETS', 512, 455);
-  });
+  };
+  const screenTexture = canvasTexture(1024, 512, ctx => { screenContext = ctx; draw(ctx, 'HOME COURT'); });
   const screenMaterial = new THREE.MeshBasicMaterial({ map: screenTexture, transparent: true, opacity: 0.89, side: THREE.DoubleSide, toneMapped: false });
   const longScreen = new THREE.PlaneGeometry(5.86, 3.11);
   const shortScreen = new THREE.PlaneGeometry(4.1, 3.11);
@@ -331,6 +338,7 @@ function buildRoof(parent: THREE.Group) {
     end.rotation.y = sign * Math.PI / 2;
     parent.add(end);
   }
+  return (title: string) => { draw(screenContext, title); screenTexture.needsUpdate = true; };
 }
 
 function buildCourt(parent: THREE.Group) {
@@ -483,17 +491,40 @@ function buildTracking(parent: THREE.Group) {
 export function buildSavageArena(): SavageArenaModel {
   const group = new THREE.Group();
   group.name = 'Savage Arena — architectural study';
-  const roof = new THREE.Group(); roof.name = 'Roof and scoreboard';
+  const roof = new THREE.Group(); roof.name = 'Revealing roof structure';
+  const scoreboard = new THREE.Group(); scoreboard.name = 'Independent suspended scoreboard';
   const seating = new THREE.Group(); seating.name = 'Seating bowl';
   const structure = new THREE.Group(); structure.name = 'Arena structure';
   const court = new THREE.Group(); court.name = 'Toledo basketball court';
   const tracking = new THREE.Group(); tracking.name = 'Illustrative tracking overlay';
-  group.add(structure, seating, court, roof, tracking);
+  group.add(structure, seating, court, roof, scoreboard, tracking);
   buildStructure(structure);
   buildSeating(seating);
   buildCourt(court);
   buildRoof(roof);
+  const setScoreboard = buildScoreboard(scoreboard);
+  // A modest illustrated press ledge and gold wayfinding establish readable interior landmarks.
+  const interiorDetails = new Linework();
+  interiorDetails.box(15, 8.5, -16, 6, .2, 1.3);
+  interiorDetails.box(15, 9, -16.5, 6, .9, .08);
+  interiorDetails.path([[12, .08, 8.5], [15.1, .08, 8.5], [15.1, .08, 4.5]]);
+  interiorDetails.addTo(structure, GOLD, .65, 'Portfolio destination accents');
   const update = buildTracking(tracking);
   update(0);
-  return { group, roof, seating, structure, court, tracking, update };
+  const roofMaterials: { material: THREE.Material; opacity: number }[] = [];
+  roof.traverse(object => {
+    const material = (object as THREE.Mesh).material;
+    if (material) for (const item of Array.isArray(material) ? material : [material]) roofMaterials.push({ material: item, opacity: item.opacity });
+  });
+  const floor = court.getObjectByName('Toledo gold court') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+  const stands = seating.getObjectByName('Transparent terraced stands') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+  const seats = seating.getObjectByName('Navy seating with Toledo gold upper sections') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
+  function setInterior(amount: number) {
+    roof.visible = amount < .995;
+    for (const { material, opacity } of roofMaterials) material.opacity = opacity * (1 - amount);
+    floor.material.opacity = THREE.MathUtils.lerp(.2, .9, amount);
+    stands.material.opacity = THREE.MathUtils.lerp(.2, .72, amount);
+    seats.material.opacity = THREE.MathUtils.lerp(.36, .88, amount);
+  }
+  return { group, roof, scoreboard, seating, structure, court, tracking, update, setInterior, setScoreboard };
 }

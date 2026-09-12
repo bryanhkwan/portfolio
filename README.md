@@ -1,6 +1,6 @@
 # Bryan Kwan — Sports analytics & data products
 
-An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual language. The homepage centers on an original Three.js x-ray study of Savage Arena, inspired by Bryan's photograph. Built with Astro, TypeScript, selective React components, Three.js, and GSAP. Case-study content ships as static HTML.
+An interactive portfolio with CourtVision's Midnight Blue and Rocket Gold visual language. Home Court is an immersive portfolio journey through an original Three.js x-ray study of Savage Arena, inspired by Bryan's photograph. A centered hero leads into the arena, where five locations reveal Projects, Experience, Research, About, and Contact. Built with Astro, TypeScript, selective React components, Three.js, and GSAP. Case-study content ships as static HTML.
 
 **Live:** https://bryanhkwan.github.io/portfolio/
 
@@ -19,7 +19,10 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 
 - `src/pages/` — homepage, project index, four case studies, research, about, and 404.
 - `src/components/ScoutingLab.tsx` — roster priorities and an interactive shot profile.
-- `src/components/SavageArena.tsx` — the arena hero, accessible camera/layer controls, and a server-rendered illustration for loading, no-JavaScript, and WebGL fallback states.
+- `src/components/SavageArena.tsx` - centered hero, history, focus management, and illustrated fallback.
+- `src/components/ArenaChapter.tsx` - readable section panels and the shared project selector.
+- `src/data/arena-chapters.ts` - destinations, 3D anchors, fallback routes, and hash parsing.
+- `src/lib/arena/journey.ts` - one GSAP timeline for camera travel, orientation, and roof reveal, advanced by the renderer.
 - `src/lib/arena/` — procedural arena geometry, a dynamically loaded Three.js renderer, a single-draw cloud bank, and a shader-based scanline glitch. Approximately 4,500 instanced seats, exposed trusses, a suspended scoreboard, hoops, and an illustrative movement layer; no external model or texture requests.
 - `src/assets/toledo-rocket.svg` — the official gold rocket paths, drawn synchronously onto the center-court texture; source attribution is included in the SVG.
 - `src/styles/arena.css` — homepage architectural art direction, responsive scene framing, and interaction controls.
@@ -41,11 +44,17 @@ npx playwright install chromium
 npm test
 ```
 
-Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, rendered arena camera/layer changes, dragging, reduced-motion idle/play/pause behavior, WebGL failure, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
+Browser tests use installed Google Chrome locally and Playwright Chromium in CI. They cover desktop and mobile routes, rendered arena journeys, all five locations, geometry picking, interrupted travel, hash history, focus restoration, dragging, remembered motion choices, WebGL failure and context loss, replay controls and offscreen pausing, temporary moment markers, ranking changes, shot controls, project filters, document links, keyboard navigation, automated accessibility, narrow layouts, and no-JavaScript fallbacks. Set `TEST_BASE_URL` to `https://bryanhkwan.github.io/portfolio/` to test the published site instead of starting a local preview.
 
-The arena rotates clockwise above a drifting cyan cloud bank. Dragging and control actions suspend rotation; after three idle seconds the camera and arena return to the default view, preserving the selected layers. Hovering does not interrupt rotation. A brief scanline glitch repeats every six active seconds. Pause effects freezes the ambient animation independently of the illustrative movement playback. Reduced-motion visitors see a clear explanation and a Start animation button on the scene. Starting or resuming effects takes effect immediately, and the explicit choice is remembered in local storage when available. A new device request for reduced motion pauses effects again. All rendering stops offscreen and in hidden tabs; movement playback stays paused when returning. Continuous effects use paced frames to leave time for input on software WebGL renderers.
+The exterior rotates clockwise above a drifting cyan cloud bank when motion is enabled. A held drag pauses rotation; three idle seconds after release, the exterior returns to its authored view. Inside, the view stays at the selected destination without an idle reset. A brief scan accent accompanies deliberate camera travel; there is no recurring glitch during reading. CourtVision has a clearly labeled illustrative player-movement layer.
 
-Mouse-wheel scrolling remains page scrolling; touch visitors opt into dragging. Camera presets and rotation buttons provide alternatives to dragging. The arena is an artistic reconstruction, not a measured digital twin, and the movement layer is fictional. The reference photo and stock reference image are not distributed with the site. Browser motion checks also cover clockwise rendered movement, paused cloud stability, glitch cadence, held dragging, the three-second idle return, and layer preservation.
+The entrance is a roughly 2.7-second camera sequence through an architectural roof reveal. The independently suspended scoreboard stays visible. Section travel uses an elevated corridor to clear the bowl and scoreboard. Close-up court and seating surfaces gain opacity to establish depth. Location labels and matching ordinary navigation provide mouse, touch, and keyboard access; phones use stable labels with leaders to the projected scene anchors. Desktop panels have independent scrolling, while mobile content flows beneath the scene.
+
+`#arena-overview`, `#arena-projects`, `#arena-experience`, `#arena-research`, `#arena-about`, and `#arena-contact` restore a stable scene without replaying the entrance. Browser Back/Forward restore the selected location. Escape returns to the overview, then the entrance. Case studies include a Return to Home Court link. Existing case-study routes and the full conventional portfolio below the arena remain accessible.
+
+Reduced-motion visitors begin with a still view and immediate navigation. Enable motion is an explicit, remembered override when browser storage is available; a new device request for reduced motion pauses it again. Pause motion also finishes pending travel immediately. Hidden tabs and offscreen scenes stop rendering and pause the journey clock. Continuous ambient effects use paced frames; short camera flights use animation frames. Mouse-wheel scrolling remains page scrolling, and touch dragging is opt-in.
+
+The arena is an artistic reconstruction, not a measured digital twin. The five locations are portfolio wayfinding metaphors. The reference photograph is not distributed with the site. Mobile browser tests use Chromium emulation; they do not establish performance on a physical iPhone or Android handset.
 
 ## Publishing
 
