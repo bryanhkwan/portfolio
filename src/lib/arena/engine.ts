@@ -4,6 +4,7 @@ import { buildSavageArena } from './model';
 import { createArenaAtmosphere } from './atmosphere';
 import { createArenaGlitch } from './glitch';
 import { createArenaJourney } from './journey';
+import { destinationScreens } from './destinations';
 import { arenaChapters, type ArenaDestination, type ChapterId, type JourneyState } from '../../data/arena-chapters';
 
 export type ArenaMotionSource = 'device' | 'visitor';
@@ -65,6 +66,7 @@ export function mountArena(host: HTMLElement, callbacks: {
   });
   const labelNodes = arenaChapters.map(chapter => host.parentElement?.querySelector<HTMLElement>(`[data-anchor="${chapter.id}"]`) ?? null);
   const leaderNodes = arenaChapters.map(chapter => host.parentElement?.querySelector<SVGLineElement>(`[data-leader="${chapter.id}"]`) ?? null);
+  const display = host.parentElement?.querySelector<HTMLElement>('[data-arena-display]');
   const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2(), projected = new THREE.Vector3();
   let disposed = false, failed = false, ready = false, inView = true, frame = 0, timer = 0;
   let previous = 0, seconds = 0, width = 1, height = 1, drawCount = 0;
@@ -83,6 +85,7 @@ export function mountArena(host: HTMLElement, callbacks: {
   function updateControls() {
     const phase = journey.state.phase;
     controls.enabled = (phase === 'exterior' || phase === 'overview') && (!coarse.matches || drag);
+    canvas.tabIndex = phase === 'exterior' || phase === 'overview' ? 0 : -1;
     canvas.style.touchAction = coarse.matches && drag && controls.enabled ? 'none' : 'pan-y';
   }
   function requestRender() {
@@ -99,7 +102,11 @@ export function mountArena(host: HTMLElement, callbacks: {
       const anchorX = (projected.x + 1) * width / 2, anchorY = (1 - projected.y) * height / 2;
       let x = THREE.MathUtils.clamp(anchorX, labelWidth / 2 + 12, width - labelWidth / 2 - 12);
       let y = THREE.MathUtils.clamp(anchorY - 14, 90, height - 35);
-      if (window.innerWidth <= 760) {
+      if (height < 330) {
+        // Short landscape view: a single, well-spaced row below the overview heading.
+        x = width * ((index + .5) / 5);
+        y = Math.max(125, height * .78);
+      } else if (window.innerWidth <= 760) {
         // Stable touch targets with leaders to the moving 3D anchors. Reserve space for the heading.
         const locations = [[.5, .65], [.23, .48], [.77, .48], [.23, .84], [.77, .84]];
         x = THREE.MathUtils.clamp(width * locations[index][0], labelWidth / 2 + 12, width - labelWidth / 2 - 12);
@@ -114,12 +121,26 @@ export function mountArena(host: HTMLElement, callbacks: {
       if (leader) { leader.setAttribute('x1', String(anchorX)); leader.setAttribute('y1', String(anchorY)); leader.setAttribute('x2', String(x)); leader.setAttribute('y2', String(y)); leader.style.visibility = label.style.visibility; }
     });
   }
+  function projectDisplay() {
+    if (journey.state.phase !== 'section' || !display) { delete canvas.dataset.screenBounds; return; }
+    const destination = journey.state.destination as ChapterId;
+    const screen = destinationScreens[destination];
+    const [x,y,z] = screen.center;
+    const first = new THREE.Vector3(x-screen.width/2,y+screen.height/2,z).project(camera);
+    const last = new THREE.Vector3(x+screen.width/2,y-screen.height/2,z).project(camera);
+    const left = Math.max(12,(first.x+1)*width/2+2), top = Math.max(10,(1-first.y)*height/2+2);
+    const right = Math.min(width-12,(last.x+1)*width/2-2), bottom = Math.min(height-10,(1-last.y)*height/2-2);
+    const bounds = {x:left,y:top,width:Math.max(1,right-left),height:Math.max(1,bottom-top)};
+    display.style.inset='auto'; display.style.left=`${bounds.x}px`; display.style.top=`${bounds.y}px`;
+    display.style.width=`${bounds.width}px`; display.style.height=`${bounds.height}px`;
+    canvas.dataset.screenBounds=JSON.stringify(bounds);
+  }
   function render(now: number) {
     frame = 0;
     if (disposed || failed || !inView || document.hidden) return;
     const elapsed = previous ? Math.max(0, (now - previous) / 1000) : 0;
     const delta = Math.min(elapsed, .08); previous = now;
-    if (effects) seconds += delta;
+    if (effects && journey.state.phase !== 'section') seconds += delta;
     // Authored camera durations follow real elapsed time even on a software GPU.
     // Ambient simulation remains capped; suspend() clears previous to exclude time offscreen.
     journey.step(elapsed);
@@ -127,20 +148,24 @@ export function mountArena(host: HTMLElement, callbacks: {
       if (idleUntil) { idleUntil = 0; journey.resetExterior(); }
       else model.group.rotation.y -= delta * .075;
     }
-    if (effects && model.tracking.visible) model.update(seconds);
+    if (effects && model.tracking.visible && journey.state.phase !== 'section') model.update(seconds);
     transitionAge += delta;
     // One restrained scan during deliberate travel, never a recurring interruption while reading.
     const accent = effects && !reduced.matches && journey.moving && transitionAge < .22 ? Math.sin(transitionAge / .22 * Math.PI) * .18 : 0;
     glitch.update(seconds, accent);
-    const moving = controls.update(); atmosphere.update(seconds, camera);
-    scene.updateMatrixWorld(); camera.updateMatrixWorld(); projectLabels(); renderer.render(scene, camera);
+    let moving = false;
+    if (journey.moving || journey.state.phase === 'section') camera.lookAt(controls.target);
+    else moving = controls.update();
+    atmosphere.update(seconds, camera);
+    scene.updateMatrixWorld(); camera.updateMatrixWorld(); projectLabels(); projectDisplay(); renderer.render(scene, camera);
     canvas.dataset.rotation = model.group.rotation.y.toFixed(5);
     canvas.dataset.cameraPosition = camera.position.toArray().map(value => value.toFixed(3)).join(',');
     canvas.dataset.renderCount = String(++drawCount); canvas.dataset.glitch = String(accent > .01);
     canvas.dataset.roofVisible = String(model.roof.visible); canvas.dataset.scoreboardVisible = String(model.scoreboard.visible);
+    canvas.dataset.destinationModel = journey.state.destination;
     if (!ready) { ready = true; callbacks.ready(); }
     if (journey.moving || moving) requestRender();
-    else if (effects) timer = window.setTimeout(requestRender, 34);
+    else if (effects && journey.state.phase !== 'section') timer = window.setTimeout(requestRender, 34);
     else previous = 0;
   }
   function navigate(destination: ArenaDestination, immediate = false) {
@@ -153,7 +178,7 @@ export function mountArena(host: HTMLElement, callbacks: {
     // Panel layout must not change the authored destination mid-flight.
     const phone = window.innerWidth <= 760;
     camera.fov = phone ? 48 : 40;
-    camera.updateProjectionMatrix(); renderer.setSize(width, height); journey.resize(phone); requestRender();
+    camera.updateProjectionMatrix(); renderer.setSize(width, height); journey.resize(width,height,phone); requestRender();
   }
   function suspend() { clearTimeout(timer); timer = 0; cancelAnimationFrame(frame); frame = 0; previous = 0; held = false; down = null; }
   function visibility() { if (document.hidden) suspend(); else requestRender(); }

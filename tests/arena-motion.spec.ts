@@ -72,16 +72,28 @@ test('reading stays at the selected view beyond the old reset and glitch interva
   expect(await canvas.getAttribute('data-camera-position')).toBe(camera);
   await expect(arena).toHaveAttribute('data-phase', 'section');
   expect(await page.evaluate(() => (window as Window & { arenaGlitches?: number }).arenaGlitches)).toBe(0);
+  const frames = await canvas.getAttribute('data-render-count');
+  await page.waitForTimeout(300);
+  expect(await canvas.getAttribute('data-render-count'), 'Inactive atmosphere and destinations must stop rendering while reading').toBe(frames);
 });
 
-test('motion controls work when storage is blocked and rendering stops offscreen', async ({ page }) => {
+test('motion controls work when storage is blocked and rendering stops when the document is hidden', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.addInitScript(() => { for (const name of ['getItem', 'setItem', 'removeItem']) Object.defineProperty(Storage.prototype, name, { value: () => { throw new DOMException('Storage blocked', 'SecurityError'); } }); });
   const { arena, canvas } = await ready(page);
   await arena.getByRole('button', { name: 'Enable motion', exact: true }).click(); await expect(arena).toHaveAttribute('data-effects', 'true');
-  await page.locator('.site-footer').scrollIntoViewIfNeeded(); await page.waitForTimeout(200);
+  // Simulate the Page Visibility API signal in the current document so the
+  // renderer's suspension path is deterministic in both headed and headless CI.
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
   const count = await canvas.getAttribute('data-render-count'); await page.waitForTimeout(400);
   expect(await canvas.getAttribute('data-render-count')).toBe(count);
-  await canvas.scrollIntoViewIfNeeded(); await expect.poll(() => canvas.getAttribute('data-render-count')).not.toBe(count);
+  await page.evaluate(() => {
+    Reflect.deleteProperty(document, 'hidden');
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect.poll(() => canvas.getAttribute('data-render-count')).not.toBe(count);
   await arena.getByRole('button', { name: 'Pause motion', exact: true }).click(); await expect(arena).toHaveAttribute('data-effects', 'false');
 });

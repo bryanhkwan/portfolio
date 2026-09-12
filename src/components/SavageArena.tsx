@@ -38,9 +38,6 @@ export default function SavageArena() {
   function navigate(destination: ArenaDestination, immediate = false, record = true) {
     desired.current = destination;
     focusAfterTravel.current = true;
-    // The mobile menu sits below the reading panel. Reveal the stage before starting
-    // its camera journey, since rendering intentionally pauses outside the viewport.
-    root.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
     if (record) {
       const hash = destinationHash(destination);
       if (location.hash !== hash) history.pushState(null, '', hash);
@@ -76,7 +73,12 @@ export default function SavageArena() {
     function restore() {
       if (location.hash === lastHash.current) return;
       lastHash.current = location.hash;
-      navigateRef.current(destinationFromHash(location.hash) ?? 'exterior', true, false);
+      if (location.hash === '#arena-menu') {
+        root.current?.querySelector<HTMLElement>('.arena-chapter-nav a')?.focus({ preventScroll: true });
+        return;
+      }
+      const destination = destinationFromHash(location.hash);
+      if (destination || !location.hash) navigateRef.current(destination ?? 'exterior', true, false);
     }
     function escape(event: KeyboardEvent) {
       if (event.key !== 'Escape' || !root.current?.contains(document.activeElement)) return;
@@ -95,11 +97,13 @@ export default function SavageArena() {
     if (state.phase === 'section') {
       const heading = root.current?.querySelector<HTMLElement>('#arena-chapter-title');
       heading?.focus({ preventScroll: true });
-      if (matchMedia('(max-width: 760px)').matches) heading?.scrollIntoView({ block: 'start', behavior: 'instant' });
+      const reading = root.current?.querySelector<HTMLElement>('.arena-reading-scroll');
+      if (reading) reading.scrollTop = 0;
     } else {
-      const target = state.phase === 'exterior' ? root.current?.querySelector<HTMLElement>('.arena-enter') : returnFocus.current?.matches('[data-anchor], [data-destination]') ? returnFocus.current : root.current?.querySelector<HTMLElement>('[data-anchor="projects"]');
+      const previous = returnFocus.current;
+      const usablePrevious = previous?.matches('[data-anchor], [data-destination]') && previous.getClientRects().length;
+      const target = state.phase === 'exterior' ? root.current?.querySelector<HTMLElement>('.arena-enter') : usablePrevious ? previous : root.current?.querySelector<HTMLElement>(status === 'fallback' ? '.arena-chapter-nav a' : '[data-anchor="projects"]');
       target?.focus({ preventScroll: true });
-      root.current?.scrollIntoView({ block: 'start', behavior: 'instant' });
     }
     });
     return () => cancelAnimationFrame(focusFrame);
@@ -116,9 +120,12 @@ export default function SavageArena() {
   const close = () => navigate('overview');
   return <section ref={root} className="arena-experience" aria-label="Home Court — Bryan Kwan’s interactive portfolio" data-status={status} data-phase={state.phase} data-destination={state.destination} data-panel={Boolean(chapter)} data-effects={effects} data-drag={drag}>
     <div className="arena-stage">
-      <div className="arena-stage-heading"><a href={href()} onClick={event => follow(event, 'exterior')} aria-label="Return to Home Court entrance"><span className="arena-home-symbol" aria-hidden="true">⌖</span> HOME COURT<span className="arena-heading-divider"> / </span><span className="arena-heading-location">SAVAGE ARENA</span></a><span className="arena-edition">BRYAN KWAN / PORTFOLIO</span></div>
+      <div className="arena-stage-heading"><a href={href()} onClick={event => follow(event, 'exterior')} aria-label="Return to Home Court entrance"><span className="arena-home-symbol" aria-hidden="true">BK</span><span>BRYAN KWAN <span className="arena-heading-divider">/</span> HOME COURT</span></a><span className="arena-edition">SAVAGE ARENA <span className="arena-heading-divider">/</span> TOLEDO, OHIO</span></div>
       <div className="arena-scene">
         <ArenaPoster/><div className="arena-canvas-host" ref={host}/>
+        <div data-arena-display="" className="arena-display" hidden={state.phase !== 'section'}>
+          {chapter && state.phase === 'section' && <ArenaChapter key={chapter.id} chapter={chapter.id} close={close}/>}
+        </div>
         <div className="arena-hotspots" hidden={!overview} aria-label="Explore arena locations">
           <svg className="arena-leaders" aria-hidden="true">{arenaChapters.map(item => <line key={item.id} data-leader={item.id}/>)}</svg>
           {arenaChapters.map(item => <a key={item.id} data-anchor={item.id} href={href(item.fallback)} onClick={event => follow(event, item.id)} onMouseEnter={() => engine.current?.highlight(item.id)} onMouseLeave={() => engine.current?.highlight(null)} onFocus={() => engine.current?.highlight(item.id)} onBlur={() => engine.current?.highlight(null)}><span>{item.number}</span><div><strong>{item.title}</strong><small>{item.location}</small></div><i aria-hidden="true">↗</i></a>)}
@@ -133,24 +140,23 @@ export default function SavageArena() {
       </div>
       {overview && <div className="arena-overview-heading"><p>FIVE PLACES. ONE PERSPECTIVE.</p><h2>Find your way around.</h2><span>Choose a location or use the menu below.</span></div>}
       {travelling && <div className="arena-travel-status"><span><i aria-hidden="true"/>{state.phase === 'entering' ? 'ENTERING HOME COURT' : state.phase === 'returning' ? 'RETURNING HOME' : `EXPLORING ${chapter?.title.toUpperCase() ?? 'THE ARENA'}`}</span><button onClick={() => engine.current?.skip()}>{state.phase === 'entering' ? 'Skip entrance' : 'Skip transition'} <span aria-hidden="true">→</span></button></div>}
-      {chapter && state.phase === 'section' && <ArenaChapter key={chapter.id} chapter={chapter.id} close={close}/>}
       <div className="arena-scene-caption" aria-hidden="true"><span className="arena-coordinate-mark">+<i/>+</span><div>SAVAGE ARENA / TOLEDO, OHIO<br/><span>{chapter ? `${chapter.number} — ${chapter.location.toUpperCase()}` : 'AN ARCHITECTURAL STUDY OF HOME'}</span></div><span className="arena-caption-right">{exterior ? '00 / 05' : 'EXPLORE THE ARENA'}</span></div>
     </div>
     <div className="arena-navigation-shell">
-      {!exterior && <nav className="arena-chapter-nav" aria-label="Portfolio sections">
+      <nav id="arena-menu" tabIndex={-1} className="arena-chapter-nav" aria-label="Portfolio sections">
         {arenaChapters.map(item => <a key={item.id} data-destination={item.id} href={href(item.fallback)} aria-current={state.destination === item.id ? 'location' : undefined} onClick={event => follow(event, item.id)}><span className="arena-nav-number">{item.number}</span><span><strong>{item.title}</strong><small>{item.location}</small></span><span className="arena-nav-arrow" aria-hidden="true">↗</span></a>)}
-      </nav>}
+      </nav>
       <div className="arena-utility-bar">
         <div className="arena-orientation">{!exterior ? <button className="arena-overview-button" onClick={close}>← Arena overview</button> : <span>YOUR NEXT PERSPECTIVE STARTS HERE</span>}</div>
-        <p id="arena-instructions">{status === 'fallback' ? 'Still view · all sections remain available' : travelling ? 'A new perspective on the game.' : chapter ? chapter.id === 'projects' ? 'Illustrative tracking on court' : 'Take your time. The view stays here.' : status === 'loading' ? 'Preparing your home court…' : 'Drag to orbit · arrow keys to turn'}</p>
+        <p id="arena-instructions">{status === 'fallback' ? 'Still view · every section is available' : travelling ? 'A new perspective on the game.' : chapter ? 'Take your time. The view stays here.' : status === 'loading' ? 'Preparing your home court…' : 'Drag to orbit · arrow keys to turn'}</p>
         <div className="arena-utilities">
           {!chapter && !travelling && status === 'ready' && <div className="arena-orbit-buttons" role="group" aria-label="Rotate arena"><button aria-label="Rotate left" onClick={() => engine.current?.rotate(-1)}>↶</button><button aria-label="Rotate right" onClick={() => engine.current?.rotate(1)}>↷</button><button className="arena-touch-toggle" aria-pressed={drag} onClick={() => { setDrag(!drag); engine.current?.setDrag(!drag); }}>{drag ? 'Stop dragging' : 'Enable drag'}</button></div>}
           {status === 'ready' && <button className="arena-effects-toggle" onClick={() => engine.current?.setEffects(!effects)} aria-pressed={effects}><span className="arena-motion-dot" aria-hidden="true"/>{effects ? 'Pause motion' : 'Enable motion'}</button>}
           <a href={href('BryanKwan_Updated_Resume.pdf')} target="_blank" rel="noopener">Résumé <span aria-hidden="true">↗</span><span className="sr-only"> (PDF, opens in a new tab)</span></a>
         </div>
       </div>
-      {status === 'ready' && !effects && motionSource === 'device' && <p className="arena-motion-explanation">Your device prefers reduced motion. Explore every section, or enable motion to see the camera journey.</p>}
-      <noscript><p className="arena-motion-explanation">The illustrated view is available without JavaScript. Use View projects, the main navigation, or scroll to explore the portfolio.</p></noscript>
+      {status === 'ready' && !effects && motionSource === 'device' && <p className="arena-motion-explanation">Your device prefers reduced motion. Enable motion for the camera journey.</p>}
+      <noscript><p className="arena-motion-explanation">Use the section links to explore without JavaScript.</p></noscript>
     </div>
   </section>;
 }

@@ -11,13 +11,14 @@ test('all pages render without runtime errors, broken resources, or horizontal o
     const response = await page.goto(route);
     expect(response?.status(), route).toBe(200);
     await expect(page.locator('h1')).toBeVisible();
-    await page.locator('.site-footer').scrollIntoViewIfNeeded();
+    if (route) await page.locator('.site-footer').scrollIntoViewIfNeeded();
+    else await expect(page.locator('.arena-experience')).toHaveAttribute('data-status', 'ready');
     await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), { message: `Overflow on ${route}` }).toBe(true);
   }
   expect(errors).toEqual([]);
 });
 test('scouting priorities change the actual ranking and shot controls update accessible output', async ({ page }) => {
-  await page.goto('');
+  await page.goto('work/basketball/');
   await page.locator('.scouting-lab').scrollIntoViewIfNeeded();
   const priority = page.getByLabel('What does the team need?');
   await expect(priority).toBeEnabled();
@@ -65,7 +66,7 @@ test('legacy URLs and document links remain available', async ({ page, request }
   }
 });
 test('keyboard navigation and mobile menu are usable', async ({ page, isMobile }) => {
-  await page.goto('');
+  await page.goto('work/basketball/');
   if (!isMobile) { await page.keyboard.press('Tab'); await expect(page.getByRole('link', { name: 'Skip to content' })).toBeFocused(); }
   if (isMobile) {
     const toggle = page.locator('.menu-toggle');
@@ -92,8 +93,12 @@ test('the portfolio is readable and navigable without JavaScript', async ({ brow
   const page = await context.newPage();
   await page.goto(baseURL!);
   await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator('.arena-poster')).toBeVisible();
+  await expect(page.locator('.arena-chapter-nav [data-destination="contact"]')).toHaveAttribute('href', /mailto:|about\/.*contact/);
+  await page.goto(new URL('work/courtvision/', baseURL).href);
   await expect(page.locator('.replay-court')).toBeVisible();
   await expect(page.getByRole('button', { name: 'Play sample replay' })).toBeDisabled();
+  await page.goto(new URL('work/basketball/', baseURL).href);
   await expect(page.locator('.rank-row').first()).toContainText('Sample B');
   await expect(page.getByRole('button', { name: 'Shot profile', exact: true })).toBeDisabled();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' }).getByRole('link', { name: 'Work', exact: true })).toBeVisible();
@@ -105,9 +110,11 @@ test('the portfolio is readable and navigable without JavaScript', async ({ brow
 test('reduced motion and representative layouts', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('');
-  await expect(page.getByRole('button', { name: 'Play sample replay' })).toBeEnabled();
+  await expect(page.locator('.arena-experience')).toHaveAttribute('data-status', 'ready');
+  await expect(page.locator('.arena-experience')).toHaveAttribute('data-effects', 'false');
   expect(await page.locator('.hero-line > span').first().evaluate(el => getComputedStyle(el).transform)).toBe('none');
   await page.screenshot({ path: testInfo.outputPath('courtside-home.png'), fullPage: true, scale: 'css' });
+  await page.goto('work/basketball/');
   await page.locator('.scouting-lab').scrollIntoViewIfNeeded();
   await page.getByRole('button', { name: 'Shot profile', exact: true }).click();
   await page.screenshot({ path: testInfo.outputPath('courtside-shot-profile.png'), fullPage: false, scale: 'css' });
@@ -129,7 +136,8 @@ test('reduced motion and representative layouts', async ({ page }, testInfo) => 
 });
 
 test('CourtVision walkthrough responds to view, time and teaching-moment controls', async ({ page }) => {
-  await page.goto('');
+  await page.goto('work/courtvision/');
+  await page.locator('.replay-console').scrollIntoViewIfNeeded();
   const time = page.getByRole('slider', { name: 'Replay time' });
   await expect(time).toBeEnabled();
   await time.fill('4.8');
@@ -152,7 +160,8 @@ test('CourtVision walkthrough responds to view, time and teaching-moment control
 
 test('replay is user-controlled and pauses when the stage leaves view', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('');
+  await page.goto('work/courtvision/');
+  await page.locator('.replay-console').scrollIntoViewIfNeeded();
   const time = page.getByRole('slider', { name: 'Replay time' });
   await expect(time).toBeEnabled();
   await expect(time).toHaveValue('2.4');
