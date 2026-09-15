@@ -38,7 +38,9 @@ Open the local URL printed by Astro, followed by `/portfolio/`. The homepage sou
 - `src/lib/arena/` — procedural arena geometry, a dynamically loaded Three.js renderer, a single-draw cloud bank, and a shader-based scanline glitch. Approximately 4,500 instanced seats, exposed trusses, a suspended scoreboard, hoops, and an illustrative movement layer; no external model or texture requests.
 - `src/assets/toledo-rocket.svg` — the official gold rocket paths, drawn synchronously onto the center-court texture; source attribution is included in the SVG.
 - `src/styles/arena.css` — homepage architectural art direction, responsive scene framing, and interaction controls.
-- `src/components/CourtReplay.tsx` — a public illustrative court walkthrough, with playback, scrubbing, movement history, shot locations, and temporary teaching-moment markers.
+- `src/components/CourtReplay.tsx` — still product preview and on-demand, isolated CourtVision 3D replay with direct public-demo links.
+- `src/pages/previews/courtvision.astro` and `src/lib/courtvision/viewer.ts` — actual CourtVision renderer adapter, source-time playback, camera controls, and failure fallback.
+- `public/courtvision/` — CourtVision renderer modules, original Blender assets, a public shot_004 snapshot, and provenance hashes.
 - `src/data/` — project metadata and clearly labeled fictional scouting examples.
 - `src/styles/constellation.css` — the active navy/gold design system and responsive product interfaces; shared layout primitives remain in the other stylesheets.
 - `src/layouts/SiteLayout.astro` — shared navigation, metadata, contact, and footer for the ordinary project, research, and about routes.
@@ -86,10 +88,12 @@ The `site` and `base` settings in `astro.config.mjs` target this repository's ex
 
 ## Content and media
 
-The court walkthrough and scouting exercise use fictional players and authored illustrative data. The walkthrough is a small portfolio interaction, not the private CourtVision runtime or a recording of team evidence. Playback begins only on request and pauses when hidden or offscreen. Moment markers last for the current component session.
+CourtVision now links directly to its account-free public demo at https://courtvision.bryanhkwan.workers.dev/v2/demo/. The portfolio preview reuses its actual renderer and Blender court/player assets with a snapshot of `shot_004` from the publicly published March 12 Toledo–Bowling Green match. This is a selected reconstruction example, not a claim of complete match coverage or model accuracy. The full demo supplies synchronized source film, match profiles, statistics, and temporary drawing tools.
+
+The portfolio loads the isolated 3D preview only after **Load 3D replay** is selected. Playback starts paused, supports scrubbing and camera controls, and pauses when hidden or offscreen. Closing the preview removes the iframe and its rendering context. A still image and native demo links work without JavaScript. All embedded renderer/data requests stay on the portfolio origin; no private account endpoints or source videos are copied. Quick view remains static. The separate scouting exercise continues to use explicitly fictional examples.
 
 CourtVision's case study reflects the current hosted coaching platform: film, source-synchronized replay, player context, coach-board tools, exports, and private delivery. Its model and reconstruction limitations remain explicit. Historical basketball results are limited to the documented three-game sample. The Astros exercise shows observational associations, not an achieved revenue increase or a client engagement.
 
-Only aggregate Astros/research figures are included; respondent-level case data is not published. Earlier CourtVision assets retain their public URLs for compatibility but are no longer used in the showcase. Current team footage, identities, private packages, credentials, and source remain private. The portal link leads to the approved-coach sign-in page. Existing resume, recommendation, and validation PDF URLs still work. Fonts are served locally.
+Only aggregate Astros/research figures are included; respondent-level case data is not published. Earlier CourtVision assets retain their public URLs for compatibility but are no longer used in the showcase. The new preview uses only the public demo snapshot and reusable renderer assets documented in its provenance. Full source film stays on CourtVision, and demo links open its account-free route. Private sessions, coaching notes, credentials, and unrelated source files are not included. Existing resume, recommendation, and validation PDF URLs still work. Fonts are served locally.
 
 The previous HTML/CSS/JS files and original asset copies were preserved locally in the ignored `.local-backup/pre-courtside/` directory during migration. Private project inventory and concept exploration files are also excluded from publication.

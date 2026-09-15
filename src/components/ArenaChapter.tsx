@@ -14,10 +14,10 @@ const resume = href('BryanKwan_Updated_Resume.pdf');
 
 const projectDetails: Record<string, { contribution: string; question: string; evidence: string; boundary: string }> = {
   'computer-vision': {
-    contribution: 'The local vision pipeline, coaching interface, interactive replay, and private delivery workflow.',
+    contribution: 'The Python vision pipeline, React coaching interface, interactive 3D replay, and scoped public demo alongside the private coaching workspace.',
     question: 'How can a coach move from the source film to a useful teaching moment without losing context?',
-    evidence: 'Film review, player profiles, coaching notes, session exports, and controlled delivery form a working private platform.',
-    boundary: 'Replay coverage and reconstruction quality vary by source. The example here uses fictional players and movement; private team footage is not published.',
+    evidence: 'Try the March 12 Toledo–Bowling Green match: source film, player profiles, shot maps, and 69 partial replay windows. No account is required.',
+    boundary: 'Movement is reconstructed from film, with coverage that varies by play. Match statistics come from separate reviewed event and official match records; reconstructed movement alone does not establish shot ownership or results.',
   },
   basketball: {
     contribution: 'Scouting interfaces, configurable evaluation tools, roster scenarios, and analytical workflows within Toledo Athletics’ data internship program.',
@@ -134,7 +134,7 @@ export default function ArenaChapter({ chapter, close }: { chapter: ChapterId; c
           </div>
           <div className="arena-project-proof"><div><h3 className="arena-display-label">What is working</h3><p>{detail.evidence}</p></div><div><h3 className="arena-display-label">Keep the context</h3><p>{detail.boundary}</p></div></div>
           <div className="arena-display-links">
-            {project.demo && <a className="arena-secondary-link" href={project.demo} target="_blank" rel="noopener">Open dashboard <Arrow /></a>}
+            {project.demo && <a className="arena-secondary-link" href={project.demo} target="_blank" rel="noopener">{project.id === 'computer-vision' ? 'Try live demo' : 'Open dashboard'} <Arrow /></a>}
             {project.source && <a className="arena-secondary-link" href={project.source} target="_blank" rel="noopener">View source <Arrow /></a>}
             <a className="arena-secondary-link" href={href('work/')}>All projects <span aria-hidden="true">→</span></a>
           </div>

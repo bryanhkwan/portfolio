@@ -1,0 +1,130 @@
+{
+  "description": "Exact CourtVision renderer modules and original Blender assets reused in an isolated portfolio preview. All replay data below comes exclusively from the anonymous public demo.",
+  "retrieved_at": "2026-09-15T23:20:05.635Z",
+  "source_repo": "computer-vision",
+  "source_commit": "459b78b8aad3c5de011395fb75cdd46b75669be1",
+  "source_path": "src/basketball_cv/web/",
+  "modifications": "None. Viewer controller lives in src/lib/courtvision/viewer.ts.",
+  "renderer": [
+    {
+      "file": "court3d.js",
+      "bytes": 145094,
+      "sha256": "6d997a9e6a9d9084387ca3ca5244343ddfec93dbc08e6fda1fdc6aa81411efb3"
+    },
+    {
+      "file": "three.module.min.js",
+      "bytes": 338908,
+      "sha256": "e2b5ee6bccd38fd6d8a2428546b83c5f2426d84b152ef82be8055556e3b40eb6"
+    },
+    {
+      "file": "three.core.min.js",
+      "bytes": 381124,
+      "sha256": "61ba0df005b05991361d040d8ff670e1aadfd0ce7aeebd1fdb0725957a8957de"
+    },
+    {
+      "file": "OrbitControls.js",
+      "bytes": 38703,
+      "sha256": "b97879c748170baadeb3fb84cea1ffdf4674e283dc06042f34e2acb95a76042c"
+    },
+    {
+      "file": "GLTFLoader.js",
+      "bytes": 119622,
+      "sha256": "6851a68b2c32cd98162948d11be66b5ac2027a96a3923e67457826eff1c5e715"
+    },
+    {
+      "file": "BufferGeometryUtils.js",
+      "bytes": 36974,
+      "sha256": "3c791672cadb6796d633adc62445a10357da3ad2f816abda928dafd29817b514"
+    },
+    {
+      "file": "SkeletonUtils.js",
+      "bytes": 11552,
+      "sha256": "a64e78273ee3abb45ed618b72c504acf424e15e4d77e7b5a07b2469486306f80"
+    },
+    {
+      "file": "THREE_LICENSE.txt",
+      "bytes": 1081,
+      "sha256": "bfe119ea4fd413f5f7ca3fcd63adb0c4a073ed39daa2fe7d3e6b769e21272601"
+    },
+    {
+      "file": "replay-trajectory.js",
+      "bytes": 17889,
+      "sha256": "94195c3ccd7759e58dc220604f42b47df41f0827a222644a68e3aca2c94d7571"
+    },
+    {
+      "file": "replay-camera.js",
+      "bytes": 7031,
+      "sha256": "3e9e9763cfa1c3cabfde481d009edae3d3a209df2e5c4a0b379470df3308a15d"
+    },
+    {
+      "file": "replay-annotations.js",
+      "bytes": 8123,
+      "sha256": "09fec0bb5f45f6ca7d20e34512c7b41af6de426f317d93b64cc092be154dccb2"
+    },
+    {
+      "file": "replay-orbit.js",
+      "bytes": 1230,
+      "sha256": "910dd28e39759188ac5aec7f893ca6648a96d9f905723ed73f2d769986993fdc"
+    },
+    {
+      "file": "replay-snapshot.js",
+      "bytes": 3127,
+      "sha256": "21da9830c6dc0dba10151fa4f75bcb1d3efc8f4571a0f81741781abb49f08d6e"
+    },
+    {
+      "file": "replay-identity-barriers.js",
+      "bytes": 2426,
+      "sha256": "01c8ce09d7eaee6545364c516ccd94dd1faf052b07e81ec592a9a6e1cd446f6f"
+    },
+    {
+      "file": "replay-coaching.js",
+      "bytes": 14453,
+      "sha256": "181f032c7a33009e53bf6664a10abeaf627338a6075e0a143ccb73c12fbceaab"
+    },
+    {
+      "file": "replay-evidence.js",
+      "bytes": 1496,
+      "sha256": "445d5375bd661ea0e12dc440ed1d11abba7a56f6355306987a9e5605c4dfd3a5"
+    },
+    {
+      "file": "replay-avatar.js",
+      "bytes": 6477,
+      "sha256": "c6f2baa55e2e7f7fb3d1d3dc1b1c0fe62a106b3f3cd41afa9ee6b3741f83de9b"
+    },
+    {
+      "file": "replay-court-asset.js",
+      "bytes": 976,
+      "sha256": "35f560cb71f9be7399318425ada9830a8ff04b690c96300d2a4ef100c6d919f3"
+    },
+    {
+      "file": "constellation-court-v1.glb",
+      "bytes": 52020,
+      "sha256": "9102cce8b29d04272f403634ab016f675605a49dfc7fe62bbf7326435c94128f"
+    },
+    {
+      "file": "constellation-player-v1.glb",
+      "bytes": 271236,
+      "sha256": "461d9abcc6b69446630b08d7c577b14f6907ea3659e27802439422c4469f7b83"
+    }
+  ],
+  "replay": {
+    "file": "shot_004.json",
+    "source_url": "https://courtvision.bryanhkwan.workers.dev/api/demo/shot-replay?session=match-2026-03-12&event_id=shot_004",
+    "bytes": 1136038,
+    "sha256": "2f1c30ac90098e9fce280ead0b64c012ab4d3c8486c93e3fe44636591ad966c0",
+    "public_demo": "https://courtvision.bryanhkwan.workers.dev/v2/demo/",
+    "session": "match-2026-03-12",
+    "event": "shot_004",
+    "note": "Partial, estimated reconstruction. Source bounds and evidence gaps retained unchanged; no private practice data or film is copied."
+  },
+  "poster": {
+    "file": "replay-poster.png",
+    "source": "Screenshot of the reused CourtVision renderer at the public shot_004 release time; no source video copied.",
+    "source_time_s": 121.9315,
+    "camera": "broadcast",
+    "width": 1440,
+    "height": 882,
+    "bytes": 145155,
+    "sha256": "10d608b6a60a1b12e6644e97516455b0af42b84fd368dea8590f639f8a0fa4b5"
+  }
+}

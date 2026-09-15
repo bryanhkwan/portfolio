@@ -44,15 +44,15 @@ test('project filters and the updated CourtVision case lead to the intended cont
   await expect(page.locator('.result-count')).toHaveText('1 project');
   await page.getByRole('button', { name: 'All work', exact: true }).click();
   await expect(page.locator('.index-project:visible')).toHaveCount(9);
-  const privateRequests: string[] = [];
-  page.on('request', request => { if (request.url().includes('courtvision.bryanhkwan.workers.dev') || request.url().endsWith('.mp4')) privateRequests.push(request.url()); });
+  const demoRequests: string[] = [];
+  page.on('request', request => { if (request.url().includes('courtvision.bryanhkwan.workers.dev') || request.url().endsWith('.mp4')) demoRequests.push(request.url()); });
   await page.goto('work/courtvision/');
   await expect(page.locator('h1')).toHaveText('CourtVision.');
   await expect(page.locator('.replay-console')).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Coach sign in' })).toHaveAttribute('href', 'https://courtvision.bryanhkwan.workers.dev/v2/');
+  await expect(page.locator('.replay-console').getByRole('link', { name: 'Try live demo' })).toHaveAttribute('href', 'https://courtvision.bryanhkwan.workers.dev/v2/demo/');
   await expect(page.locator('video, img[src*="compvision/"]')).toHaveCount(0);
   await expect(page.locator('#approach')).toContainText('Keep the teaching moment.');
-  expect(privateRequests).toHaveLength(0);
+  expect(demoRequests).toHaveLength(0);
 });
 test('legacy URLs and document links remain available', async ({ page, request }) => {
   await page.goto('projects.html#basketball');
@@ -96,8 +96,11 @@ test('the portfolio is readable and navigable without JavaScript', async ({ brow
   await expect(page.locator('.arena-poster')).toBeVisible();
   await expect(page.locator('.arena-chapter-nav [data-destination="contact"]')).toHaveAttribute('href', /mailto:|about\/.*contact/);
   await page.goto(new URL('work/courtvision/', baseURL).href);
-  await expect(page.locator('.replay-court')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Play sample replay' })).toBeDisabled();
+  await expect(page.locator('.replay-poster')).toBeVisible();
+  await expect.poll(() => page.locator('.replay-poster').evaluate(image => image instanceof HTMLImageElement && image.complete && image.naturalWidth > 0)).toBe(true);
+  await expect(page.getByRole('button', { name: 'Load 3D replay' })).toBeDisabled();
+  await expect(page.locator('.replay-console').getByRole('link', { name: 'Try live demo' })).toHaveAttribute('href', 'https://courtvision.bryanhkwan.workers.dev/v2/demo/');
+  await expect(page.locator('iframe[title="CourtVision 3D replay"]')).toHaveCount(0);
   await page.goto(new URL('work/basketball/', baseURL).href);
   await expect(page.locator('.rank-row').first()).toContainText('Sample B');
   await expect(page.getByRole('button', { name: 'Shot profile', exact: true })).toBeDisabled();
@@ -133,46 +136,4 @@ test('reduced motion and representative layouts', async ({ page }, testInfo) => 
       return range.getBoundingClientRect().width <= el.getBoundingClientRect().width + 1;
     })), `Hero text must fit at ${width}px`).toBe(true);
   }
-});
-
-test('CourtVision walkthrough responds to view, time and teaching-moment controls', async ({ page }) => {
-  await page.goto('work/courtvision/');
-  await page.locator('.replay-console').scrollIntoViewIfNeeded();
-  const time = page.getByRole('slider', { name: 'Replay time' });
-  await expect(time).toBeEnabled();
-  await time.fill('4.8');
-  await expect(page.locator('.replay-time')).toHaveText('00:04.8');
-  await expect(page.locator('.console-note')).toContainText('weak-side player');
-  await page.getByRole('button', { name: 'Movement', exact: true }).click();
-  await expect(page.locator('.replay-court polyline')).toHaveCount(6);
-  await page.getByRole('button', { name: 'Mark moment' }).click();
-  await expect(page.getByRole('status')).toContainText('00:04.8');
-  await page.getByRole('button', { name: 'Clear', exact: true }).click();
-  await expect(page.locator('.saved-moment')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Shot map', exact: true }).click();
-  await expect(page.locator('.replay-court')).toHaveAttribute('aria-label', /7 makes and 5 misses/);
-  await expect(time).toHaveCount(0);
-  await page.getByRole('button', { name: 'Replay', exact: true }).click();
-  await expect(time).toHaveValue('4.8');
-  const audit = await new AxeBuilder({ page }).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();
-  expect(audit.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)}))).toEqual([]);
-});
-
-test('replay is user-controlled and pauses when the stage leaves view', async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('work/courtvision/');
-  await page.locator('.replay-console').scrollIntoViewIfNeeded();
-  const time = page.getByRole('slider', { name: 'Replay time' });
-  await expect(time).toBeEnabled();
-  await expect(time).toHaveValue('2.4');
-  await page.getByRole('button', { name: 'Play sample replay' }).click();
-  await expect.poll(async()=>Number(await time.inputValue())).toBeGreaterThan(2.5);
-  await page.getByRole('button', { name: 'Pause sample replay' }).click();
-  const paused = await time.inputValue();
-  await page.waitForTimeout(150);
-  expect(await time.inputValue()).toBe(paused);
-  await page.getByRole('button', { name: 'Play sample replay' }).click();
-  await page.locator('.site-footer').scrollIntoViewIfNeeded();
-  await expect(page.getByRole('button', { name: 'Play sample replay' })).toHaveCount(1);
-  await expect(page.getByRole('button', { name: 'Pause sample replay' })).toHaveCount(0);
 });

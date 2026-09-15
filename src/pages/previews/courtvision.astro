@@ -1,0 +1,68 @@
+---
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/600.css';
+import '../../styles/courtvision-viewer.css';
+import { href, courtVisionReplayUrl } from '../../lib/paths';
+const assets = href('courtvision/');
+const importMap = JSON.stringify({ imports: {
+  three: `${assets}three.module.min.js`,
+  'three/addons/controls/OrbitControls.js': `${assets}OrbitControls.js`,
+} });
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#020916" />
+    <title>CourtVision — public match 3D replay</title>
+    <script type="importmap" is:inline set:html={importMap}></script>
+  </head>
+  <body>
+    <main id="courtvision-viewer" class="cvv" data-state="loading" data-playing="false" data-assets={assets} aria-label="CourtVision public match replay">
+      <h1 class="cvv-sr">CourtVision public match 3D replay</h1>
+      <div class="cvv-heading"><span>TOLEDO × BOWLING GREEN</span><span>MARCH 12, 2026</span></div>
+      <div class="cvv-stage-wrap">
+        <div id="courtvision-stage" role="img" aria-label="Three-dimensional reconstruction of a published Toledo basketball sequence. Playback and camera controls follow."></div>
+        <p id="courtvision-loading" class="cvv-loading" role="status">Loading the CourtVision renderer…</p>
+        <div id="courtvision-fallback" class="cvv-fallback" hidden>
+          <strong>This device could not open the 3D preview.</strong>
+          <p>You can still explore CourtVision’s film, player profiles, and shot maps.</p>
+          <a href={courtVisionReplayUrl} target="_blank" rel="noopener noreferrer">Open full CourtVision demo ↗</a>
+        </div>
+        <noscript><div class="cvv-fallback"><strong>The 3D preview needs JavaScript.</strong><p><a href={courtVisionReplayUrl} target="_blank" rel="noopener noreferrer">Open CourtVision ↗</a></p></div></noscript>
+        <div class="cvv-stage-note" aria-hidden="true">SOURCE-ALIGNED REPLAY<span id="courtvision-frame-status">PAUSED AT RELEASE</span></div>
+      </div>
+      <div id="courtvision-controls" class="cvv-controls" inert>
+        <div class="cvv-timeline-row">
+          <button id="courtvision-play" type="button" class="cvv-play" aria-label="Play replay"><span aria-hidden="true">▶</span><span id="courtvision-play-label">Play</span></button>
+          <label class="cvv-scrubber"><span class="cvv-sr">Replay timeline</span><input id="courtvision-timeline" type="range" min="0" max="1" step="0.001" value="0" aria-label="Replay timeline" /></label>
+          <output id="courtvision-time" for="courtvision-timeline">0.00 / 2.37 s</output>
+        </div>
+        <div class="cvv-camera-row">
+          <div class="cvv-camera-presets" role="group" aria-label="Camera view">
+            <button type="button" data-camera="broadcast" aria-pressed="true">Orbit</button>
+            <button type="button" data-camera="film" aria-pressed="false">Film</button>
+            <button type="button" data-camera="top" aria-pressed="false">Top</button>
+            <button type="button" data-camera="sideline" aria-pressed="false">Sideline</button>
+          </div>
+          <div class="cvv-camera-tools" role="group" aria-label="Adjust camera">
+            <button type="button" data-adjust="left" aria-label="Rotate left" title="Rotate left">↶</button>
+            <button type="button" data-adjust="right" aria-label="Rotate right" title="Rotate right">↷</button>
+            <button type="button" data-adjust="in" aria-label="Zoom in" title="Zoom in">+</button>
+            <button type="button" data-adjust="out" aria-label="Zoom out" title="Zoom out">−</button>
+            <button type="button" id="courtvision-reset" aria-label="Reset view">Reset</button>
+          </div>
+        </div>
+        <p class="cvv-help">Drag to orbit · scroll or pinch to zoom. Film view follows the original camera.</p>
+      </div>
+      <p id="courtvision-announcement" class="cvv-sr" role="status" aria-live="polite"></p>
+    </main>
+    <script>
+      import { initializeCourtVisionPreview } from '../../lib/courtvision/viewer';
+      initializeCourtVisionPreview();
+    </script>
+  </body>
+</html>

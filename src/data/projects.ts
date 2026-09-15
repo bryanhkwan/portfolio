@@ -1,9 +1,11 @@
+import { courtVisionDemoUrl } from '../lib/paths';
+
 export type Project = {
   id: string; title: string; category: 'Sports' | 'Vision' | 'Business' | 'Research';
   description: string; status: string; stack: string[]; case?: string; demo?: string; source?: string; note?: string;
 };
 export const projects: Project[] = [
-  { id: 'computer-vision', title: 'CourtVision', category: 'Vision', description: 'A private basketball coaching platform connecting film, spatial replay, shot maps, player profiles, and saved teaching moments.', status: 'Hosted private platform', stack: ['Python', 'React', '3D replay', 'Cloudflare'], case: 'courtvision', note: 'Explore the public case study and illustrative walkthrough. The coaching app requires approved access.' },
+  { id: 'computer-vision', title: 'CourtVision', category: 'Vision', description: 'A basketball coaching platform connecting source film, 3D reconstruction, shot maps, and player profiles. Explore a real match in the public demo.', status: 'Live public demo', stack: ['Python', 'React', '3D replay', 'Cloudflare'], case: 'courtvision', demo: courtVisionDemoUrl, note: 'No account needed. The demo covers Toledo–Bowling Green on March 12, 2026; reconstruction coverage varies by play.' },
   { id: 'basketball', title: 'Basketball decision platform', category: 'Sports', description: 'Scouting, shot analysis, configurable player evaluation, and constrained roster construction.', status: 'Working dashboard', stack: ['JavaScript', 'SVG', 'Cloudflare Workers'], case: 'basketball', demo: 'https://bryanhkwan.github.io/basketball-dashboard/', source: 'https://github.com/bryanhkwan/basketball-dashboard' },
   { id: 'astros', title: 'What brings a fan back?', category: 'Business', description: 'Survey analysis and logistic regression turn a ticketing question into a focused operational experiment.', status: 'Analyst case study', stack: ['Python', 'pandas', 'SciPy', 'Matplotlib'], case: 'astros' },
   { id: 'volleyball', title: 'Volleyball performance', category: 'Sports', description: 'From practice exports to role-aware comparisons, player development, and setter–hitter chemistry.', status: 'Working dashboard', stack: ['JavaScript', 'Plotly', 'IndexedDB'], case: 'volleyball', demo: 'https://bryanhkwan.github.io/volleyball-dashboard/' },

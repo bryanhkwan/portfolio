@@ -10,10 +10,10 @@ const details: Record<string, { category: string; title: string; summary: string
   'computer-vision': {
     category: 'Computer vision / Product engineering',
     title: 'CourtVision',
-    summary: 'A coaching workspace connecting source film, spatial replay, player context, and saved teaching moments.',
-    contribution: 'The Python vision pipeline, React coaching interface, interactive replay, and controlled delivery workflow.',
-    evidence: 'Film review, player profiles, notes, and session exports form a working private platform. The public case study includes an illustrative walkthrough.',
-    context: 'Private platform · Reconstruction quality varies by source',
+    summary: 'A coaching workspace connecting source film, 3D reconstruction, shot maps, and player context.',
+    contribution: 'The Python vision pipeline, React coaching interface, interactive replay, and scoped public demo alongside the private coaching workspace.',
+    evidence: 'A live, account-free demo of Toledo–Bowling Green on March 12, 2026: source film, 17 match player profiles, shot maps, and 69 partial replay windows.',
+    context: 'Public match demo · Reconstructed movement is distinct from reviewed match statistics',
   },
   basketball: {
     category: 'Sports analytics / Scouting & roster strategy',
@@ -90,7 +90,7 @@ const details: Record<string, { category: string; title: string; summary: string
             <p class="qv-project-context">{detail.context}</p>
             <div class="qv-project-links">
               <a class="qv-text-link" href={href(`work/${project.case}/`)}>View case study <span class="qv-sr-only">— {detail.title}</span><span aria-hidden="true">↗</span></a>
-              {project.demo && <a class="qv-text-link qv-text-link-muted" href={project.demo} target="_blank" rel="noopener">Open dashboard <span class="qv-sr-only">— {detail.title} (opens in a new tab)</span><span aria-hidden="true">↗</span></a>}
+              {project.demo && <a class="qv-text-link qv-text-link-muted" href={project.demo} target="_blank" rel="noopener">{project.id === 'computer-vision' ? 'Try live demo' : 'Open dashboard'} <span class="qv-sr-only">— {detail.title} (opens in a new tab)</span><span aria-hidden="true">↗</span></a>}
             </div>
           </div>
         </article>;
