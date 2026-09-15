@@ -38,6 +38,7 @@ async function loadPreview(page: Page) {
 }
 
 test('CourtVision loads its real replay only on request and renders time and camera changes', async ({ page }) => {
+  if (process.env.CI) test.setTimeout(120000);
   const resources: string[] = [], errors: string[] = [];
   page.on('request', request => resources.push(request.url()));
   page.on('pageerror', error => errors.push(error.message));
@@ -68,8 +69,8 @@ test('CourtVision loads its real replay only on request and renders time and cam
   const requestedTime = await seekTimeline(viewer, .65);
   await expect.poll(async () => (await diagnostics(viewer)).replay_time_s).toBeCloseTo(requestedTime, 2);
   expect((await diagnostics(viewer)).player_positions.map(({ marker_id, x, y, z }) => ({ marker_id, x, y, z }))).not.toEqual(initial.player_positions.map(({ marker_id, x, y, z }) => ({ marker_id, x, y, z })));
-  expect((await canvas.screenshot({ scale: 'css' })).equals(release), 'Scrubbing must change the rendered players, not just a timestamp').toBe(false);
   const orbit = await canvas.screenshot({ scale: 'css' });
+  expect(orbit.equals(release), 'Scrubbing must change the rendered players, not just a timestamp').toBe(false);
   await viewer.getByRole('button', { name: 'Top', exact: true }).click();
   await expect(viewer.getByRole('button', { name: 'Top', exact: true })).toHaveAttribute('aria-pressed', 'true');
   expect((await diagnostics(viewer)).camera_view).toBe('top');
@@ -87,30 +88,39 @@ test('CourtVision loads its real replay only on request and renders time and cam
 });
 
 test('CourtVision replay stays user controlled and pauses when its parent leaves view', async ({ page }) => {
+  if (process.env.CI) test.setTimeout(120000);
   await page.emulateMedia({ reducedMotion: 'reduce' });
+  // Install before navigation, let loading proceed normally, then control only
+  // playback time. The real 2.37-second clip must not finish while a software
+  // renderer is waiting to dispatch the test's next pointer or keyboard action.
+  await page.clock.install({ time: new Date('2026-09-15T12:00:00Z') });
   const viewer = await loadPreview(page), state = viewer.locator('#courtvision-viewer');
+  await page.clock.pauseAt(new Date('2026-09-15T12:05:00Z'));
   const timeline = viewer.getByRole('slider', { name: 'Replay timeline', exact: true });
   await expect(state).toHaveAttribute('data-playing', 'false');
   const start = await seekTimeline(viewer);
   await viewer.getByRole('button', { name: 'Play replay', exact: true }).click();
+  await page.clock.runFor(200);
   await expect.poll(async () => Number(await timeline.inputValue())).toBeGreaterThan(start + .1);
   await viewer.getByRole('button', { name: 'Pause replay', exact: true }).click();
   await expect(state).toHaveAttribute('data-playing', 'false');
   const paused = await timeline.inputValue();
-  await page.waitForTimeout(200);
+  await page.clock.runFor(200);
   expect(await timeline.inputValue()).toBe(paused);
   // This source clip is only 2.37 seconds long. Rewind before testing offscreen
   // pause so a near-end manual pause cannot turn this into an end-of-clip test.
   await timeline.press('Home');
   await viewer.getByRole('button', { name: 'Play replay', exact: true }).click();
   await expect(state).toHaveAttribute('data-playing', 'true');
+  await page.clock.runFor(100);
   await page.locator('.site-footer').scrollIntoViewIfNeeded();
   await expect(state).toHaveAttribute('data-playing', 'false');
   const offscreen = await timeline.inputValue();
   expect(Number(offscreen), 'Leaving the viewport must pause before the source clip finishes').toBeLessThan(Number(await timeline.getAttribute('max')) - .02);
   await page.locator('.replay-console').scrollIntoViewIfNeeded();
-  await page.waitForTimeout(200);
+  await page.clock.runFor(200);
   expect(await timeline.inputValue(), 'Returning to the preview must not restart it').toBe(offscreen);
+  await page.clock.resume();
   await page.getByRole('button', { name: 'Close 3D replay', exact: true }).click();
   await expect(page.locator('iframe[title="CourtVision 3D replay"]')).toHaveCount(0);
   await expect(page.locator('.replay-poster')).toBeVisible();

@@ -6,6 +6,7 @@ interface Replay {
   timeline: { start_s: number; release_s: number; end_s: number };
 }
 interface Engine {
+  configureRenderer(options: { pixelRatio: number; antialias: boolean; shadows: boolean; maxFPS: number; renderOnDemand: boolean }): void;
   init(host: HTMLElement): void;
   update(scene: { available: boolean; court: unknown; shots: unknown[] }): void;
   updateReplay(replay: Replay, options: { showPlayers: boolean; showFutureTrajectory: boolean }): void;
@@ -62,6 +63,8 @@ export function initializeCourtVisionPreview() {
   }
   function tick(now: number) {
     if (!playing || !engine) return;
+    // Match the preview's render budget without recomputing every player rig at display refresh rate.
+    if (now - lastFrame < 1000 / 30) { frame = requestAnimationFrame(tick); return; }
     time = Math.min(replay.timeline.end_s, time + Math.min((now - lastFrame) / 1000, .1));
     lastFrame = now;
     engine.setReplayTime(time);
@@ -154,6 +157,7 @@ export function initializeCourtVisionPreview() {
     if (!data.available || !data.players?.length || !data.timeline || ![data.timeline.start_s, data.timeline.release_s, data.timeline.end_s].every(Number.isFinite)) throw new Error('Replay invalid.');
     replay = data;
     engine = loaded;
+    engine.configureRenderer({ pixelRatio: 1, antialias: false, shadows: false, maxFPS: 30, renderOnDemand: true });
     engine.init(host);
     engine.update({ available: true, court: replay.court, shots: [] });
     engine.updateReplay(replay, { showPlayers: true, showFutureTrajectory: false });

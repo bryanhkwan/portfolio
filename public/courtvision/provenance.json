@@ -1,15 +1,18 @@
 {
-  "description": "Exact CourtVision renderer modules and original Blender assets reused in an isolated portfolio preview. All replay data below comes exclusively from the anonymous public demo.",
+  "description": "CourtVision renderer and original Blender assets reused in an isolated portfolio preview, with documented rendering-budget adaptations. All replay data comes exclusively from the anonymous public demo.",
   "retrieved_at": "2026-09-15T23:20:05.635Z",
   "source_repo": "computer-vision",
   "source_commit": "459b78b8aad3c5de011395fb75cdd46b75669be1",
   "source_path": "src/basketball_cv/web/",
-  "modifications": "None. Viewer controller lives in src/lib/courtvision/viewer.ts.",
+  "modifications": "court3d.js adds an optional rendering budget (DPR, antialiasing, shadows, frame rate and redraw on demand), hidden-document drawing pause, and rendering diagnostics. replay-court-asset.js notifies the renderer after its asynchronous court model loads. The portfolio controller lives in src/lib/courtvision/viewer.ts. Geometry, Blender models, player poses, trajectories and replay data are unchanged.",
   "renderer": [
     {
       "file": "court3d.js",
-      "bytes": 145094,
-      "sha256": "6d997a9e6a9d9084387ca3ca5244343ddfec93dbc08e6fda1fdc6aa81411efb3"
+      "bytes": 148280,
+      "sha256": "183085e4d1ac5053669de5ca5e0dcc9b50c0b7a4e94a5feaa8f966729e08d6ac",
+      "source_sha256": "6d997a9e6a9d9084387ca3ca5244343ddfec93dbc08e6fda1fdc6aa81411efb3",
+      "source_bytes": 145094,
+      "modification": "Optional rendering budget, render-on-demand lifecycle, hidden-document pause and diagnostics."
     },
     {
       "file": "three.module.min.js",
@@ -93,8 +96,11 @@
     },
     {
       "file": "replay-court-asset.js",
-      "bytes": 976,
-      "sha256": "35f560cb71f9be7399318425ada9830a8ff04b690c96300d2a4ef100c6d919f3"
+      "bytes": 1072,
+      "sha256": "da8ad9db708cf3b2a5a5444110905a7fceed6b4d95b4a83a09618aa78fe498d6",
+      "source_sha256": "35f560cb71f9be7399318425ada9830a8ff04b690c96300d2a4ef100c6d919f3",
+      "source_bytes": 976,
+      "modification": "Optional asynchronous model-ready callback for redraw."
     },
     {
       "file": "constellation-court-v1.glb",

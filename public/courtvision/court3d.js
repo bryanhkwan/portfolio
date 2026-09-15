@@ -11,6 +11,52 @@ import { normalizeReplayPredictionLabels } from "./replay-evidence.js";
 import { preloadPlayerAvatar, createSkinnedPlayer, retargetSkinnedPlayer, avatarAssetStatus } from "./replay-avatar.js";
 import { attachCourtPlinth } from "./replay-court-asset.js";
 
+// Portfolio adaptation: callers can reduce rasterization cost before the first
+// scene is created. Defaults preserve the source renderer's original quality.
+// This budget never changes court geometry, source time, trajectories or poses.
+const rendererBudget = { pixelRatio: null, antialias: true, shadows: true, maxFPS: 0, renderOnDemand: false };
+let renderedFrames = 0;
+let diagnosticFrames = 0;
+let lastRenderTime = Number.NEGATIVE_INFINITY;
+let renderDirty = true;
+
+function invalidateRenderer() {
+  renderDirty = true;
+}
+
+function configureRenderer(options = {}) {
+  if (sceneState.renderer) throw new Error("Configure the renderer before creating its scene.");
+  if (options.pixelRatio !== undefined) {
+    const ratio = Number(options.pixelRatio);
+    if (!Number.isFinite(ratio) || ratio <= 0) throw new Error("pixelRatio must be positive.");
+    rendererBudget.pixelRatio = Math.min(2, Math.max(0.5, ratio));
+  }
+  if (options.antialias !== undefined) rendererBudget.antialias = Boolean(options.antialias);
+  if (options.shadows !== undefined) rendererBudget.shadows = Boolean(options.shadows);
+  if (options.renderOnDemand !== undefined) rendererBudget.renderOnDemand = Boolean(options.renderOnDemand);
+  if (options.maxFPS !== undefined) {
+    const fps = Number(options.maxFPS);
+    if (!Number.isFinite(fps) || fps < 0) throw new Error("maxFPS must be nonnegative; zero is uncapped.");
+    rendererBudget.maxFPS = fps === 0 ? 0 : Math.max(1, Math.min(120, fps));
+  }
+  return renderingDiagnostics();
+}
+
+function renderingDiagnostics() {
+  return {
+    pixel_ratio: sceneState.renderer?.getPixelRatio()
+      ?? rendererBudget.pixelRatio ?? Math.min(window.devicePixelRatio || 1, 2),
+    antialias: rendererBudget.antialias,
+    shadows: rendererBudget.shadows,
+    max_fps: rendererBudget.maxFPS,
+    render_on_demand: rendererBudget.renderOnDemand,
+    dirty: renderDirty,
+    rendered_frames: renderedFrames,
+    diagnostic_frames: diagnosticFrames,
+    document_hidden: document.hidden,
+  };
+}
+
 const sceneState = {
   container: null,
   scene: null,
@@ -441,7 +487,7 @@ function addCourt(scene, court) {
   }
 
   scene.add(courtGroup);
-  attachCourtPlinth(courtGroup, dimensions);
+  attachCourtPlinth(courtGroup, dimensions, invalidateRenderer);
   return courtGroup;
 }
 
@@ -501,16 +547,18 @@ function createScene(container, data) {
   scene.background = new THREE.Color(COLORS.background);
   scene.fog = new THREE.Fog(COLORS.background, 150, 240);
   const camera = new THREE.PerspectiveCamera(46, 1, 0.1, 240);
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const renderer = new THREE.WebGLRenderer({ antialias: rendererBudget.antialias, powerPreference: "high-performance" });
+  renderer.setPixelRatio(rendererBudget.pixelRatio ?? Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = rendererBudget.shadows;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   container.replaceChildren(renderer.domElement);
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.07;
+  // Pointer orbit, wheel zoom and remaining damping steps request a frame.
+  controls.addEventListener("change", invalidateRenderer);
   controls.minDistance = 18;
   controls.maxDistance = 155;
   controls.minPolarAngle = 0.025;
@@ -523,7 +571,7 @@ function createScene(container, data) {
   scene.add(new THREE.HemisphereLight(0xdcecff, 0x06162e, 1.35));
   const keyLight = new THREE.DirectionalLight(0xf2f7ff, 1.9);
   keyLight.position.set(-18, 38, 35);
-  keyLight.castShadow = true;
+  keyLight.castShadow = rendererBudget.shadows;
   keyLight.shadow.mapSize.set(2048, 2048);
   keyLight.shadow.camera.left = -34;
   keyLight.shadow.camera.right = 34;
@@ -604,6 +652,7 @@ function ensureAnnotationGroup() {
 }
 
 function renderAnnotationPreview() {
+  invalidateRenderer();
   ensureAnnotationGroup();
   if (!sceneState.annotationGroup) return;
   const stroke = sceneState.activeAnnotation;
@@ -633,6 +682,7 @@ function renderAnnotationPreview() {
 }
 
 function renderAnnotations() {
+  invalidateRenderer();
   ensureAnnotationGroup();
   if (!sceneState.annotationGroup) return;
   const retained = new Set(sceneState.annotationStrokes.map((stroke) => stroke.id));
@@ -1030,6 +1080,7 @@ function updateElapsedBallEvidence(timeS) {
 }
 
 function drawShots(data, selectedId, showAll) {
+  invalidateRenderer();
   if (sceneState.dynamicGroup) {
     sceneState.scene.remove(sceneState.dynamicGroup);
     disposeObject(sceneState.dynamicGroup);
@@ -1971,6 +2022,7 @@ function ballSampleAt(ballReplay, timeS) {
 }
 
 function clearReplay() {
+  invalidateRenderer();
   disposePlayerMarkers();
   if (sceneState.playerGroup && sceneState.scene) {
     sceneState.scene.remove(sceneState.playerGroup);
@@ -2234,6 +2286,7 @@ function getCoachingState() {
 }
 
 function updateCoaching(forceNotify = false) {
+  invalidateRenderer();
   const replay = sceneState.replay;
   const visible = new Set([...sceneState.playerMarkers].filter(([, marker]) => marker.visible).map(([id]) => id));
   const state = buildCoachingState(replay, sceneState.replayTimeS, sceneState.coachingOptions, visible);
@@ -2430,12 +2483,14 @@ function updateReplay(replay, options = {}) {
 }
 
 function setPlayersVisible(visible) {
+  invalidateRenderer();
   sceneState.showPlayers = Boolean(visible);
   if (sceneState.playerGroup) sceneState.playerGroup.visible = sceneState.showPlayers;
   updateCoaching(true);
 }
 
 function setReplayTime(timeS) {
+  invalidateRenderer();
   if (!sceneState.replay) return [];
   if (!Number.isFinite(Number(timeS))) return [];
   const timeline = sceneState.replay.timeline;
@@ -2598,6 +2653,7 @@ function setReplayTime(timeS) {
 }
 
 function update(data, options = {}) {
+  invalidateRenderer();
   if (!sceneState.container || !data?.available) return;
   if (!sceneState.scene) createScene(sceneState.container, data);
   updateCourtContext(data.court);
@@ -2606,6 +2662,7 @@ function update(data, options = {}) {
 }
 
 function init(container) {
+  invalidateRenderer();
   if (sceneState.scene && sceneState.container !== container) {
     sceneState.annotationInputCleanup?.();
     sceneState.annotationInputCleanup = null;
@@ -2797,6 +2854,7 @@ function startSourceOrbit(sample, focus, timeS) {
 }
 
 function setView(view, { immediate = false } = {}) {
+  invalidateRenderer();
   if (!sceneState.camera || !sceneState.controls) return;
   if (!["film", "broadcast", "sideline", "top"].includes(view)) return;
   finishActiveAnnotation(false);
@@ -2914,6 +2972,7 @@ function synchronizeOrbitCamera(position, target) {
 }
 
 function changeOrbitCamera(options) {
+  invalidateRenderer();
   const { camera, controls } = sceneState;
   if (!camera || !controls || sceneState.currentView === "film") return false;
   const pose = orbitCameraPose(camera.position.toArray(), controls.target.toArray(), {
@@ -2940,6 +2999,7 @@ function captureSnapshot() {
 }
 
 function resize() {
+  invalidateRenderer();
   const { container, renderer, camera } = sceneState;
   if (!container || !renderer || !camera) return;
   const width = Math.max(1, container.clientWidth);
@@ -2953,7 +3013,11 @@ function resize() {
 
 function animate(time = performance.now()) {
   sceneState.animationFrame = requestAnimationFrame(animate);
+  // Hidden documents retain their scene but do not spend GPU time drawing it.
+  // Source replay playback is separately controlled by the viewer's clock.
+  if (document.hidden) return;
   if (sceneState.cameraTween && sceneState.camera && sceneState.controls) {
+    invalidateRenderer();
     const tween = sceneState.cameraTween;
     const fraction = Math.max(0, Math.min(1, (time - tween.start) / tween.duration));
     const eased = fraction < 0.5
@@ -2964,6 +3028,7 @@ function animate(time = performance.now()) {
     if (fraction >= 1) sceneState.cameraTween = null;
   }
   if (sceneState.animationStart !== null && sceneState.selectedShot && sceneState.ball) {
+    invalidateRenderer();
     const elapsed = time - sceneState.animationStart;
     const fraction = Math.min(1, elapsed / sceneState.animationDurationMs);
     const totalSeconds = (
@@ -2979,8 +3044,14 @@ function animate(time = performance.now()) {
   if (sceneState.annotationMode === "navigate" && !sceneState.sourceCameraDisplayHeld
     && (sceneState.currentView !== "film" || sceneState.sourceCameraStatus !== "source_aligned_2_5d_candidate")) sceneState.controls?.update();
   if (sceneState.renderer && sceneState.scene && sceneState.camera) {
+    if (rendererBudget.renderOnDemand && !renderDirty) return;
+    const interval = rendererBudget.maxFPS > 0 ? 1000 / rendererBudget.maxFPS : 0;
+    if (interval && time - lastRenderTime + 0.001 < interval) return;
     updatePlayerLabelScales();
     sceneState.renderer.render(sceneState.scene, sceneState.camera);
+    lastRenderTime = time;
+    renderDirty = false;
+    renderedFrames += 1;
   }
 }
 
@@ -3005,6 +3076,7 @@ function getDiagnostics() {
   if (!sceneState.camera || !sceneState.scene || !sceneState.controls || !sceneState.renderer) {
     return {
       renderer_ready: false, selected_event_id: null, player_positions: [],
+      render_budget: renderingDiagnostics(),
       camera_view: sceneState.currentView, source_camera: { status: "initializing" },
       annotation_count: sceneState.annotationStrokes.length,
       annotation_can_undo: sceneState.annotationHistory.past.length > 0,
@@ -3074,6 +3146,7 @@ function getDiagnostics() {
   return {
     selected_event_id: sceneState.selectedShot?.event_id || null,
     renderer_ready: true,
+    render_budget: renderingDiagnostics(),
     player_asset: avatarAssetStatus(),
     selected_outcome: sceneState.selectedShot?.outcome || null,
     replay_time_s: sceneState.replayTimeS,
@@ -3176,6 +3249,7 @@ function getPixelDiagnostics() {
   const renderer = sceneState.renderer;
   if (!renderer || !sceneState.scene || !sceneState.camera) return null;
   renderer.render(sceneState.scene, sceneState.camera);
+  diagnosticFrames += 1;
   const context = renderer.getContext();
   const width = context.drawingBufferWidth;
   const height = context.drawingBufferHeight;
@@ -3212,6 +3286,7 @@ function getPixelDiagnostics() {
 }
 
 window.CourtVision3D = {
+  configureRenderer,
   init,
   update,
   updateReplay,
