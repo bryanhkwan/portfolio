@@ -1,2 +1,6 @@
+*.pdf binary
+*.png binary
+*.mp4 binary
+
 # Preserve the exact third-party and CourtVision bytes recorded in provenance.json.
 public/courtvision/* -text
